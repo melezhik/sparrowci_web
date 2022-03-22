@@ -1,2 +1,2 @@
 # fastest
-Rakudo community modules fast test on Sparky cluster
+Rakudo community modules fast tests on Sparky cluster
