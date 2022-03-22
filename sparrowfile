@@ -42,7 +42,7 @@ class Pipeline does Sparky::JobApi::Role {
   method stage-run-container-job {
 
     bash qq:to/HERE/, %( description => "run sparky job" );
-      az container exec -g sparky --name spk-0{$.num} \\
+      az container exec -g sparky2 --name spk-0{$.num} \\
       --exec-command "curl -fs -d '' --retry-delay 10 --retry-connrefused --retry 10 -X POST 127.0.0.1:4000/build/project/container" \\
       -o table
     HERE
