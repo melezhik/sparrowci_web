@@ -9,7 +9,12 @@ class Pipeline does Sparky::JobApi::Role {
   has Str $.notify-job = %*ENV<NOTIFY_JOB> || "";
 
   method stage-test {
-      zef 'Async::Workers', %( depsonly => True );
+      zef 'Async::Workers', %( 
+        description => "Async::Workers deps",
+        depsonly => True, 
+        notest => True 
+      );
+      zef 'Async::Workers';
   }
 
 
