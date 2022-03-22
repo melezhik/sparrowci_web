@@ -9,12 +9,15 @@ class Pipeline does Sparky::JobApi::Role {
   has Str $.notify-job = %*ENV<NOTIFY_JOB> || "";
 
   method stage-test {
-      zef 'Async::Workers', %( 
-        description => "Async::Workers deps",
-        depsonly => True, 
-        notest => True 
-      );
-      zef 'Async::Workers';
+
+      for 'Dawa', 'Async::Workers' -> $i {
+        zef $i, %( 
+          description => "$i deps",
+          depsonly => True, 
+          notest => True 
+        );
+        zef $i;
+      }
   }
 
 
@@ -51,7 +54,7 @@ class Pipeline does Sparky::JobApi::Role {
       }
 
       $nj.queue({
-        description => "testspec 0{$.worker} report",
+        description => "fastest 0{$.worker} report",
         tags => %(
           stage => "notify",
           worker => $.worker
