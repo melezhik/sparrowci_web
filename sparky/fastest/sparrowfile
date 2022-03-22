@@ -1,0 +1,78 @@
+use Sparky::JobApi;
+use HTTP::Tiny;
+
+class Pipeline does Sparky::JobApi::Role {
+
+  has Str $.worker = %*ENV<WORKER> || tags()<worker>;
+  has Str $.notify-api = %*ENV<NOTIFY_API> || "";
+  has Str $.notify-project = %*ENV<NOTIFY_PROJECT> || "";
+  has Str $.notify-job = %*ENV<NOTIFY_JOB> || "";
+
+  method stage-test {
+      zef 'Async::Workers', %( depsonly => True );
+  }
+
+
+  method stage-main {
+
+      my $j = self.new-job;
+
+      $j.queue({
+        description => "test",
+        tags => %(
+          stage => "test"
+        ),
+      });
+
+
+      my $s = self.wait-job($j);
+
+      my $nj = self.new-job: 
+        :api($.notify-api), 
+        :project($.notify-project), 
+        :job-id($.notify-job);
+
+
+      my %j = $j.info;
+
+      my $r = HTTP::Tiny.get: "http://127.0.0.1:4000/report/raw/{%j<project>}/{%j<job-id>}";
+
+      my $log = $r<content> ?? $r<content>.decode !! '';
+
+      if $s<OK> {
+        $nj.put-stash({ status => "OK", log => $log  });
+      } else {
+        $nj.put-stash({ status => "FAIL", log => $log  });
+      }
+
+      $nj.queue({
+        description => "testspec 0{$.worker} report",
+        tags => %(
+          stage => "notify",
+          worker => $.worker
+        ),
+      });
+      
+  }
+
+  method stage-notify {
+
+    my $nj = self.new-job: :mine(True);
+
+    my $report = $nj.get-stash();
+
+    say "=========================";
+
+    say "status: ", $report<status>;
+
+    say "log: ", $report<log>;
+
+    bash "az container delete -g sparky2 --name spk-0{$.worker} -y -o table || echo", %(
+      description => "delete container";
+    );
+
+  }
+
+}
+
+Pipeline.new.run;  

@@ -1,0 +1,114 @@
+use Sparky::JobApi;
+class Pipeline does Sparky::JobApi::Role {
+
+  has Str $.cpu = tags()<cpu> || "2";
+  has Str $.max = tags()<max> || "5";
+  has Str $.mem = tags()<mem> || "7";
+  has Str $.num = tags()<num> || "0";
+  has Str $.notify-project = tags()<notify-project> || "";;
+  has Str $.notify-job = tags()<notify-job> || "";;
+
+  method stage-run-container {
+
+    bash qq:to/HERE/, %( description => "az container create" );
+      #set -x 
+      az container create -g sparky2 \\
+        --name spk-0{$.num} \\
+        --image melezhik/sparky-fastspec:v10 \\
+        --cpu {$.cpu} --memory {$.mem} \\
+        --secure-environment-variables SPARKY_API_TOKEN={%*ENV<SPARKY_API_TOKEN>} \\
+        GIT_URL=https://github.com/melezhik/fastest.git \\
+        WORKER="{$.num}" \\
+        SPARKY_TIMEOUT=5 \\
+        SPARKY_PROJECT="fastest" \\
+        NOTIFY_PROJECT={self.notify-project} \\
+        NOTIFY_JOB={self.notify-job} \\
+        NOTIFY_API=http://sparrowhub.io:4000 -o table
+    HERE
+
+    my $j = self.new-job: :workers<4>;
+
+    $j.queue({
+      description => "run az container job #{$.num}",
+      tags => %(
+        stage => "run-container-job",
+        num => $.num,
+      ),
+    });
+
+  }
+
+
+  method stage-run-container-job {
+
+    bash qq:to/HERE/, %( description => "run sparky job" );
+      az container exec -g sparky --name spk-0{$.num} \\
+      --exec-command "curl -fs -d '' --retry-delay 10 --retry-connrefused --retry 10 -X POST 127.0.0.1:4000/build/project/container" \\
+      -o table
+    HERE
+
+  }
+
+  method stage-main {
+
+    my @cjobs;
+    my @njobs;
+
+    say "configuration: cpu: {$.cpu} | mem: {$.mem} | vms: {$.max}";
+
+    say "cost: \$", (0.00445*($.mem.Int)*30*($.max.Int) + 0.04050*($.cpu.Int)*30*($.max,Int)), '  for 30 hours';
+
+    for 1 .. $.max.Int -> $i {
+
+      my $cj = self.new-job: :workers<4>;
+
+      my $nj = self.new-job: :project<fastspec.notify>, :job-id($cj.info()<job-id>);
+
+      @cjobs.push: $cj;
+
+      @njobs.push: $nj;
+
+      $cj.queue({
+        description => "run az container #{$i}",
+        tags => %(
+          stage => "run-container",
+          cpu => $.cpu,
+          mem => $.mem,
+          num => $i,
+          max => $.max,
+          notify-job => $cj.info()<job-id>,
+          notify-project => "fastspec.notify",
+        ),
+      });
+
+    }
+
+    # wait containers jobs
+    my $s = self.wait-jobs(@cjobs); 
+
+    # wait notify jobs
+    my $s2 = self.wait-jobs(@njobs); 
+
+    # remove containers
+    say "clean up containers just in case ...";
+
+    for 1 .. $.max.Int -> $i {
+
+      bash "az container delete -g sparky2 --name spk-0{$i} -y -o table || echo", %(
+        description => "delete container";
+      );
+
+    }
+
+
+    say "{now - INIT now} sec passed";
+
+    die if $s<FAIL>;
+
+    die if $s2<FAIL>;
+
+  }
+
+}
+
+Pipeline.new.run;  
