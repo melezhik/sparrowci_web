@@ -58,8 +58,6 @@ class Pipeline does Sparky::JobApi::Role {
 
     say "configuration: cpu: {$.cpu} | mem: {$.mem} | vms: {$.max}";
 
-    say "cost: \$", (0.00445*($.mem.Int)*30*($.max.Int) + 0.04050*($.cpu.Int)*30*($.max,Int)), '  for 30 hours';
-
     for 1 .. $.max.Int -> $i {
 
       my $cj = self.new-job: :workers<4>;
@@ -104,7 +102,11 @@ class Pipeline does Sparky::JobApi::Role {
     }
 
 
-    say "{now - INIT now} sec passed";
+    my $time = now - INIT now;
+
+    say "$time sec passed";
+
+    say "cost: \$", (0.0000013**($.mem.Int)*$time*($.max.Int) + 0.0000113*($.cpu.Int)*$time*($.max,Int));
 
     die if $s<FAIL>;
 

@@ -16,6 +16,11 @@ class Pipeline does Sparky::JobApi::Role {
           notest => True 
       );
 
+      zef "prove6", %(
+          description => "install prove6",
+          notest => True
+      );
+
       directory "scm";
 
       git-scm $.project, %(
