@@ -16,7 +16,7 @@ class Pipeline does Sparky::JobApi::Role {
           notest => True 
       );
 
-      zef "prove6", %(
+      zef "App::Prove6", %(
           description => "install prove6",
           notest => True
       );
