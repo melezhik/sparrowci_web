@@ -5,6 +5,7 @@ class Pipeline does Sparky::JobApi::Role {
   has Str $.max = tags()<max> || "5";
   has Str $.mem = tags()<mem> || "7";
   has Str $.num = tags()<num> || "0";
+  has Str $.project = tags()<project> || "";
   has Str $.notify-project = tags()<notify-project> || "";;
   has Str $.notify-job = tags()<notify-job> || "";;
 
@@ -21,6 +22,7 @@ class Pipeline does Sparky::JobApi::Role {
         WORKER="{$.num}" \\
         SPARKY_TIMEOUT=5 \\
         SPARKY_PROJECT="fastest" \\
+        PROJECT="{$.project}" \\
         NOTIFY_PROJECT={self.notify-project} \\
         NOTIFY_JOB={self.notify-job} \\
         NOTIFY_API=http://sparrowhub.io:4000 -o table
@@ -76,6 +78,7 @@ class Pipeline does Sparky::JobApi::Role {
           mem => $.mem,
           num => $i,
           max => $.max,
+          project => $.project,
           notify-job => $cj.info()<job-id>,
           notify-project => "fastspec.notify",
         ),

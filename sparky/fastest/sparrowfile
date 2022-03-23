@@ -3,6 +3,7 @@ use HTTP::Tiny;
 
 class Pipeline does Sparky::JobApi::Role {
 
+  has Str $.project = %*ENV<PROJECT> || "";
   has Str $.worker = %*ENV<WORKER> || tags()<worker>;
   has Str $.notify-api = %*ENV<NOTIFY_API> || "";
   has Str $.notify-project = %*ENV<NOTIFY_PROJECT> || "";
@@ -10,14 +11,27 @@ class Pipeline does Sparky::JobApi::Role {
 
   method stage-test {
 
-      for 'Dawa', 'Async::Workers' -> $i {
-        zef $i, %( 
-          description => "$i deps",
-          depsonly => True, 
+      zef "App::RaCoCo", %(
+          description => "install App::RaCoCo",
           notest => True 
-        );
-        zef $i;
-      }
+      );
+
+      directory "scm";
+
+      git-scm $.project, %(
+        to => "scm"
+      );
+
+      bash "zef install --deps-only --/test .", %(
+        cwd => "{$*CWD}/scm",
+        description => "install deps"
+      );
+    
+      bash "racoco -l", %(
+        cwd => "{$*CWD}/scm",
+        description => "run tests"
+      );
+
   }
 
 
