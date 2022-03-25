@@ -32,11 +32,16 @@ class Pipeline does Sparky::JobApi::Role {
         description => "install deps"
       );
     
-      bash "racoco -l", %(
+      bash "racoco -l --html", %(
         cwd => "{$*CWD}/scm",
         description => "run tests"
       );
 
+      my $j = self.new-job: :mine(True);
+
+      $j.put-stash({
+        test-coverage-html => "scm/.racoco/report.html".IO.slurp(),
+      });
   }
 
 
@@ -66,10 +71,20 @@ class Pipeline does Sparky::JobApi::Role {
 
       my $log = $r<content> ?? $r<content>.decode !! '';
 
+      my $test-coverage-html = $j.get-stash()<test-coverage-html> || ""; 
+
       if $s<OK> {
-        $nj.put-stash({ status => "OK", log => $log  });
+        $nj.put-stash({ 
+          status => "OK", 
+          log => $log, 
+          test-coverage-html => $test-coverage-html 
+        });
       } else {
-        $nj.put-stash({ status => "FAIL", log => $log  });
+        $nj.put-stash({ 
+          status => "FAIL", 
+          log => $log,  
+          test-coverage-html => $test-coverage-html 
+        });
       }
 
       $nj.queue({
