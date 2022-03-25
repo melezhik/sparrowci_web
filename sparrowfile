@@ -25,7 +25,7 @@ class Pipeline does Sparky::JobApi::Role {
         PROJECT="{$.project}" \\
         NOTIFY_PROJECT={self.notify-project} \\
         NOTIFY_JOB={self.notify-job} \\
-        NOTIFY_API=http://sparrowhub.io:4000 -o table
+        NOTIFY_API=https://sparrowhub.io:4000 -o table
     HERE
 
     my $j = self.new-job: :workers<4>;
