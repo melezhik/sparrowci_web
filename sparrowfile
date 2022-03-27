@@ -108,9 +108,9 @@ class Pipeline does Sparky::JobApi::Role {
 
     say "cost: \$", (0.0000013**($.mem.Int)*$time*($.max.Int) + 0.0000113*($.cpu.Int)*$time*($.max,Int));
 
-    die if $s<FAIL>;
+    die if $s<FAIL> or $s<TIMEOUT>;
 
-    die if $s2<FAIL>;
+    die if $s2<FAIL> or $s2<TIMEOUT>;
 
   }
 
