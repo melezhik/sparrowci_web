@@ -1,6 +1,6 @@
-# fastest
+# SparkyCI
 
-Rakudo community modules fast tests on Sparky cluster
+SparkyCI - dead simple CI service
 
 # How to run
 
@@ -10,3 +10,4 @@ Rakudo community modules fast tests on Sparky cluster
     --no_sudo \
     --desc="fastest" \
     --tags=cpu=2,max=1,mem=5,project=Config-BINDish,scm=https://github.com/vrurg/raku-Config-BINDish.git
+
