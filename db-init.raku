@@ -4,7 +4,7 @@ use Data::Dump;
 use SparkyCI;
 
 sub MAIN (
-  Str  :$root = %*ENV<HOME> ~ '/.sparky/projects',
+  Str  :$root = sparkyci-root(),
 )
 
 {
