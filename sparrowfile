@@ -1,12 +1,12 @@
 use Sparky::JobApi;
 use SparkyCI;
+use JSON::Tiny;
 
 class Pipeline does Sparky::JobApi::Role {
 
   has Str $.cpu = tags()<cpu> || "2";
   has Str $.max = tags()<max> || "5";
   has Str $.mem = tags()<mem> || "7";
-  has Str $.num = tags()<num> || "0";
   has Str $.project = tags()<project> || "";
   has Str $.scm = tags()<scm> || "";
   has Str $.notify-project = tags()<notify-project> || "";;
@@ -17,11 +17,10 @@ class Pipeline does Sparky::JobApi::Role {
     bash qq:to/HERE/, %( description => "az container create" );
       #set -x 
       az container create -g sparky2 \\
-        --name spk-0{$.num} \\
+        --name spk-00 \\
         --image melezhik/sparky-fastspec:v10 \\
         --cpu {$.cpu} --memory {$.mem} \\
         --secure-environment-variables SPARKY_API_TOKEN={%*ENV<SPARKY_API_TOKEN>} \\
-        WORKER="{$.num}" \\
         SPARKY_TIMEOUT=5 \\
         SPARKY_PROJECT="raku" \\
         GIT_URL="https://github.com/melezhik/sparkyci.git" \\
@@ -33,10 +32,9 @@ class Pipeline does Sparky::JobApi::Role {
     my $j = self.new-job: :workers<4>;
 
     $j.queue({
-      description => "run az container job #{$.num}",
+      description => "run az container job",
       tags => %(
         stage => "run-container-job",
-        num => $.num,
       ),
     });
 
@@ -46,7 +44,7 @@ class Pipeline does Sparky::JobApi::Role {
   method stage-run-container-job {
 
     bash qq:to/HERE/, %( description => "run sparky job" );
-      az container exec -g sparky2 --name spk-0{$.num} \\
+      az container exec -g sparky2 --name spk-00 \\
       --exec-command "curl -fs -d '' --retry-delay 10 --retry-connrefused --retry 10 -X POST 127.0.0.1:4000/build/project/container" \\
       -o table
     HERE
@@ -55,28 +53,19 @@ class Pipeline does Sparky::JobApi::Role {
 
   method stage-main {
 
-    my @cjobs;
-    my @njobs;
-
     say "configuration: cpu: {$.cpu} | mem: {$.mem} | vms: {$.max}";
 
-    for 1 .. $.max.Int -> $i {
 
       my $cj = self.new-job: :workers<4>;
 
       my $nj = self.new-job: :project<raku.notify>, :job-id($cj.info()<job-id>);
 
-      @cjobs.push: $cj;
-
-      @njobs.push: $nj;
-
       $cj.queue({
-        description => "run az container #{$i}",
+        description => "run az container",
         tags => %(
           stage => "run-container",
           cpu => $.cpu,
           mem => $.mem,
-          num => $i,
           max => $.max,
           project => $.project,
           notify-job => $cj.info()<job-id>,
@@ -84,13 +73,12 @@ class Pipeline does Sparky::JobApi::Role {
         ),
       });
 
-    }
 
     # wait containers jobs
-    my $s = self.wait-jobs(@cjobs); 
+    my $s = self.wait-job($cj); 
 
     # wait notify jobs
-    my $s2 = self.wait-jobs(@njobs, %( timeout => 800 )); 
+    my $s2 = self.wait-job($nj, %( timeout => 800 )); 
 
     # remove containers
     say "clean up containers just in case ...";
@@ -119,7 +107,25 @@ class Pipeline does Sparky::JobApi::Role {
 
     say "generate sparkyci build ...";
 
-    insert-build :$state, :$project, :$desc, :$job-id;
+    my $bid = insert-build :$state, :$project, :$desc, :$job-id;
+
+    mkdir "{sparkyci-root()}/data/{$bid}";
+
+    my $nj-stash = $nj.get-stash;
+
+    "{sparkyci-root()}/data/{$bid}/log.txt".IO.spurt($nj-stash<log>||"");
+
+    "{sparkyci-root()}/data/{$bid}/data.json".IO.spurt(to-json(
+      date => DateTime.now,
+      state => $state,
+      project => $project,
+      desc => $desc,
+      job-id => $job-id,
+      id => $bid,
+      test-coverage-html => $nj-stash<test-coverage-html> || "",
+      log => $nj-stash<log> || "", 
+    ));
+
 
     say $s.perl;
 
