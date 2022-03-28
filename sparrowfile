@@ -117,6 +117,8 @@ class Pipeline does Sparky::JobApi::Role {
 
     my $project = $.project;
 
+    say "generate sparkyci build ...";
+
     insert-build :$state, :$project, :$desc, :$job-id;
 
     die if $s<FAIL> or $s<TIMEOUT>;
