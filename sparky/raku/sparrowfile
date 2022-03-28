@@ -52,7 +52,8 @@ class Pipeline does Sparky::JobApi::Role {
       $j.queue({
         description => "test",
         tags => %(
-          stage => "test"
+          stage => "test
+          scm => $.scm,"
         ),
       });
 
@@ -88,7 +89,7 @@ class Pipeline does Sparky::JobApi::Role {
       }
 
       $nj.queue({
-        description => "fastest 0{$.worker} report",
+        description => "{$.worker} raku build report",
         tags => %(
           stage => "notify",
           worker => $.worker
