@@ -23,6 +23,7 @@ class Pipeline does Sparky::JobApi::Role {
         --secure-environment-variables SPARKY_API_TOKEN={%*ENV<SPARKY_API_TOKEN>} \\
         SPARKY_TIMEOUT=5 \\
         SPARKY_PROJECT="raku" \\
+        SCM="{$.scm}" \\
         GIT_URL="https://github.com/melezhik/sparkyci.git" \\
         NOTIFY_PROJECT={self.notify-project} \\
         NOTIFY_JOB={self.notify-job} \\
