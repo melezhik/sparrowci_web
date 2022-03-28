@@ -3,7 +3,6 @@ use HTTP::Tiny;
 
 class Pipeline does Sparky::JobApi::Role {
 
-  has Str $.project = %*ENV<PROJECT> || "";
   has Str $.scm = %*ENV<scm> || "";
   has Str $.worker = %*ENV<WORKER> || tags()<worker>;
   has Str $.notify-api = %*ENV<NOTIFY_API> || "";

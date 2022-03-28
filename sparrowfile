@@ -24,7 +24,7 @@ class Pipeline does Sparky::JobApi::Role {
         WORKER="{$.num}" \\
         SPARKY_TIMEOUT=5 \\
         SPARKY_PROJECT="raku" \\
-        SCM="{$.scm}" \\
+        GIT_URL="https://github.com/melezhik/sparkyci.git" \\
         NOTIFY_PROJECT={self.notify-project} \\
         NOTIFY_JOB={self.notify-job} \\
         NOTIFY_API=https://sparrowhub.io:4000 -o table
