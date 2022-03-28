@@ -1,4 +1,6 @@
 use Sparky::JobApi;
+use SparkyCI;
+
 class Pipeline does Sparky::JobApi::Role {
 
   has Str $.cpu = tags()<cpu> || "2";
@@ -6,6 +8,7 @@ class Pipeline does Sparky::JobApi::Role {
   has Str $.mem = tags()<mem> || "7";
   has Str $.num = tags()<num> || "0";
   has Str $.project = tags()<project> || "";
+  has Str $.scm = tags()<scm> || "";
   has Str $.notify-project = tags()<notify-project> || "";;
   has Str $.notify-job = tags()<notify-job> || "";;
 
@@ -18,11 +21,10 @@ class Pipeline does Sparky::JobApi::Role {
         --image melezhik/sparky-fastspec:v10 \\
         --cpu {$.cpu} --memory {$.mem} \\
         --secure-environment-variables SPARKY_API_TOKEN={%*ENV<SPARKY_API_TOKEN>} \\
-        GIT_URL=https://github.com/melezhik/fastest.git \\
         WORKER="{$.num}" \\
         SPARKY_TIMEOUT=5 \\
         SPARKY_PROJECT="fastest" \\
-        PROJECT="{$.project}" \\
+        SCM="{$.SCM}" \\
         NOTIFY_PROJECT={self.notify-project} \\
         NOTIFY_JOB={self.notify-job} \\
         NOTIFY_API=https://sparrowhub.io:4000 -o table
@@ -101,12 +103,21 @@ class Pipeline does Sparky::JobApi::Role {
 
     }
 
-
     my $time = now - INIT now;
 
     say "$time sec passed";
 
     say "cost: \$", (0.0000013**($.mem.Int)*$time*($.max.Int) + 0.0000113*($.cpu.Int)*$time*($.max,Int));
+
+    my $state = $s2<OK> ?? 1 !! ( $s2<TIMEOUT> ?? -1 !! -2 );
+
+    my $desc = $.scm;
+
+    my $job-id = $s2.info()<job-id>;
+
+    my $project = $.project;
+
+    insert-build (:$state, :$project, :$desc, :$job-id );
 
     die if $s<FAIL> or $s<TIMEOUT>;
 
