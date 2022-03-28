@@ -113,7 +113,7 @@ class Pipeline does Sparky::JobApi::Role {
 
     my $desc = $.scm;
 
-    my $job-id = $s2.info()<job-id>;
+    my $job-id = tags()<SPARKY_JOB_ID>;
 
     my $project = $.project;
 
