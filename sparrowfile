@@ -23,7 +23,7 @@ class Pipeline does Sparky::JobApi::Role {
         --secure-environment-variables SPARKY_API_TOKEN={%*ENV<SPARKY_API_TOKEN>} \\
         WORKER="{$.num}" \\
         SPARKY_TIMEOUT=5 \\
-        SPARKY_PROJECT="fastest" \\
+        SPARKY_PROJECT="raku" \\
         SCM="{$.scm}" \\
         NOTIFY_PROJECT={self.notify-project} \\
         NOTIFY_JOB={self.notify-job} \\
@@ -64,7 +64,7 @@ class Pipeline does Sparky::JobApi::Role {
 
       my $cj = self.new-job: :workers<4>;
 
-      my $nj = self.new-job: :project<fastspec.notify>, :job-id($cj.info()<job-id>);
+      my $nj = self.new-job: :project<raku.notify>, :job-id($cj.info()<job-id>);
 
       @cjobs.push: $cj;
 
@@ -80,7 +80,7 @@ class Pipeline does Sparky::JobApi::Role {
           max => $.max,
           project => $.project,
           notify-job => $cj.info()<job-id>,
-          notify-project => "fastspec.notify",
+          notify-project => "raku.notify",
         ),
       });
 
