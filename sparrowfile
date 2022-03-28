@@ -71,6 +71,7 @@ class Pipeline does Sparky::JobApi::Role {
           project => $.project,
           notify-job => $cj.info()<job-id>,
           notify-project => "raku.notify",
+          scm => $.scm,
         ),
       });
 
