@@ -10,6 +10,10 @@ class Pipeline does Sparky::JobApi::Role {
 
   method stage-test {
 
+      say "scm: {$.scm}";
+
+      return;
+
       zef "App::RaCoCo", %(
           description => "install App::RaCoCo",
           notest => True 
@@ -45,6 +49,8 @@ class Pipeline does Sparky::JobApi::Role {
 
 
   method stage-main {
+
+      say "run raku build for scm: {$.scm}";
 
       my $j = self.new-job;
 
