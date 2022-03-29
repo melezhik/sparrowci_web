@@ -86,7 +86,14 @@ sub get-builds () is export {
 
     my $sth = $dbh.prepare(q:to/STATEMENT/);
         SELECT 
-          project, state, dt as date, id
+          project, 
+          CASE
+            WHEN state = 1 THEN "OK"
+            WHEN state = -1 THEN "TIMEOUT"
+            WHEN state = -2 THEN "FAIL"
+            ELSE "UNKNOWN"
+          END AS state,
+          dt as date, id
         FROM 
           builds
         ORDER BY
