@@ -5,7 +5,7 @@ sparrowdo:
   bootstrap: false
   format: default
   repo: file:///home/sph/repo
-  tags: cpu=2,mem=6
+  tags: cpu=2,mem=6,SCM_URL=https://github.com/vrurg/raku-Config-BINDish.git
 disabled: false
 keep_builds: 100
 allow_manual_run: true

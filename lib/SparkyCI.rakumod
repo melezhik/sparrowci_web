@@ -79,3 +79,24 @@ sub insert-build (:$state, :$project, :$desc, :$job-id ) is export {
     return $build_id;
 
 }
+
+sub get-builds () is export {
+
+    my $dbh = get-dbh();
+
+    my $sth = $dbh.prepare(q:to/STATEMENT/);
+        SELECT 
+          project, state, dt as date, id
+        FROM 
+          builds
+    STATEMENT
+
+    $sth.execute();
+
+    my @rows = $sth.allrows(:array-of-hash);
+
+    $sth.finish;
+
+    return @rows;
+
+}

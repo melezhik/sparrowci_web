@@ -1,0 +1,15 @@
+cro: 1
+id: sparkyci
+name: SparkyCI
+entrypoint: app.raku
+ignore:
+  - projects
+  - sparky
+  - .cache
+  - .tom
+  - README.md
+  - run.sh
+  - sparrowfile
+  - t/
+  - db-init.raku
+  - META6.json

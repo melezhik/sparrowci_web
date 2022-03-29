@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SparkyCI - dead easy CI service</title>
+    <link rel="stylesheet" href="https://jenil.github.io/bulmaswatch/<.theme>/bulmaswatch.min.css">                                                                          <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
+  </head>
+  <body>
+
+  <section class="section">
+    <div class="container">
+      <!-- Main container -->
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th><abbr title="Project">Project</abbr></th>
+              <th>Status</th>
+              <th>Date</th>
+              <th><abbr title="Report">Report</abbr></th>
+          </tr>
+        </thead>
+        <tbody>
+          <@results>
+          <tr>
+            <td><.id></td>
+            <td><.project></td>
+            <td><.state></td>
+            <td><.date></td>
+            <td><a href="/report/<.id>" title="report">link</td>
+          </tr>
+          </@>
+        </tbody>
+      </table>
+    </div>
+  </section>    
+  </body>
+</html>
