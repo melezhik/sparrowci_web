@@ -89,6 +89,8 @@ sub get-builds () is export {
           project, state, dt as date, id
         FROM 
           builds
+        ORDER BY
+          id desc
     STATEMENT
 
     $sth.execute();
