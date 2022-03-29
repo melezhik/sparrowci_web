@@ -14,6 +14,8 @@ class Pipeline does Sparky::JobApi::Role {
 
   method stage-run-container {
 
+    say "run az container, scm: {$.scm}";
+
     bash qq:to/HERE/, %( description => "az container create" );
       #set -x 
       az container create -g sparky2 \\
@@ -85,13 +87,9 @@ class Pipeline does Sparky::JobApi::Role {
     # remove containers
     say "clean up containers just in case ...";
 
-    for 1 .. $.max.Int -> $i {
-
-      bash "az container delete -g sparky2 --name spk-0{$i} -y -o table || echo", %(
-        description => "delete container";
-      );
-
-    }
+    bash "az container delete -g sparky2 --name spk-00 -y -o table || echo", %(
+      description => "delete container";
+    );
 
     my $time = now - INIT now;
 
@@ -117,7 +115,7 @@ class Pipeline does Sparky::JobApi::Role {
 
     "{sparkyci-root()}/data/{$bid}/log.txt".IO.spurt($nj-stash<log>||"");
 
-    "{sparkyci-root()}/data/{$bid}/data.json".IO.spurt(to-json(
+    "{sparkyci-root()}/data/{$bid}/data.json".IO.spurt(to-json(%(
       date => DateTime.now,
       state => $state,
       project => $project,
@@ -126,7 +124,7 @@ class Pipeline does Sparky::JobApi::Role {
       id => $bid,
       test-coverage-html => $nj-stash<test-coverage-html> || "",
       log => $nj-stash<log> || "", 
-    ));
+    )));
 
 
     say $s.perl;
