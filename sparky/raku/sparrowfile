@@ -12,38 +12,36 @@ class Pipeline does Sparky::JobApi::Role {
 
       say "scm: {$.scm}";
 
-      return;
+      #zef "App::RaCoCo", %(
+      #    description => "install App::RaCoCo",
+      #    notest => True 
+      #);
 
-      zef "App::RaCoCo", %(
-          description => "install App::RaCoCo",
-          notest => True 
-      );
+      #zef "App::Prove6", %(
+      #    description => "install prove6",
+      #    notest => True
+      #);
 
-      zef "App::Prove6", %(
-          description => "install prove6",
-          notest => True
-      );
+      #directory "scm";
 
-      directory "scm";
+      #git-scm $.scm, %(
+      #  to => "scm"
+      #);
 
-      git-scm $.scm, %(
-        to => "scm"
-      );
-
-      bash "zef install --deps-only --/test .", %(
-        cwd => "{$*CWD}/scm",
-        description => "install deps"
-      );
+      #bash "zef install --deps-only --/test .", %(
+      #  cwd => "{$*CWD}/scm",
+      #  description => "install deps"
+      #);
     
-      bash "racoco -l --html", %(
-        cwd => "{$*CWD}/scm",
-        description => "run tests"
-      );
+      #bash "racoco -l --html", %(
+      #  cwd => "{$*CWD}/scm",
+      #  description => "run tests"
+      #);
 
       my $j = self.new-job: :mine(True);
 
       $j.put-stash({
-        test-coverage-html => "scm/.racoco/report.html".IO.slurp(),
+        test-coverage-html => ( "OK" || "scm/.racoco/report.html".IO.slurp ),
       });
   }
 
