@@ -8,7 +8,7 @@ This might change!
 
 [http://sparrowhub.io:2222](http://sparrowhub.io:2222)
 
-# Long story short
+# Current Status
 
 SparkyCI is in deep development and is HIGHLY experimental, things might change.
 
