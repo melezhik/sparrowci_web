@@ -3,6 +3,7 @@ use Cro::HTTP::Server;
 use Cro::WebApp::Template;
 use SparkyCI;
 use SparkyCI::HTML;
+use Text::Markdown;
 
 my $application = route {
 
@@ -49,6 +50,7 @@ my $application = route {
 
     get -> 'about', {
       template 'templates/about.crotmp', %( 
+        data => parse-markdown("README.md".IO.slurp).to_html,
         theme => $theme,
         navbar => navbar(),
       )

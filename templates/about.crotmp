@@ -19,22 +19,12 @@
       <nav class="panel">
       <&HTML-AND-JAVASCRIPT(.navbar)>
         <p class="panel-heading">
-            SparkyCI - dead simple CI service
+            SparkyCI - About
         </p>
-        <div class="panel-block">
-          <pre>
-   SparkyCI is in deep development and is HIGHLY experimental,
-   things might change.
-
-   TODO:
-         - more languages support (not just Raku)
-         - improve UI
-         - GH authentication
-         - Discuss must have features with Raku community
-
-   Ideas, comments, bugs - are welcome: drop a message to @melezhik on Raku IRC
-
-          </pre>
+        <div class="panel-block"> 
+          <div class="content" id="doc">
+          <&HTML(.data)>
+          </div>
         </div>
       </nav>
     </div>
