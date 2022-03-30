@@ -38,7 +38,8 @@
                 BuildID: <.id><br>
                 Status: <.state><br>
                 Date: <.date><br>
-                Raku Env: <.raku-env>
+                Raku Version: <.raku-env.raku><br>
+                Zef Version: <.raku-env.zef>
               </div>
               <div id="Report" class="content-tab" style="display:none">
                 <pre><&HTML(.log)></pre>

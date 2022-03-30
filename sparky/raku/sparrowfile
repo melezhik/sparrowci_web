@@ -29,12 +29,12 @@ class Pipeline does Sparky::JobApi::Role {
         to => "scm"
       );
 
-      bash "zef install --deps-only --/test .", %(
+      bash "zef install --deps-only --/test . 2>&1", %(
         cwd => "{$*CWD}/scm",
         description => "install deps"
       );
     
-      bash "racoco -l --html", %(
+      bash "racoco -l --html 2>&1", %(
         cwd => "{$*CWD}/scm",
         description => "run tests"
       );
