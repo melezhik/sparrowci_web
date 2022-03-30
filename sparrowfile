@@ -7,7 +7,7 @@ class Pipeline does Sparky::JobApi::Role {
   has Str $.cpu = tags()<cpu> || "2";
   has Str $.mem = tags()<mem> || "7";
   has Str $.project = tags()<project> || tags()<SPARKY_PROJECT> || "";
-  has Str $.worker = "spk-" ~ (("a" .. "z").pick(10).join("")); 
+  has Str $.worker = tags()<worker> || "spk-" ~ (("a" .. "z").pick(10).join("")); 
   has Str $.scm = tags()<scm> || tags()<SCM_URL> || "";
   has Str $.notify-project = tags()<notify-project> || "";
   has Str $.notify-job = tags()<notify-job> || "";
@@ -39,6 +39,7 @@ class Pipeline does Sparky::JobApi::Role {
       description => "run az container job",
       tags => %(
         stage => "run-container-job",
+        worker => $.worker,
       ),
     });
 
@@ -74,6 +75,7 @@ class Pipeline does Sparky::JobApi::Role {
           notify-job => $cj.info()<job-id>,
           notify-project => "raku.notify",
           scm => $.scm,
+          worker => $.worker,
         ),
       });
 
