@@ -127,7 +127,8 @@ class Pipeline does Sparky::JobApi::Role {
       job-id => $job-id,
       id => $bid,
       test-coverage-html => $nj-stash<test-coverage-html> || "",
-      log => $nj-stash<log> || "", 
+      log => $nj-stash<log> || "",
+      raku-env => $nj-stash<raku-env> || {}, 
     )));
 
 

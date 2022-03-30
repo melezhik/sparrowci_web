@@ -37,7 +37,8 @@
               <div id="Summary" class="content-tab">
                 BuildID: <.id><br>
                 Status: <.state><br>
-                Date: <.date>
+                Date: <.date><br>
+                Raku Env: <.raku-env>
               </div>
               <div id="Report" class="content-tab" style="display:none">
                 <pre><&HTML(.log)></pre>

@@ -3,7 +3,7 @@ id: sparkyci
 name: SparkyCI
 entrypoint: app.raku
 ignore:
-  - projects
+  #- projects
   #- sparky
   #- .cache
   #- .tom

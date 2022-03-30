@@ -77,17 +77,21 @@ class Pipeline does Sparky::JobApi::Role {
 
       my $test-coverage-html = $j.get-stash()<test-coverage-html> || ""; 
 
+      my $raku-env = task-run "dump info", "raku-env-info";
+
       if $s<OK> {
         $nj.put-stash({ 
           status => "OK", 
           log => $log, 
-          test-coverage-html => $test-coverage-html 
+          test-coverage-html => $test-coverage-html,
+          raku-env => $raku-env,
         });
       } else {
         $nj.put-stash({ 
           status => "FAIL", 
           log => $log,  
-          test-coverage-html => $test-coverage-html 
+          test-coverage-html => $test-coverage-html,
+          raku-env => $raku-env,
         });
       }
 
