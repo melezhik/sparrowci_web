@@ -2,6 +2,10 @@
 
 SparkyCI - dead simple CI service
 
+# Service URL
+
+http://sparrowhub.io:2222 # it might change!
+
 # Long story short
 
 SparkyCI is in deep development and is HIGHLY experimental, things might change.
