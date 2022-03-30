@@ -2,12 +2,15 @@
 
 SparkyCI - dead simple CI service
 
-# How to run
+# Long story short
 
-    sparrowdo \
-    --localhost \
-    --with_sparky \
-    --no_sudo \
-    --desc="fastest" \
-    --tags=cpu=2,mem=5,project=Config-BINDish,scm=https://github.com/vrurg/raku-Config-BINDish.git
+   SparkyCI is in deep development and is HIGHLY experimental,
+   things might change.
 
+   TODO:
+         - more languages support (not just Raku)
+         - improve UI
+         - GH authentication
+         - Discuss must have features with Raku community
+
+   Ideas, comments, bugs - are welcome: drop a message to @melezhik on Raku IRC
