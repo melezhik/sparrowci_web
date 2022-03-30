@@ -3,7 +3,7 @@ id: sparkyci
 name: SparkyCI
 entrypoint: app.raku
 ignore:
-  #- projects
+  - projects
   #- sparky
   #- .cache
   #- .tom
@@ -13,3 +13,4 @@ ignore:
   - t/
   - db-init.raku
   - META6.json
+  - .gitignore
