@@ -29,6 +29,10 @@ class Pipeline does Sparky::JobApi::Role {
         to => "scm"
       );
 
+      my $git-data = task-run "git data", "git-commit-data", %(
+        dir => "{$*CWD}/scm"
+      );
+
       bash "zef install --deps-only --/test . 2>&1", %(
         cwd => "{$*CWD}/scm",
         description => "install deps"
@@ -43,6 +47,7 @@ class Pipeline does Sparky::JobApi::Role {
 
       $j.put-stash({
         test-coverage-html => ("scm/.racoco/report.html".IO ~~ :e ?? "scm/.racoco/report.html".IO.slurp !! ""),
+        git-data => $git-data,
       });
   }
 

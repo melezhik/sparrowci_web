@@ -61,12 +61,12 @@ class Pipeline does Sparky::JobApi::Role {
     say "configuration: cpu: {$.cpu} | mem: {$.mem}";
 
 
-      my $cj = self.new-job: :workers<4>;
+      my $cj = self.new-job: :project<sparkyci.run.container>;
 
       my $nj = self.new-job: :project<raku.notify>, :job-id($cj.info()<job-id>);
 
       $cj.queue({
-        description => "run az container",
+        description => "{$.project} - run az container",
         tags => %(
           stage => "run-container",
           cpu => $.cpu,
