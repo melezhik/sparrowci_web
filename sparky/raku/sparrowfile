@@ -3,6 +3,7 @@ use HTTP::Tiny;
 
 class Pipeline does Sparky::JobApi::Role {
 
+  has Str $.worker = %*ENV<WORKER> || tags()<worker> || "";
   has Str $.scm = %*ENV<SCM> || "";
   has Str $.notify-api = %*ENV<NOTIFY_API> || "";
   has Str $.notify-project = %*ENV<NOTIFY_PROJECT> || "";
@@ -93,7 +94,8 @@ class Pipeline does Sparky::JobApi::Role {
       $nj.queue({
         description => "raku build report - {$.scm}",
         tags => %(
-          stage => "notify"
+          stage => "notify",
+          worker => $.worker,
         ),
       });
       
@@ -113,7 +115,7 @@ class Pipeline does Sparky::JobApi::Role {
 
     say "test-coverage-html: ", $report<test-coverage-html>;
 
-    bash "az container delete -g sparky2 --name spk-00 -y -o table || echo", %(
+    bash "az container delete -g sparky2 --name {$.worker} -y -o table || echo", %(
       description => "delete container";
     );
 

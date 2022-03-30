@@ -7,6 +7,7 @@ class Pipeline does Sparky::JobApi::Role {
   has Str $.cpu = tags()<cpu> || "2";
   has Str $.mem = tags()<mem> || "7";
   has Str $.project = tags()<project> || tags()<SPARKY_PROJECT> || "";
+  has Str $.worker = "spk-" ~ (("a" .. "z").pick(10).join("")); 
   has Str $.scm = tags()<scm> || tags()<SCM_URL> || "";
   has Str $.notify-project = tags()<notify-project> || "";
   has Str $.notify-job = tags()<notify-job> || "";
@@ -18,7 +19,7 @@ class Pipeline does Sparky::JobApi::Role {
     bash qq:to/HERE/, %( description => "az container create" );
       #set -x 
       az container create -g sparky2 \\
-        --name spk-00 \\
+        --name {$.worker} \\
         --image melezhik/sparky-fastspec:v10 \\
         --cpu {$.cpu} --memory {$.mem} \\
         --secure-environment-variables SPARKY_API_TOKEN={%*ENV<SPARKY_API_TOKEN>} \\
@@ -26,6 +27,7 @@ class Pipeline does Sparky::JobApi::Role {
         SPARKY_PROJECT="raku" \\
         SCM={$.scm} \\
         GIT_URL="https://github.com/melezhik/sparkyci.git" \\
+        WORKER={$.worker} \\
         NOTIFY_PROJECT={self.notify-project} \\
         NOTIFY_JOB={self.notify-job} \\
         NOTIFY_API=https://sparrowhub.io:4000 -o table
@@ -46,7 +48,7 @@ class Pipeline does Sparky::JobApi::Role {
   method stage-run-container-job {
 
     bash qq:to/HERE/, %( description => "run sparky job" );
-      az container exec -g sparky2 --name spk-00 \\
+      az container exec -g sparky2 --name {$.worker} \\
       --exec-command "curl -fs -d '' --retry-delay 10 --retry-connrefused --retry 10 -X POST 127.0.0.1:4000/build/project/container" \\
       -o table
     HERE
@@ -85,7 +87,7 @@ class Pipeline does Sparky::JobApi::Role {
     # remove containers
     say "clean up containers just in case ...";
 
-    bash "az container delete -g sparky2 --name spk-00 -y -o table || echo", %(
+    bash "az container delete -g sparky2 --name {$.worker} -y -o table || echo", %(
       description => "delete container";
     );
 

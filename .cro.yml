@@ -9,7 +9,7 @@ ignore:
   #- .tom
   - README.md
   - run.sh
-  #- sparrowfile
+  - sparrowfile
   - t/
   - db-init.raku
   - META6.json
