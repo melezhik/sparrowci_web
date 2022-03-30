@@ -4,7 +4,9 @@ SparkyCI - dead simple CI service
 
 # Service URL
 
-http://sparrowhub.io:2222 # it might change!
+This might change!
+
+[http://sparrowhub.io:2222](http://sparrowhub.io:2222)
 
 # Long story short
 
@@ -12,9 +14,11 @@ SparkyCI is in deep development and is HIGHLY experimental, things might change.
 
 TODO:
 
-* more languages support (not just Raku)
-* improve UI
+* More languages support (not just Raku)
+* Improve UI
 * GH authentication
+* Send notifications (email/irc?)
+* CI against daily Rakudo builds
 * Discuss must have features with Raku community
 
 Ideas, comments, bugs - are welcome: drop a message to @melezhik on Raku IRC

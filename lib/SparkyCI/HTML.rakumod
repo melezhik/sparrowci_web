@@ -32,6 +32,9 @@ sub navbar is export {
               <a class="navbar-item" href="https://github.com/melezhik/sparkyci">
                 GitHub Page
               </a>
+              <a class="navbar-item" href="https://sparrowhub.io:4000">
+                Sparky Admin
+              </a>
             </div>
           </div>
         </div>
