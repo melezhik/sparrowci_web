@@ -3,13 +3,13 @@ id: sparkyci
 name: SparkyCI
 entrypoint: app.raku
 ignore:
-  - projects
-  - sparky
-  - .cache
-  - .tom
+  #- projects
+  #- sparky
+  #- .cache
+  #- .tom
   - README.md
   - run.sh
-  - sparrowfile
+  #- sparrowfile
   - t/
   - db-init.raku
   - META6.json

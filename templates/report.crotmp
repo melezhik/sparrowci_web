@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SparkyCI - dead easy CI service</title>
+    <link rel="stylesheet" href="https://jenil.github.io/bulmaswatch/<.theme>/bulmaswatch.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.1/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </head>
+  <body>
+
+  <script src="/js/misc.js"></script>
+  <section class="section">
+    <div class="container">
+      <!-- Main container -->
+      <nav class="panel">
+        <&HTML-AND-JAVASCRIPT(.navbar)>
+        <p class="panel-heading">
+            <.project> - SparkyCI build report
+        </p>
+        <div class="panel-block">
+           <nav class="tabs is-boxed is-fullwidth">
+                <div class="container">
+                  <ul>
+                    <li class="tab is-active" onclick="openTab(event,'Summary')"><a >Summary</a></li>
+                    <li class="tab" onclick="openTab(event,'Report')"><a >Report</a></li>
+                    <li class="tab" onclick="openTab(event,'TC')"><a >Test coverage</a></li>
+                  </ul>
+                </div>
+              </nav>
+        </div>
+        <div class="panel-block">
+          <p>
+            <div class="container section">
+              <div id="Summary" class="content-tab">
+                BuildID: <.id><br>
+                Status: <.state><br>
+                Date: <.date>
+              </div>
+              <div id="Report" class="content-tab" style="display:none">
+                <pre><&HTML(.log)></pre>
+              </div>
+              <div id="TC" class="content-tab" style="display:none">
+                <&HTML-AND-JAVASCRIPT(.test-coverage-html)>
+              </div>
+            </div>
+          </p>
+        </div>
+      </nav>
+    </div>
+  </section>    
+  </body>
+</html>

@@ -1,8 +1,15 @@
 unit module SparkyCI:ver<0.0.1>;
 use YAMLish;
 use DBIish;
+use JSON::Fast;
 
 my %conf;
+
+sub sparkyci-http-root is export {
+
+  %*ENV<SPARKYCI_HTTP_ROOT> || "";
+
+}
 
 sub get-sparkyci-conf is export {
 
@@ -80,7 +87,7 @@ sub insert-build (:$state, :$project, :$desc, :$job-id ) is export {
 
 }
 
-sub get-builds () is export {
+sub get-builds ($limit=10) is export {
 
     my $dbh = get-dbh();
 
@@ -98,9 +105,10 @@ sub get-builds () is export {
           builds
         ORDER BY
           id desc
+        LIMIT ?
     STATEMENT
 
-    $sth.execute();
+    $sth.execute($limit);
 
     my @rows = $sth.allrows(:array-of-hash);
 
@@ -108,4 +116,29 @@ sub get-builds () is export {
 
     return @rows;
 
+}
+
+
+sub get-report ($id) is export {
+
+  if "{sparkyci-root()}/data/{$id}/data.json".IO ~~ :e {
+    my $r = from-json("{sparkyci-root()}/data/{$id}/data.json".IO.slurp);
+    if $r<state> == 1 {
+      $r<state> = "OK"
+    } elsif $r<state> == -1 {
+      $r<state> = "TIMEOUT"
+    } elsif $r<state> == -2  {
+      $r<state> = "FAIL"
+    }
+    $r<date> = DateTime.new(
+      $r<date>,
+      formatter => {
+          sprintf '%02d.%02d.%04d @ %02d:%02d', 
+          .day, .month, .year, .hour, .minute
+      }
+    ).Str;
+    return $r;
+  } else {
+    return {}
+  }
 }

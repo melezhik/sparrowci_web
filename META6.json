@@ -14,7 +14,8 @@
   "name" : "SparkyCI",
   "perl" : "6.*",
   "provides" : {
-    "SparkyCI" : "lib/SparkyCI.rakumod"
+    "SparkyCI" : "lib/SparkyCI.rakumod",
+    "SparkyCI::HTML" : "lib/SparkyCI/HTML.rakumod"
   },
   "resources" : [ ],
   "source-type" : "git",

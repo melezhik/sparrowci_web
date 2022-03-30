@@ -22,30 +22,19 @@
             SparkyCI - dead simple CI service
         </p>
         <div class="panel-block">
-          <p>
-          <table class="table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th><abbr title="Project">Project</abbr></th>
-                <th>Status</th>
-                <th>Date</th>
-                <th><abbr title="Report">Report</abbr></th>
-              </tr>
-            </thead>
-            <tbody>
-            <@results>
-              <tr>
-                <td><.id></td>
-                <td><.project></td>
-                <td><.state></td>
-                <td><.date></td>
-                <td><a href="/report/<.id>" title="report">link</td>
-              </tr>
-            </@>
-            </tbody>
-          </table>
-          </p>
+          <pre>
+   SparkyCI is in deep development and is HIGHLY experimental,
+   things might change.
+
+   TODO:
+         - more languages support (not just Raku)
+         - improve UI
+         - GH authentication
+         - Discuss must have features with Raku community
+
+   Ideas, comments, bugs - are welcome: drop a message to @melezhik on Raku IRC
+
+          </pre>
         </div>
       </nav>
     </div>

@@ -2,7 +2,7 @@ use Cro::HTTP::Router;
 use Cro::HTTP::Server;
 use Cro::WebApp::Template;
 use SparkyCI;
-
+use SparkyCI::HTML;
 
 my $application = route {
 
@@ -23,10 +23,36 @@ my $application = route {
       #die @results.perl;
       template 'templates/main.crotmp', %( 
         results => @results,
-        theme => $theme
+        theme => $theme,
+        navbar => navbar(),
       )
     }
 
+    get -> 'all', {
+      my @results = get-builds(1000);
+      #die @results.perl;
+      template 'templates/main.crotmp', %( 
+        results => @results,
+        theme => $theme,
+        navbar => navbar(),
+      )
+    }
+
+    get -> 'report', Int $id {
+      my %report = get-report($id);
+      template 'templates/report.crotmp', %( 
+        %report,
+        theme => $theme,
+        navbar => navbar(),
+      )
+    }
+
+    get -> 'about', {
+      template 'templates/about.crotmp', %( 
+        theme => $theme,
+        navbar => navbar(),
+      )
+    }
     get -> 'js', *@path {
         cache-control :public, :max-age(300);
         static 'js', @path;
