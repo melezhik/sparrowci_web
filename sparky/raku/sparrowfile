@@ -82,6 +82,8 @@ class Pipeline does Sparky::JobApi::Role {
 
       my $test-coverage-html = $j.get-stash()<test-coverage-html> || ""; 
 
+      my $git-data = $j.get-stash()<git-data> || {}; 
+
       my $raku-env = task-run "dump info", "raku-env-info";
 
       if $s<OK> {
@@ -90,6 +92,7 @@ class Pipeline does Sparky::JobApi::Role {
           log => $log, 
           test-coverage-html => $test-coverage-html,
           raku-env => $raku-env,
+          git-data => $git-data,
         });
       } else {
         $nj.put-stash({ 
@@ -97,6 +100,7 @@ class Pipeline does Sparky::JobApi::Role {
           log => $log,  
           test-coverage-html => $test-coverage-html,
           raku-env => $raku-env,
+          git-data => $git-data,
         });
       }
 
