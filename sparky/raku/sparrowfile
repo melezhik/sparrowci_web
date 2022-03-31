@@ -3,6 +3,7 @@ use HTTP::Tiny;
 
 class Pipeline does Sparky::JobApi::Role {
 
+  has Str $.project = %*ENV<PROJECT> || "";
   has Str $.worker = %*ENV<WORKER> || tags()<worker> || "";
   has Str $.scm = %*ENV<SCM> || "";
   has Str $.git-sha = %*ENV<GIT_SHA> || "";
@@ -28,7 +29,7 @@ class Pipeline does Sparky::JobApi::Role {
       );
 
       bash "zef install --deps-only --/test . 2>&1", %(
-        cwd => "{$*CWD}/scm",
+        cwd => $.scm-dir,
         description => "install deps"
       );
     
@@ -108,7 +109,7 @@ class Pipeline does Sparky::JobApi::Role {
       }
 
       $nj.queue({
-        description => "raku build report - {$.scm}",
+        description => "{$.project} - build report",
         tags => %(
           stage => "notify",
           worker => $.worker,

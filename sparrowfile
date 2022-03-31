@@ -11,7 +11,7 @@ class Pipeline does Sparky::JobApi::Role {
   has Str $.scm = tags()<scm> || tags()<SCM_URL> || "";
   has Str $.notify-project = tags()<notify-project> || "";
   has Str $.notify-job = tags()<notify-job> || "";
-  has Str $.git-sha = tags<SCM_BRANCH> || tags<git-sha> || "";
+  has Str $.git-sha = tags<SCM_BRANCH> || tags<git-sha> || "master";
 
   method stage-run-container {
 
@@ -29,6 +29,7 @@ class Pipeline does Sparky::JobApi::Role {
         SCM={$.scm} \\
         GIT_SHA="{$.git-sha}" \\
         GIT_URL="https://github.com/melezhik/sparkyci.git" \\
+        PROJECT={$.project} \\
         WORKER={$.worker} \\
         NOTIFY_PROJECT={self.notify-project} \\
         NOTIFY_JOB={self.notify-job} \\
@@ -38,7 +39,7 @@ class Pipeline does Sparky::JobApi::Role {
     my $j = self.new-job: :project<sparkyci.run.job>;
 
     $j.queue({
-      description => "run az container job",
+      description => "{$.project} - run az container job",
       tags => %(
         stage => "run-container-job",
         worker => $.worker,
@@ -131,7 +132,8 @@ class Pipeline does Sparky::JobApi::Role {
       id => $bid,
       test-coverage-html => $nj-stash<test-coverage-html> || "",
       log => $nj-stash<log> || "",
-      raku-env => $nj-stash<raku-env> || {}, 
+      raku-env => $nj-stash<raku-env> || {},
+      git-data => $nj-stash<git-data> || {}, 
     )));
 
 
