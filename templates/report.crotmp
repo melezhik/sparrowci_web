@@ -38,8 +38,11 @@
                 BuildID: <.id><br>
                 Status: <.state><br>
                 Date: <.date><br>
+                Time elapsed: <.elapsed><br>
+                --- <br>
                 Raku Version: <.raku-env.raku><br>
                 Zef Version: <.raku-env.zef><br>
+                --- <br>
                 Git sha: <.git-data.sha><br>
                 Git comment: <.git-data.comment><br>
               </div>

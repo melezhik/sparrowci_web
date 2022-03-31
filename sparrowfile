@@ -134,6 +134,7 @@ class Pipeline does Sparky::JobApi::Role {
       log => $nj-stash<log> || "",
       raku-env => $nj-stash<raku-env> || {},
       git-data => $nj-stash<git-data> || {}, 
+      elapsed => $time.Int,
     )));
 
 
