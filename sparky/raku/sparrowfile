@@ -130,8 +130,6 @@ class Pipeline does Sparky::JobApi::Role {
 
     say "log: ", $report<log>;
 
-    say "test-coverage-html: ", $report<test-coverage-html>;
-
     bash "az container delete -g sparky2 --name {$.worker} -y -o table || echo", %(
       description => "delete container";
     );
