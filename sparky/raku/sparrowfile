@@ -41,7 +41,7 @@ class Pipeline does Sparky::JobApi::Role {
       my $j = self.new-job: :mine(True);
 
       $j.put-stash({
-        test-coverage-html => ("scm/.racoco/report.html".IO ~~ :e ?? "scm/.racoco/report.html".IO.slurp !! ""),
+        test-coverage-html => ("{$.scm-dir}/.racoco/report.html".IO ~~ :e ?? "{$.scm-dir}/.racoco/report.html".IO.slurp !! ""),
       });
   }
 
