@@ -5,6 +5,8 @@ class Pipeline does Sparky::JobApi::Role {
 
   has Str $.worker = %*ENV<WORKER> || tags()<worker> || "";
   has Str $.scm = %*ENV<SCM> || "";
+  has Str $.git-sha = %*ENV<GIT_SHA> || "";
+  has Str $.scm-dir = tags()<scm-dir> || "";
   has Str $.notify-api = %*ENV<NOTIFY_API> || "";
   has Str $.notify-project = %*ENV<NOTIFY_PROJECT> || "";
   has Str $.notify-job = %*ENV<NOTIFY_JOB> || "";
@@ -12,6 +14,8 @@ class Pipeline does Sparky::JobApi::Role {
   method stage-test {
 
       say "scm: {$.scm}";
+      say "scm-dir: {$.scm-dir}";
+      say "git-sha: {$.git-sha}";
 
       zef "App::RaCoCo", %(
           description => "install App::RaCoCo",
@@ -23,23 +27,13 @@ class Pipeline does Sparky::JobApi::Role {
           notest => True
       );
 
-      directory "scm";
-
-      git-scm $.scm, %(
-        to => "scm"
-      );
-
-      my $git-data = task-run "git data", "git-commit-data", %(
-        dir => "{$*CWD}/scm"
-      );
-
       bash "zef install --deps-only --/test . 2>&1", %(
         cwd => "{$*CWD}/scm",
         description => "install deps"
       );
     
       bash "racoco -l --html 2>&1", %(
-        cwd => "{$*CWD}/scm",
+        cwd => $.scm-dir,
         description => "run tests"
       );
 
@@ -47,7 +41,6 @@ class Pipeline does Sparky::JobApi::Role {
 
       $j.put-stash({
         test-coverage-html => ("scm/.racoco/report.html".IO ~~ :e ?? "scm/.racoco/report.html".IO.slurp !! ""),
-        git-data => $git-data,
       });
   }
 
@@ -56,12 +49,24 @@ class Pipeline does Sparky::JobApi::Role {
 
       say "run raku build for scm: {$.scm}";
 
+      directory "scm";
+
+      git-scm $.scm, %(
+        to => "scm",
+        branch => $.git-sha,
+      );
+
+      my $git-data = task-run "git data", "git-commit-data", %(
+        dir => "{$*CWD}/scm",
+      );
+
       my $j = self.new-job;
 
       $j.queue({
         description => "test",
         tags => %(
-          stage => "test"
+          stage => "test",
+          scm-dir => "{$*CWD}/scm"
         ),
       });
 
@@ -81,8 +86,6 @@ class Pipeline does Sparky::JobApi::Role {
       my $log = $r<content> ?? $r<content>.decode !! '';
 
       my $test-coverage-html = $j.get-stash()<test-coverage-html> || ""; 
-
-      my $git-data = $j.get-stash()<git-data> || {}; 
 
       my $raku-env = task-run "dump info", "raku-env-info";
 

@@ -11,6 +11,7 @@ class Pipeline does Sparky::JobApi::Role {
   has Str $.scm = tags()<scm> || tags()<SCM_URL> || "";
   has Str $.notify-project = tags()<notify-project> || "";
   has Str $.notify-job = tags()<notify-job> || "";
+  has Str $.git-sha = tags<SCM_BRANCH> || tags<git-sha> || "";
 
   method stage-run-container {
 
@@ -26,6 +27,7 @@ class Pipeline does Sparky::JobApi::Role {
         SPARKY_TIMEOUT=5 \\
         SPARKY_PROJECT="raku" \\
         SCM={$.scm} \\
+        GIT_SHA="{$.git-sha}" \\
         GIT_URL="https://github.com/melezhik/sparkyci.git" \\
         WORKER={$.worker} \\
         NOTIFY_PROJECT={self.notify-project} \\
@@ -33,7 +35,7 @@ class Pipeline does Sparky::JobApi::Role {
         NOTIFY_API=https://sparrowhub.io:4000 -o table
     HERE
 
-    my $j = self.new-job: :workers<4>;
+    my $j = self.new-job: :project<sparkyci.run.job>;
 
     $j.queue({
       description => "run az container job",
@@ -75,6 +77,7 @@ class Pipeline does Sparky::JobApi::Role {
           notify-job => $cj.info()<job-id>,
           notify-project => "raku.notify",
           scm => $.scm,
+          git-sha => $.git-sha,
           worker => $.worker,
         ),
       });
