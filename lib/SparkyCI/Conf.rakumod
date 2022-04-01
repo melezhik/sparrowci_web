@@ -16,7 +16,7 @@ sub get-sparkyci-conf is export {
 
 }
 
-sub sparkyci-http-root is export {
+sub http-root is export {
 
   %*ENV<SPARKYCI_HTTP_ROOT> || "";
 

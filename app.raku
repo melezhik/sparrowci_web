@@ -179,11 +179,11 @@ my $application = route {
 
           set-cookie 'token', $tk, http-only => True, expires => $date;
 
-          redirect :see-other, "{sparkyci-http-root()}/?message=user logged in";
+          redirect :see-other, "{http-root()}/?message=user logged in";
 
         } else {
 
-          redirect :see-other, "{sparkyci-http-root()}/?message=issues with login";
+          redirect :see-other, "{http-root()}/?message=issues with login";
 
         }
         
@@ -193,7 +193,7 @@ my $application = route {
 
       template 'templates/login-page.crotmp', {
         title => title(),
-        http-root => sparkyci-http-root(),
+        http-root => http-root(),
         message => $message || "sign in using your github account",
         css => css($theme),
         theme => $theme,

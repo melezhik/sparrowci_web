@@ -43,13 +43,13 @@ sub login-logout (Mu $user, Mu $token) {
 
   if check-user($user,$token) == True {
 
-    "<a href=\"{sparkyci-http-root()}/logout?q=123\">
+    "<a href=\"{http-root()}/logout?q=123\">
       Log out
     </a>"
 
   } else {
 
-    "<a href=\"{sparkyci-http-root()}/login-page?q=123\">
+    "<a href=\"{http-root()}/login-page?q=123\">
       Log In
     </a>"
   }
@@ -60,13 +60,13 @@ sub theme-link (Mu $theme) {
 
   if $theme eq "light" {
 
-    "<a href=\"{sparkyci-http-root()}/set-theme?theme=dark\">
+    "<a href=\"{http-root()}/set-theme?theme=dark\">
       Dark Theme
     </a>"
 
   } else {
 
-    "<a href=\"{sparkyci-http-root()}/set-theme?theme=light\">
+    "<a href=\"{http-root()}/set-theme?theme=light\">
       Light Theme
     </a>"
 
@@ -77,9 +77,9 @@ sub navbar (Mu $user, Mu $token, Mu $theme) is export {
   qq:to /HERE/
       <div class="panel-block">
         <p class="control">
-            <a href="{sparkyci-http-root()}/">Home</a> |
-            <a href="{sparkyci-http-root()}/all"> Add builds </a> |
-            <a href="{sparkyci-http-root()}/about">About</a> |
+            <a href="{http-root()}/">Home</a> |
+            <a href="{http-root()}/all"> Add builds </a> |
+            <a href="{http-root()}/about">About</a> |
             <a href="https://sparrowhub.io:4000">Admin</a> |
             {theme-link($theme)} |
             <a href="https://github.com/melezhik/sparkyci" target="_blank">Github</a> |
