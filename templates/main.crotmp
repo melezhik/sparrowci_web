@@ -7,11 +7,9 @@
       <p class="panel-heading">Welcome to SparkyCI</p>
       <&HTML-AND-JAVASCRIPT(.navbar)>
       <?.message>
-        <div class="panel-block">
-          <p class="control">
-            <span>[ok] <.message></span>
-          </p>
-        </div>
+          <span class="control">
+            <pre class="notification"><.message></pre>
+          </span>
       </?>
         <div class="panel-block">
           <p>
@@ -19,10 +17,10 @@
             <thead>
               <tr>
                 <th>ID</th>
-                <th><abbr title="Project">Project</abbr></th>
-                <th>Status</th>
-                <th>Date</th>
-                <th><abbr title="Report">Report</abbr></th>
+                <th><abbr title="Project Name">Project</abbr></th>
+                <th><abbr title="Build Statuss">Status</abbr></th>
+                <th><abbr title="Build Date">Date</abbr></th>
+                <th><abbr title="Link to report">Report</abbr></th>
               </tr>
             </thead>
             <tbody>
