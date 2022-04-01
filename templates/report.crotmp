@@ -47,7 +47,12 @@
                     <pre><&HTML(.log)></pre>
                   </div>
                   <div id="TC" class="content-tab" style="display:none">
-                    <&HTML-AND-JAVASCRIPT(.test-coverage-html)>
+                    <?.test-coverage-html>
+                      <a href="/tc/<.id>" target="_blank">test coverage report</a>
+                    </?>
+                    <!.test-coverage-html>
+                      no data found
+                    </!>
                   </div>
               </div>
             </div>

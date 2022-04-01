@@ -59,6 +59,17 @@ my $application = route {
       )
     }
 
+    get -> 'tc', Int $id, :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
+      my %report = get-report($id);
+      template 'templates/tc.crotmp', %( 
+        title => title(),   
+        %report,
+        css => css($theme),
+        theme => $theme,
+        navbar => navbar($user, $token, $theme),
+      )
+    }
+
     get -> 'js', *@path {
         cache-control :public, :max-age(300);
         static 'js', @path;
