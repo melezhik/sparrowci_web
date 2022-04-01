@@ -1,44 +1,49 @@
-<&HTML-AND-JAVASCRIPT(.css)>
-
+<html>
+    <&HTML-AND-JAVASCRIPT(.css)>
     <head>
       <title><.title></title>
     </head>
-    <nav class="panel container is-fluid is-primary">
-      <p class="panel-heading">Welcome to SparkyCI</p>
-      <&HTML-AND-JAVASCRIPT(.navbar)>
-      <?.message>
+    <body>
+      <div class="container is-fluid">
+        <div>
+          <&HTML-AND-JAVASCRIPT(.navbar)>
+        </div>
+        <?.message>
           <span class="control">
             <pre class="notification"><.message></pre>
           </span>
-      </?>
-        <div class="panel-block">
-          <p>
-          <table class="table">
-            <thead>
-              <tr>
-                <th><abbr title="Build ID">ID</abbr></th>
-                <th><abbr title="Project Name">Project</abbr></th>
-                <th><abbr title="Build Statuss">Status</abbr></th>
-                <th><abbr title="Build Date">Date</abbr></th>
-                <th><abbr title="Link to report">Report</abbr></th>
-              </tr>
-            </thead>
-            <tbody>
-            <@results>
-              <tr>
-                <td><.id></td>
-                <td><.project></td>
-                <td><.state></td>
-                <td><.date></td>
-                <td><a href="/report/<.id>" title="report">link</td>
-              </tr>
-            </@>
-            </tbody>
-          </table>
-          </p>
-        </div>
-      </nav>
-    </div>
-  </section>    
-  </body>
+        </?>
+        <div>    
+          <nav class="panel">
+            <p class="panel-heading">
+              Welcome to SparkyCI
+            </p>
+            <div class="panel-block">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th><abbr title="Build ID">ID</abbr></th>
+                    <th><abbr title="Project Name">Project</abbr></th>
+                    <th><abbr title="Build Status">Status</abbr></th>
+                    <th><abbr title="Build Date">Date</abbr></th>
+                    <th><abbr title="Link to report">Report</abbr></th>
+                  </tr>
+                </thead>
+                <tbody>
+                <@results>
+                  <tr>
+                    <td><.id></td>
+                    <td><.project></td>
+                    <td><.state></td>
+                    <td><.date></td>
+                    <td><a href="/report/<.id>" title="report">link</td>
+                  </tr>
+                </@>
+                </tbody>
+              </table>
+            </div>
+          </nav>
+        </div>      
+      </div>      
+    </body>
 </html>

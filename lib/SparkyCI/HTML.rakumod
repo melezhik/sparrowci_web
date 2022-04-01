@@ -44,13 +44,13 @@ sub login-logout (Mu $user, Mu $token) {
 
   if check-user($user,$token) == True {
 
-    "<a href=\"{http-root()}/logout?q=123\">
+    "<a class=\"navbar-item\" href=\"{http-root()}/logout?q=123\">
       Log out
     </a>"
 
   } else {
 
-    "<a href=\"{http-root()}/login-page?q=123\">
+    "<a class=\"navbar-item\" href=\"{http-root()}/login-page?q=123\">
       Log In
     </a>"
   }
@@ -61,13 +61,13 @@ sub theme-link (Mu $theme) {
 
   if $theme eq "light" {
 
-    "<a href=\"{http-root()}/set-theme?theme=dark\">
+    "<a class=\"navbar-item\" href=\"{http-root()}/set-theme?theme=dark\">
       Dark Theme
     </a>"
 
   } else {
 
-    "<a href=\"{http-root()}/set-theme?theme=light\">
+    "<a class=\"navbar-item\" href=\"{http-root()}/set-theme?theme=light\">
       Light Theme
     </a>"
 
@@ -76,17 +76,34 @@ sub theme-link (Mu $theme) {
 }
 sub navbar (Mu $user, Mu $token, Mu $theme) is export {
   qq:to /HERE/
-      <div class="panel-block">
-        <p class="control">
-            <a href="{http-root()}/">Home</a> |
-            <a href="{http-root()}/all"> All builds </a> |
-            <a href="{http-root()}/about">About</a> |
-            <a href="https://sparrowhub.io:4000">Admin</a> |
-            {theme-link($theme)} |
-            <a href="https://github.com/melezhik/sparkyci" target="_blank">Github</a> |
-            {login-logout($user, $token)}
-        </p>
-      </div>
+      <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+          <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>
+          <div id="navbarBasicExample" class="navbar-menu"> 
+            <div class="navbar-start">
+              <a class="navbar-item" href="{http-root()}/">Home</a>
+              <a class="navbar-item" href="{http-root()}/all"> All builds </a>
+              <a class="navbar-item"href="{http-root()}/about">About</a>
+              <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">
+                  More
+                </a>
+                <div class="navbar-dropdown">
+                  {login-logout($user, $token)}
+                  {theme-link($theme)}
+                  <a class="navbar-item" href="https://github.com/melezhik/sparkyci" target="_blank">Github</a>
+                  <hr class="navbar-divider">
+                  <a class="navbar-item" href="https://sparrowhub.io:4000">Admin</a>
+                </div>
+              </div>      
+            </div>  
+          </div>
+        </div>
+      </nav>
   HERE
 
 }

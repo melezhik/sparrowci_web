@@ -1,28 +1,33 @@
-<&HTML-AND-JAVASCRIPT(.css)>
-
+<html>
+    <&HTML-AND-JAVASCRIPT(.css)>
     <head>
       <title><.title></title>
     </head>
-    <nav class="panel container is-fluid is-primary">
-      <p class="panel-heading">About SparkyCI</p>
-      <&HTML-AND-JAVASCRIPT(.navbar)>
-      <?.message>
-        <div class="panel-block">
-          <p class="control">
-            <span class="icon has-text-info">
-              <i class="fas fa-info-circle"></i>
-            </span>
-            <span><.message></span>
-          </p>
+    <body>
+      <div class="container is-fluid">
+        <div>
+          <&HTML-AND-JAVASCRIPT(.navbar)>
         </div>
-      </?>
-        <div class="panel-block"> 
-          <div class="content" id="doc">
-          <&HTML(.data)>
-          </div>
-        </div>
-      </nav>
-    </div>
-  </section>    
-  </body>
+        <?.message>
+          <span class="control">
+            <pre class="notification"><.message></pre>
+          </span>
+        </?>
+        <div>    
+          <nav class="panel">
+            <p class="panel-heading">
+              About SparkyCI
+            </p>
+            <div class="panel-block"> 
+              <div class="content" id="doc">
+                <&HTML(.data)>
+              </div>
+            </div>
+          </nav>
+        </div>      
+      </div>      
+    </body>
 </html>
+
+
+
