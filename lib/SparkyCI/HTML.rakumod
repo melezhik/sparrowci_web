@@ -14,7 +14,7 @@ sub css (Mu $theme) is export {
     if %conf<ui> && %conf<ui><theme><dark> {
       $bulma-theme = %conf<ui><theme><dark>
     } else {
-      $bulma-theme = "cyborg";
+      $bulma-theme = "nuclear";
     }
 
   } elsif $theme eq "light" {

@@ -14,7 +14,7 @@
           </span>
         </?>
         <div>    
-          <nav class="panel">
+          <nav class="panel is-link">
             <p class="panel-heading">
               <.page-title>
             </p>
