@@ -1,5 +1,6 @@
 use Sparky::JobApi;
-use SparkyCI;
+use SparkyCI::DB;
+use SparkyCI::Conf;
 use JSON::Tiny;
 
 class Pipeline does Sparky::JobApi::Role {
