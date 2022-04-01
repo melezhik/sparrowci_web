@@ -1,26 +1,21 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SparkyCI - dead easy CI service</title>
-    <link rel="stylesheet" href="https://jenil.github.io/bulmaswatch/<.theme>/bulmaswatch.min.css">
-    <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.1/styles/default.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.1/highlight.min.js"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
-  </head>
-  <body>
+<&HTML-AND-JAVASCRIPT(.css)>
 
-  <script src="/js/misc.js"></script>
-  <section class="section">
-    <div class="container">
-      <!-- Main container -->
-      <nav class="panel">
-        <&HTML-AND-JAVASCRIPT(.navbar)>
-        <p class="panel-heading">
-            <.project> - SparkyCI build report
-        </p>
+    <head>
+      <title><.title></title>
+    </head>
+    <nav class="panel container is-fluid is-primary">
+      <p class="panel-heading">SparkyCI Build Reports</p>
+      <&HTML-AND-JAVASCRIPT(.navbar)>
+      <?.message>
+        <div class="panel-block">
+          <p class="control">
+            <span class="icon has-text-info">
+              <i class="fas fa-info-circle"></i>
+            </span>
+            <span><.message></span>
+          </p>
+        </div>
+      </?>
         <div class="panel-block">
            <nav class="tabs is-boxed is-fullwidth">
                 <div class="container">
