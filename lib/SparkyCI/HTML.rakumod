@@ -22,12 +22,12 @@ sub css (Mu $theme) is export {
     if %conf<ui> && %conf<ui><theme><light> {
       $bulma-theme = %conf<ui><theme><light>
     } else {
-      $bulma-theme = "cosmo";
+      $bulma-theme = "materia";
     }
 
   } else {
 
-    $bulma-theme = "cosmo";
+    $bulma-theme = "materia";
 
   }
 
@@ -35,6 +35,7 @@ sub css (Mu $theme) is export {
   <meta charset="utf-8">
   <link rel="stylesheet" href="https://unpkg.com/bulmaswatch/$bulma-theme/bulmaswatch.min.css">
   <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
+  <script src="{http-root()}/js/misc.js"></script>
   HERE
 
 }

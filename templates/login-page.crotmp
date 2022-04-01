@@ -1,0 +1,27 @@
+<&HTML-AND-JAVASCRIPT(.css)>
+
+    <head>
+      <title><.title></title>
+    </head>
+    <nav class="panel container is-fluid is-primary">
+      <p class="panel-heading">Sign In</p>
+      <&HTML-AND-JAVASCRIPT(.navbar)>
+      <div class="panel-block">
+        <p class="control">
+          <?{ .theme eq 'dark' }>
+          <a href="<.http-root>/login?q=123"><img border=1 src="<.http-root>/icons/GitHub-Mark-Light-32px.png"></a>
+          </?>
+          <?{ .theme eq 'light' }>
+          <a href="<.http-root>/login?q=123"><img border=1 src="<.http-root>/icons/GitHub-Mark-32px.png"></a>
+          </?>
+        </p>
+      </div>
+      <?.message>
+      <div class="panel-block">
+        <p class="control">
+          <.message>
+        </p>
+      </div>
+      </?>
+   </nav>
+

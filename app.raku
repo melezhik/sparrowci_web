@@ -38,6 +38,7 @@ my $application = route {
       my @results = get-builds(1000);
       #die @results.perl;
       template 'templates/main.crotmp', %( 
+        title => title(),   
         results => @results,
         css => css($theme),
         theme => $theme,
@@ -48,6 +49,7 @@ my $application = route {
     get -> 'report', Int $id, :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       my %report = get-report($id);
       template 'templates/report.crotmp', %( 
+        title => title(),   
         %report,
         theme => $theme,
         navbar => navbar($user, $token, $theme),
@@ -56,6 +58,7 @@ my $application = route {
 
     get -> 'about', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       template 'templates/about.crotmp', %( 
+        title => title(),   
         data => parse-markdown("README.md".IO.slurp).to_html,
         css => css($theme),
         theme => $theme,
@@ -68,6 +71,23 @@ my $application = route {
         static 'js', @path;
     }
 
+    get -> 'icons', *@path {
+
+      cache-control :public, :max-age(3000);
+
+      static 'icons', @path;
+
+    }
+
+    get -> 'set-theme', :$message, :$theme, :$user is cookie, :$token is cookie {
+
+      my $date = DateTime.now.later(years => 100);
+
+      set-cookie 'theme', $theme, http-only => True, expires => $date;
+
+      redirect :see-other, "{http-root()}/?message=theme set to {$theme}";
+
+    }
     get -> 'login' {
 
       if %*ENV<MB_DEBUG_MODE> {
