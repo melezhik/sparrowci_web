@@ -87,7 +87,7 @@ sub navbar (Mu $user, Mu $token, Mu $theme) is export {
             <div class="navbar-start">
               <a class="navbar-item" href="{http-root()}/">Home</a>
               <a class="navbar-item" href="{http-root()}/all"> All builds </a>
-              <a class="navbar-item"href="{http-root()}/about">About</a>
+              <a class="navbar-item"href="{http-root()}/about">Roadmap</a>
               <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link">
                   More

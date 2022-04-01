@@ -54,7 +54,7 @@ my $application = route {
 
     get -> 'about', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       template 'templates/about.crotmp', %(
-        page-title => "SparkyCI - Roadmap", 
+        page-title => "Roadmap", 
         title => title(),   
         data => parse-markdown("README.md".IO.slurp).to_html,
         css => css($theme),
