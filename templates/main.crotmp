@@ -9,10 +9,7 @@
       <?.message>
         <div class="panel-block">
           <p class="control">
-            <span class="icon has-text-info">
-              <i class="fas fa-info-circle"></i>
-            </span>
-            <span><.message></span>
+            <span>[ok] <.message></span>
           </p>
         </div>
       </?>

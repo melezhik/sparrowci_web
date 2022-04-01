@@ -13,10 +13,11 @@ my $application = route {
 
     my %conf = get-sparkyci-conf();
   
-    get -> :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
+    get -> :$message, :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       my @results = get-builds();
       #die @results.perl;
       template 'templates/main.crotmp', %(
+        message => $message,
         title => title(),   
         results => @results,
         css => css($theme),
