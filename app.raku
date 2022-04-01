@@ -25,7 +25,8 @@ my $application = route {
     get -> :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       my @results = get-builds();
       #die @results.perl;
-      template 'templates/main.crotmp', %( 
+      template 'templates/main.crotmp', %(
+        title => title(),   
         results => @results,
         css => css($theme),
         theme => $theme,

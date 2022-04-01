@@ -78,7 +78,7 @@ sub navbar (Mu $user, Mu $token, Mu $theme) is export {
       <div class="panel-block">
         <p class="control">
             <a href="{http-root()}/">Home</a> |
-            <a href="{http-root()}/all"> Add builds </a> |
+            <a href="{http-root()}/all"> All builds </a> |
             <a href="{http-root()}/about">About</a> |
             <a href="https://sparrowhub.io:4000">Admin</a> |
             {theme-link($theme)} |
