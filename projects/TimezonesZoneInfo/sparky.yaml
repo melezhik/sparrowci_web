@@ -1,0 +1,14 @@
+#crontab: "2 * * * *"
+sparrowdo:
+  no_sudo: true
+  no_index_update: false
+  bootstrap: false
+  format: default
+  repo: file:///home/sph/repo
+  tags: cpu=2,mem=6,SCM_URL=https://github.com/alabamenhu/TimezonesZoneInfo.git
+disabled: false
+keep_builds: 100
+allow_manual_run: true
+scm:
+  url: https://github.com/alabamenhu/TimezonesZoneInfo.git
+  branch: main
