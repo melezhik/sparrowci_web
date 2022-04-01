@@ -7,21 +7,12 @@ use SparkyCI::Conf;
 use SparkyCI::Security;
 use Text::Markdown;
 use JSON::Tiny;
+use Cro::HTTP::Client;
 
 my $application = route {
 
     my %conf = get-sparkyci-conf();
   
-    my $theme;
-  
-    if %conf<ui> && %conf<ui><theme> {
-      $theme = %conf<ui><theme>
-    } else {
-      $theme = "lumen";
-    };
-
-    say "ui theme: <$theme> ...";
-
     get -> :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       my @results = get-builds();
       #die @results.perl;
@@ -51,6 +42,7 @@ my $application = route {
       template 'templates/report.crotmp', %( 
         title => title(),   
         %report,
+        css => css($theme),
         theme => $theme,
         navbar => navbar($user, $token, $theme),
       )
@@ -150,7 +142,7 @@ my $application = route {
             "Accept" => "application/json"
           ],
           query => { 
-            redirect_uri => "https://mybf.io/oauth2",
+            redirect_uri => "http://sparrowhub.io:2222/oauth2",
             client_id => %*ENV<OAUTH_CLIENT_ID>,
             client_secret => %*ENV<OAUTH_CLIENT_SECRET>,
             code => $code,
