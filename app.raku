@@ -1,7 +1,7 @@
 use Cro::HTTP::Router;
 use Cro::HTTP::Server;
 use Cro::WebApp::Template;
-use SparkyCI;
+use SparkyCI::DB;
 use SparkyCI::HTML;
 use SparkyCI::Conf;
 use SparkyCI::Security;
@@ -22,40 +22,43 @@ my $application = route {
 
     say "ui theme: <$theme> ...";
 
-    get -> {
+    get -> :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       my @results = get-builds();
       #die @results.perl;
       template 'templates/main.crotmp', %( 
         results => @results,
+        css => css($theme),
         theme => $theme,
-        navbar => navbar(),
+        navbar => navbar($user, $token, $theme),
       )
     }
 
-    get -> 'all', {
+    get -> 'all', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       my @results = get-builds(1000);
       #die @results.perl;
       template 'templates/main.crotmp', %( 
         results => @results,
+        css => css($theme),
         theme => $theme,
-        navbar => navbar(),
+        navbar => navbar($user, $token, $theme),
       )
     }
 
-    get -> 'report', Int $id {
+    get -> 'report', Int $id, :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       my %report = get-report($id);
       template 'templates/report.crotmp', %( 
         %report,
         theme => $theme,
-        navbar => navbar(),
+        navbar => navbar($user, $token, $theme),
       )
     }
 
-    get -> 'about', {
+    get -> 'about', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       template 'templates/about.crotmp', %( 
         data => parse-markdown("README.md".IO.slurp).to_html,
+        css => css($theme),
         theme => $theme,
-        navbar => navbar(),
+        navbar => navbar($user, $token, $theme),
       )
     }
 
@@ -64,74 +67,139 @@ my $application = route {
         static 'js', @path;
     }
 
-  get -> 'oauth2', :$state, :$code {
+    get -> 'login' {
 
-      say "request token from https://github.com/login/oauth/access_token";
+      if %*ENV<MB_DEBUG_MODE> {
 
-      my $resp = await Cro::HTTP::Client.get: 'https://github.com/login/oauth/access_token',
-        headers => [
-          "Accept" => "application/json"
-        ],
-        query => { 
-          redirect_uri => "https://mybf.io/oauth2",
-          client_id => %*ENV<OAUTH_CLIENT_ID>,
-          client_secret => %*ENV<OAUTH_CLIENT_SECRET>,
-          code => $code,
-          state => $state,    
-        };
+          say "MB_DEBUG_MODE is set, you need to set MB_DEBUG_USER var as well"
+            unless %*ENV<MB_DEBUG_USER>;
 
+          my $user = %*ENV<MB_DEBUG_USER>;
 
-      my $data = await $resp.body-text();
+          say "set user login to {$user}";
 
-      my %data = from-json($data);
+          set-cookie 'user', $user;
 
-      say "response recieved - {%data.perl} ... ";
+          mkdir "{cache-root()}/users";
 
-      if %data<access_token>:exists {
+          mkdir "{cache-root()}/users/{$user}";
 
-        say "token recieved - {%data<access_token>} ... ";
+          mkdir "{cache-root()}/users/{$user}/tokens";
 
-        my $resp = await Cro::HTTP::Client.get: 'https://api.github.com/user',
-          headers => [
-            "Accept" => "application/vnd.github.v3+json",
-            "Authorization" => "token {%data<access_token>}"
-          ];
+          "{cache-root()}/users/{$user}/meta.json".IO.spurt('{}');
 
-        my $data2 = await $resp.body-text();
-  
-        my %data2 = from-json($data2);
+          my $tk = gen-token();
 
-        say "set user login to {%data2<login>}";
+          "{cache-root()}/users/$user/tokens/{$tk}".IO.spurt("");
 
-        my $date = DateTime.now.later(years => 100);
+          say "set user token to {$tk}";
 
-        set-cookie 'user', %data2<login>, http-only => True, expires => $date;
+          set-cookie 'token', $tk;
 
-        mkdir "{cache-root()}/users";
+          redirect :see-other, "{http-root()}/?message=user logged in";
 
-        mkdir "{cache-root()}/users/{%data2<login>}";
+      } else  {
 
-        mkdir "{cache-root()}/users/{%data2<login>}/tokens";
+        redirect :see-other,
+          "https://github.com/login/oauth/authorize?client_id={%*ENV<OAUTH_CLIENT_ID>}&state={%*ENV<OAUTH_STATE>}"
+      }
+    }
 
-        "{cache-root()}/users/{%data2<login>}/meta.json".IO.spurt($data2);
+    get -> 'logout', :$user is cookie, :$token is cookie {
 
-        my $tk = gen-token();
+      set-cookie 'user', Nil;
+      set-cookie 'token', Nil;
 
-        "{cache-root()}/users/{%data2<login>}/tokens/{$tk}".IO.spurt("");
+      if ( $user && $token && "{cache-root()}/users/{$user}/tokens/{$token}".IO ~~ :e ) {
 
-        say "set user token to {$tk}";
-
-        set-cookie 'token', $tk, http-only => True, expires => $date;
-
-        redirect :see-other, "{sparkyci-http-root()}/?message=user logged in";
-
-      } else {
-
-        redirect :see-other, "{sparkyci-http-root()}/?message=issues with login";
+        unlink "{cache-root()}/users/{$user}/tokens/{$token}";
+        say "unlink user token - {cache-root()}/users/{$user}/tokens/{$token}";
 
       }
-       
-  } 
+
+      redirect :see-other, "{http-root()}/?message=user logged out";
+    } 
+
+    get -> 'oauth2', :$state, :$code {
+
+        say "request token from https://github.com/login/oauth/access_token";
+
+        my $resp = await Cro::HTTP::Client.get: 'https://github.com/login/oauth/access_token',
+          headers => [
+            "Accept" => "application/json"
+          ],
+          query => { 
+            redirect_uri => "https://mybf.io/oauth2",
+            client_id => %*ENV<OAUTH_CLIENT_ID>,
+            client_secret => %*ENV<OAUTH_CLIENT_SECRET>,
+            code => $code,
+            state => $state,    
+          };
+
+
+        my $data = await $resp.body-text();
+
+        my %data = from-json($data);
+
+        say "response recieved - {%data.perl} ... ";
+
+        if %data<access_token>:exists {
+
+          say "token recieved - {%data<access_token>} ... ";
+
+          my $resp = await Cro::HTTP::Client.get: 'https://api.github.com/user',
+            headers => [
+              "Accept" => "application/vnd.github.v3+json",
+              "Authorization" => "token {%data<access_token>}"
+            ];
+
+          my $data2 = await $resp.body-text();
+    
+          my %data2 = from-json($data2);
+
+          say "set user login to {%data2<login>}";
+
+          my $date = DateTime.now.later(years => 100);
+
+          set-cookie 'user', %data2<login>, http-only => True, expires => $date;
+
+          mkdir "{cache-root()}/users";
+
+          mkdir "{cache-root()}/users/{%data2<login>}";
+
+          mkdir "{cache-root()}/users/{%data2<login>}/tokens";
+
+          "{cache-root()}/users/{%data2<login>}/meta.json".IO.spurt($data2);
+
+          my $tk = gen-token();
+
+          "{cache-root()}/users/{%data2<login>}/tokens/{$tk}".IO.spurt("");
+
+          say "set user token to {$tk}";
+
+          set-cookie 'token', $tk, http-only => True, expires => $date;
+
+          redirect :see-other, "{sparkyci-http-root()}/?message=user logged in";
+
+        } else {
+
+          redirect :see-other, "{sparkyci-http-root()}/?message=issues with login";
+
+        }
+        
+    }
+
+    get -> 'login-page', :$message, :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
+
+      template 'templates/login-page.crotmp', {
+        title => title(),
+        http-root => sparkyci-http-root(),
+        message => $message || "sign in using your github account",
+        css => css($theme),
+        theme => $theme,
+        navbar => navbar($user, $token, $theme),
+      }
+    }
 
 }
 
