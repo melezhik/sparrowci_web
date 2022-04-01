@@ -16,7 +16,7 @@
           <table class="table">
             <thead>
               <tr>
-                <th>ID</th>
+                <th><abbr title="Build ID">ID</abbr></th>
                 <th><abbr title="Project Name">Project</abbr></th>
                 <th><abbr title="Build Statuss">Status</abbr></th>
                 <th><abbr title="Build Date">Date</abbr></th>
