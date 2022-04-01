@@ -30,7 +30,6 @@
               </nav>
             </div>
             <div class="panel-block">
-              <div class="container section">
                   <div id="Summary" class="content-tab">
                     BuildID: <.id><br>
                     Status: <.state><br>
@@ -54,7 +53,6 @@
                       no data found
                     </!>
                   </div>
-              </div>
             </div>
           </nav>
         </div>      
