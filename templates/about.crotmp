@@ -16,7 +16,7 @@
         <div>    
           <nav class="panel">
             <p class="panel-heading">
-              About SparkyCI
+              <.page-title>
             </p>
             <div class="panel-block"> 
               <div class="content" id="doc">

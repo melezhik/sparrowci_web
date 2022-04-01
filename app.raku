@@ -17,6 +17,7 @@ my $application = route {
       my @results = get-builds();
       #die @results.perl;
       template 'templates/main.crotmp', %(
+        page-title => "SparkyCI - dead simple CI service",
         message => $message,
         title => title(),   
         results => @results,
@@ -30,6 +31,7 @@ my $application = route {
       my @results = get-builds(1000);
       #die @results.perl;
       template 'templates/main.crotmp', %( 
+        page-title => "All Reports",
         title => title(),   
         results => @results,
         css => css($theme),
@@ -41,6 +43,7 @@ my $application = route {
     get -> 'report', Int $id, :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       my %report = get-report($id);
       template 'templates/report.crotmp', %( 
+        page-title => "SparkyCI Report",
         title => title(),   
         %report,
         css => css($theme),
@@ -50,7 +53,8 @@ my $application = route {
     }
 
     get -> 'about', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
-      template 'templates/about.crotmp', %( 
+      template 'templates/about.crotmp', %(
+        page-title => "SparkyCI - Roadmap", 
         title => title(),   
         data => parse-markdown("README.md".IO.slurp).to_html,
         css => css($theme),
@@ -217,6 +221,7 @@ my $application = route {
     get -> 'login-page', :$message, :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
 
       template 'templates/login-page.crotmp', {
+        page-title => "Login page",
         title => title(),
         http-root => http-root(),
         message => $message || "sign in using your github account",

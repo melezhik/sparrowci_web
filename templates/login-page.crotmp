@@ -16,7 +16,7 @@
         <div>    
           <nav class="panel">
             <p class="panel-heading">
-              Login Page
+              <.page-title>
             </p>
             <div class="panel-block">
               <p class="control">

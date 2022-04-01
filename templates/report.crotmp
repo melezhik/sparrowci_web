@@ -16,7 +16,7 @@
         <div>    
           <nav class="panel">
             <p class="panel-heading">
-              SparkyCI CI Reports
+              <.page-title>
             </p>
             <div class="panel-block">
               <nav class="tabs is-boxed is-fullwidth">
