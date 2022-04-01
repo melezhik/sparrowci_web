@@ -14,8 +14,8 @@
           </span>
         </?>
         <div>    
-          <nav class="panel">
-            <p class="panel-heading is-success">
+          <nav class="panel is-success">
+            <p class="panel-heading">
               <.page-title>
             </p>
             <div class="panel-block">
