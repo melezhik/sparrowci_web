@@ -98,12 +98,12 @@ my $application = route {
     }
     get -> 'login' {
 
-      if %*ENV<MB_DEBUG_MODE> {
+      if %*ENV<SC_DEBUG_MODE> {
 
-          say "MB_DEBUG_MODE is set, you need to set MB_DEBUG_USER var as well"
-            unless %*ENV<MB_DEBUG_USER>;
+          say "SC_DEBUG_MODE is set, you need to set SC_DEBUG_USER var as well"
+            unless %*ENV<SC_DEBUG_USER>;
 
-          my $user = %*ENV<MB_DEBUG_USER>;
+          my $user = %*ENV<SC_DEBUG_USER>;
 
           say "set user login to {$user}";
 
