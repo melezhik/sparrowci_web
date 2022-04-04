@@ -45,7 +45,7 @@
                   <@projects: $i>
                     <tr>
                       <td>
-                        <form autocomplete="off" method="/repo" method="DELETE">
+                        <form action="/repo-rm" method="POST">
                           <input id="repo" class="input" type="hidden" name="repo" value="<$i>">
                           <$i>
                       </td>

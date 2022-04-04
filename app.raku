@@ -65,7 +65,7 @@ my $application = route {
       )
     }
 
-    get -> 'repos', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
+    get -> 'repos', :$message, :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       if check-user($user, $token) == True {
         my @data = repos($user);
         my @projects = projects($user);
@@ -81,6 +81,7 @@ my $application = route {
           css => css($theme),
           theme => $theme,
           navbar => navbar($user, $token, $theme),
+          message => $message,
         )
       } else {
         redirect :see-other, "{http-root()}/login-page?message=you need to sign in to manage repositories";
@@ -125,7 +126,7 @@ my $application = route {
       }  
     }
 
-    delete -> 'repo', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
+    post -> 'repo-rm', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       if check-user($user, $token) == True {
         my $repo-id;
         request-body -> (:$repo) {
