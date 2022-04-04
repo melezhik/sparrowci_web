@@ -45,7 +45,7 @@ my $application = route {
     get -> 'report', Int $id, :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       my %report = get-report($id);
       template 'templates/report.crotmp', %( 
-        page-title => "SparkyCI Report",
+        page-title => "SparkyCI Report - {%report<project>}",
         title => title(),   
         %report,
         css => css($theme),
