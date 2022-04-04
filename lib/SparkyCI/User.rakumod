@@ -6,12 +6,17 @@ use JSON::Tiny;
 
 sub repos (Mu $user) is export {
 
-    my %q = %( per_page => 100, sort => "updated", access_token =>  access-token($user) );
+    say "fetch user repos: https://api.github.com/users/$user/repos";
+
+    my %q = %( per_page => 100, sort => "updated" );
+
+    #say %q.perl;
 
     my $resp = await Cro::HTTP::Client.get: "https://api.github.com/users/$user/repos",
-        query => %q;
-
-    say "fetch user repos: https://api.github.com/users/$user/repos";
+        query => %q,
+        headers => [
+            Authorization => "token {access-token($user)}"
+        ];
 
     my $data = await $resp.body-text();
 
