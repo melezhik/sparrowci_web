@@ -1,5 +1,6 @@
 unit module SparkyCI::Security;
 use SparkyCI::Conf;
+use JSON::Tiny;
 
 sub gen-token is export {
 
@@ -21,4 +22,8 @@ sub check-user (Mu $user, Mu $token) is export {
     return False
   }
 
+}
+
+sub access-token (Mu $user) is export {
+  from-json("{cache-root()}/users/{$user}/meta.json".IO.slurp)<access_token>;
 }

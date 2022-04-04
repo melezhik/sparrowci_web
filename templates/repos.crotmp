@@ -21,7 +21,7 @@
             <div class="panel-block"> 
               <div class="content" id="doc">
                 <@repos: $i>
-                  <$i.id><br>
+                  <$i.clone_url><br>
                 </@>
               </div>
             </div>

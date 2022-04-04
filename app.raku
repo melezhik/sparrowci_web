@@ -65,15 +65,19 @@ my $application = route {
     }
 
     get -> 'repos', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
-      my $data = repos($user); 
-      template 'templates/repos.crotmp', %(
-        page-title => "Repositories", 
-        title => title(),
-        repos => $data.flat,   
-        css => css($theme),
-        theme => $theme,
-        navbar => navbar($user, $token, $theme),
-      )
+      if check-user($user, $token) == True {
+        my $data = repos($user); 
+        template 'templates/repos.crotmp', %(
+          page-title => "Repositories", 
+          title => title(),
+          repos => $data[0],   
+          css => css($theme),
+          theme => $theme,
+          navbar => navbar($user, $token, $theme),
+        )
+      } else {
+        redirect :see-other, "{http-root()}/login-page?message=you need to sign in to add repositories";
+      }  
     }
 
     get -> 'tc', Int $id, :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
@@ -111,12 +115,12 @@ my $application = route {
     }
     get -> 'login' {
 
-      if %*ENV<SC_DEBUG_MODE> {
+      if %*ENV<SC_USER> {
 
-          say "SC_DEBUG_MODE is set, you need to set SC_DEBUG_USER var as well"
-            unless %*ENV<SC_DEBUG_USER>;
+          say "SC_USER is set, you need to set SC_TOKEN var as well"
+            unless %*ENV<SC_TOKEN>;
 
-          my $user = %*ENV<SC_DEBUG_USER>;
+          my $user = %*ENV<SC_USER>;
 
           say "set user login to {$user}";
 
@@ -128,7 +132,9 @@ my $application = route {
 
           mkdir "{cache-root()}/users/{$user}/tokens";
 
-          "{cache-root()}/users/{$user}/meta.json".IO.spurt('{}');
+          "{cache-root()}/users/{$user}/meta.json".IO.spurt(
+            to-json({ access_token => %*ENV<SC_TOKEN>})
+          );
 
           my $tk = gen-token();
 
@@ -145,6 +151,7 @@ my $application = route {
         redirect :see-other,
           "https://github.com/login/oauth/authorize?client_id={%*ENV<OAUTH_CLIENT_ID>}&state={%*ENV<OAUTH_STATE>}"
       }
+
     }
 
     get -> 'logout', :$user is cookie, :$token is cookie {
@@ -157,7 +164,15 @@ my $application = route {
         unlink "{cache-root()}/users/{$user}/tokens/{$token}";
         say "unlink user token - {cache-root()}/users/{$user}/tokens/{$token}";
 
+        if ( $user && $token && "{cache-root()}/users/{$user}/meta.json".IO ~~ :e ) {
+
+          unlink "{cache-root()}/users/{$user}/meta.json";
+          say "unlink user meta - {cache-root()}/users/{$user}/meta.json";
+
+        }
+
       }
+
 
       redirect :see-other, "{http-root()}/?message=user logged out";
     } 
@@ -198,6 +213,8 @@ my $application = route {
           my $data2 = await $resp.body-text();
     
           my %data2 = from-json($data2);
+
+          %data2<access_token> = %data<access_token>;
 
           say "set user login to {%data2<login>}";
 
