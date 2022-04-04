@@ -26,3 +26,11 @@ sub repos (Mu $user) is export {
 
 }
 
+sub projects (Mu $user) is export {
+    my @list;
+    for dir "{%*ENV<HOME>}/.sparky/projects/" -> $i {
+        push @list, "{$0}" if $i.IO ~~ :d and $i ~~ /"gh-" $user "-" (\S+)/;
+    }
+    return @list;
+}
+

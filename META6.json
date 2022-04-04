@@ -7,7 +7,8 @@
   "depends" : [
     "YAMLish",
     "DBIish",
-    "JSON::Tiny"
+    "JSON::Tiny",
+    "File::Directory::Tree"
   ],
   "description" : "SparkyCI",
   "license" : "Artistic-2.0",

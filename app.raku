@@ -9,6 +9,7 @@ use SparkyCI::Security;
 use Text::Markdown;
 use JSON::Tiny;
 use Cro::HTTP::Client;
+use File::Directory::Tree;
 
 my $application = route {
 
@@ -67,18 +68,78 @@ my $application = route {
     get -> 'repos', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       if check-user($user, $token) == True {
         my @data = repos($user);
-        #say @data[0].perl;
+        my @projects = projects($user);
+        #say @projects.perl;
         #die "";
         my $repos =  @data[0].map({ ("\"{$_<name>}\"") }).join(",");
-        say $repos;
+        #say $repos;
         template 'templates/repos.crotmp', %(
           page-title => "Repositories", 
           title => title(),
-          repos => $repos,   
+          projects => @projects, 
+          repos-js => $repos,
           css => css($theme),
           theme => $theme,
           navbar => navbar($user, $token, $theme),
         )
+      } else {
+        redirect :see-other, "{http-root()}/login-page?message=you need to sign in to manage repositories";
+      }  
+    }
+
+    post -> 'repo', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
+      if check-user($user, $token) == True {
+        my $repo;
+        request-body -> (:$repos) {
+          $repo = $repos;
+          say "add repo: $repo";
+        }
+        my $yaml = qq:to/YAML/;
+          sparrowdo:
+            no_sudo: true
+            no_index_update: false
+            bootstrap: false
+            format: default
+            repo: file:///home/sph/repo
+            tags: cpu=2,mem=6,SCM_URL=https://github.com/{$user}/{$repo}.git
+          disabled: false
+          keep_builds: 100
+          allow_manual_run: true
+          scm:
+            url: https://github.com/{$user}/{$repo}.git
+            branch: main
+        YAML
+        say "yaml: $yaml";  
+        mkdir "{%*ENV<HOME>}/.sparky/projects/gh-{$user}-$repo";
+        "{%*ENV<HOME>}/.sparky/projects/gh-{$user}-$repo/sparky.yaml".IO.spurt($yaml);
+
+        if "{%*ENV<HOME>}/.sparky/projects/gh-{$user}-$repo/sparrowfile".IO ~~ :e {
+           say "{%*ENV<HOME>}/.sparky/projects/gh-{$user}-$repo/sparrowfile symlink exists"; 
+        } else {
+           say "create {%*ENV<HOME>}/.sparky/projects/gh-{$user}-$repo/sparrowfile symlink"; 
+           symlink("sparrowfile","{%*ENV<HOME>}/.sparky/projects/gh-{$user}-$repo/sparrowfile");         
+        }
+        redirect :see-other, "{http-root()}/repos?message=repo {$repo} added";
+      } else {
+        redirect :see-other, "{http-root()}/login-page?message=you need to sign in to manage repositories";
+      }  
+    }
+
+    delete -> 'repo', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
+      if check-user($user, $token) == True {
+        my $repo-id;
+        request-body -> (:$repo) {
+          $repo-id = $repo;
+          say "remove repo: $repo";
+        }
+
+        if "{%*ENV<HOME>}/.sparky/projects/gh-{$user}-{$repo-id}".IO ~~ :d {
+           say "remove {%*ENV<HOME>}/.sparky/projects/gh-{$user}-{$repo-id}";
+          rmtree "{%*ENV<HOME>}/.sparky/projects/gh-{$user}-{$repo-id}";
+        } else {
+           say "{%*ENV<HOME>}/.sparky/projects/gh-{$user}-{$repo-id} does not exist"; 
+        }
+        redirect :see-other, "{http-root()}/repos?message=repo {$repo-id} removed";
       } else {
         redirect :see-other, "{http-root()}/login-page?message=you need to sign in to manage repositories";
       }  

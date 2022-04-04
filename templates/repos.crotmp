@@ -25,37 +25,59 @@
                     <div class="container">
                       <ul>
                         <li class="tab is-active" onclick="openTab(event,'ActiveList')"><a>Active Repos</a></li>
+                        <li class="tab" onclick="openTab(event,'ManageRepos')"><a>Manage Repos</a></li>
                         <li class="tab" onclick="openTab(event,'AddRepo')"><a>Add Repo</a></li>
                       </ul>
                     </div>
               </nav>
             </div>
             <div class="panel-block">
-                  <div id="ActiveList" class="content-tab">
-                    Repo list
-                  </div>
-                  <div id="AddRepo" class="content-tab" style="display:none">
-                    <div class="panel-block">
-                      <form autocomplete="off" action="/add-repo">
-                        <div class="field">
-                            <div class="autocomplete" style="width:300px;">
-                              <label class="label">Add repository</label>
-                              <input id="repos" class="input" type="text" name="repos" placeholder="Repo name">
-                              <span class="help is-success">Type here to search within repos</span>
-                            </div>
+              <div id="ActiveList" class="content-tab">
+                <p class="control">
+                  <@projects: $i>
+                    <$i><br>
+                  </@>
+                </p>
+              </div>
+              <div id="ManageRepos" class="content-tab" style="display:none">
+                <p class="control">
+                  <table class="table">
+                  <@projects: $i>
+                    <tr>
+                      <td>
+                        <form autocomplete="off" method="/repo" method="DELETE">
+                          <input id="repo" class="input" type="hidden" name="repo" value="<$i>">
+                          <$i>
+                      </td>
+                      <td>  
+                          <button class="button is-small">Delete</button>  
+                        </form>
+                      </td>
+                    </tr>
+                  </@>
+                  </table>
+                </p>
+              </div>
+              <div id="AddRepo" class="content-tab" style="display:none">
+                  <form autocomplete="off" action="/repo" method="POST">
+                    <div class="field">
+                        <div class="autocomplete" style="width:300px;">
+                          <label class="label">Add repository</label>
+                          <input id="repos" class="input" type="text" name="repos" placeholder="Repo name">
+                          <span class="help is-success">Type here to search within repos</span>
                         </div>
-                        <div class="field>
-                          <div class="control">
-                            <button class="button is-link">Add Repo</button>
-                          </div>
-                        </div>    
-                      </form>
-                      <script>
-                        var repos = [ <.repos> ]
-                        autocomplete(document.getElementById("repos"), repos);
-                      </script> 
                     </div>
-                  </div>
+                    <div class="field>
+                      <div class="control">
+                        <button class="button is-link">Add Repo</button>
+                      </div>
+                    </div>    
+                  </form>
+                  <script>
+                    var repos = [ <.repos-js> ]
+                    autocomplete(document.getElementById("repos"), repos);
+                  </script> 
+              </div>
             </div>
           </nav>
         </div>      
