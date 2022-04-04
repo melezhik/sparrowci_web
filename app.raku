@@ -228,7 +228,7 @@ my $application = route {
 
           mkdir "{cache-root()}/users/{%data2<login>}/tokens";
 
-          "{cache-root()}/users/{%data2<login>}/meta.json".IO.spurt($data2);
+          "{cache-root()}/users/{%data2<login>}/meta.json".IO.spurt(to-json(%data2));
 
           my $tk = gen-token();
 
