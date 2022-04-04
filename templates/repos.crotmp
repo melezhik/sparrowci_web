@@ -25,6 +25,7 @@
                 <div class="field">
                     <div class="autocomplete" style="width:300px;">
                       <input id="repos" class="input" type="text" name="repos" placeholder="Type here for completion">
+                      <span class="help is-success">Type here to search within repos, autocomplion is enabled</span>
                     </div>
                 </div>
                 <div class="field>
