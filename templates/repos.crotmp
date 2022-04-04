@@ -21,26 +21,46 @@
               <.page-title>
             </p>
             <div class="panel-block">
-              <form autocomplete="off" action="/add-repo">
-                <div class="field">
-                    <div class="autocomplete" style="width:300px;">
-                      <input id="repos" class="input" type="text" name="repos" placeholder="Type here for completion">
-                      <span class="help is-success">Type here to search within repos, autocomplion is enabled</span>
+              <nav class="tabs is-boxed is-fullwidth">
+                    <div class="container">
+                      <ul>
+                        <li class="tab is-active" onclick="openTab(event,'ActiveList')"><a>Active Repos</a></li>
+                        <li class="tab" onclick="openTab(event,'AddRepo')"><a>Add Repo</a></li>
+                      </ul>
                     </div>
-                </div>
-                <div class="field>
-                  <div class="control">
-                    <button class="button is-link">Submit</button>
+              </nav>
+            </div>
+            <div class="panel-block">
+                  <div id="ActiveList" class="content-tab">
+                    Repo list
                   </div>
-                </div>    
-              </form>
-              <script>
-                var repos = [ <.repos> ]
-                autocomplete(document.getElementById("repos"), repos);
-              </script> 
+                  <div id="AddRepo" class="content-tab" style="display:none">
+                    <div class="panel-block">
+                      <form autocomplete="off" action="/add-repo">
+                        <div class="field">
+                            <div class="autocomplete" style="width:300px;">
+                              <label class="label">Add repository</label>
+                              <input id="repos" class="input" type="text" name="repos" placeholder="Repo name">
+                              <span class="help is-success">Type here to search within repos</span>
+                            </div>
+                        </div>
+                        <div class="field>
+                          <div class="control">
+                            <button class="button is-link">Add Repo</button>
+                          </div>
+                        </div>    
+                      </form>
+                      <script>
+                        var repos = [ <.repos> ]
+                        autocomplete(document.getElementById("repos"), repos);
+                      </script> 
+                    </div>
+                  </div>
             </div>
           </nav>
         </div>      
       </div>      
   </body>
 </html>
+
+
