@@ -2,6 +2,7 @@ use Cro::HTTP::Router;
 use Cro::HTTP::Server;
 use Cro::WebApp::Template;
 use SparkyCI::DB;
+use SparkyCI::User;
 use SparkyCI::HTML;
 use SparkyCI::Conf;
 use SparkyCI::Security;
@@ -57,6 +58,18 @@ my $application = route {
         page-title => "Roadmap", 
         title => title(),   
         data => parse-markdown("README.md".IO.slurp).to_html,
+        css => css($theme),
+        theme => $theme,
+        navbar => navbar($user, $token, $theme),
+      )
+    }
+
+    get -> 'repos', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
+      my $data = repos($user); 
+      template 'templates/repos.crotmp', %(
+        page-title => "Repositories", 
+        title => title(),
+        repos => $data.flat,   
         css => css($theme),
         theme => $theme,
         navbar => navbar($user, $token, $theme),
@@ -232,6 +245,8 @@ my $application = route {
     }
 
 }
+
+(.out-buffer = False for $*OUT, $*ERR);
 
 my Cro::Service $service = Cro::HTTP::Server.new:
     :host<0.0.0.0>, :port<2222>, :$application;

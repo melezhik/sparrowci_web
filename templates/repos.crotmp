@@ -20,7 +20,9 @@
             </p>
             <div class="panel-block"> 
               <div class="content" id="doc">
-                <pre><.repos></pre>
+                <@repos: $i>
+                  <$i.id><br>
+                </@>
               </div>
             </div>
           </nav>

@@ -8,9 +8,9 @@ ignore:
   #- .cache
   #- .tom
   - README.md
-  - run.sh
-  - sparrowfile
-  - t/
-  - db-init.raku
-  - META6.json
-  - .gitignore
+  #- run.sh
+  #- sparrowfile
+  #- t/
+  #- db-init.raku
+  #- META6.json
+  #- .gitignore
