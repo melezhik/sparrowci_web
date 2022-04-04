@@ -2,6 +2,8 @@
     <&HTML-AND-JAVASCRIPT(.css)>
     <head>
       <title><.title></title>
+      <script type="text/javascript" src="js/select-search.js"></script>
+      <link rel="stylesheet" type="text/css" href="css/select-search.css" />
     </head>
     <body>
       <div class="container is-fluid">
@@ -18,15 +20,26 @@
             <p class="panel-heading">
               <.page-title>
             </p>
-            <div class="panel-block"> 
-              <div class="content" id="doc">
-                <@repos: $i>
-                  <$i.clone_url><br>
-                </@>
-              </div>
+            <div class="panel-block">
+              <form autocomplete="off" action="/add-repo">
+                <div class="field">
+                    <div class="autocomplete" style="width:300px;">
+                      <input id="repos" class="input" type="text" name="repos" placeholder="Type here for completion">
+                    </div>
+                </div>
+                <div class="field>
+                  <div class="control">
+                    <button class="button is-link">Submit</button>
+                  </div>
+                </div>    
+              </form>
+              <script>
+                var repos = [ <.repos> ]
+                autocomplete(document.getElementById("repos"), repos);
+              </script> 
             </div>
           </nav>
         </div>      
       </div>      
-    </body>
+  </body>
 </html>

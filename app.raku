@@ -66,17 +66,21 @@ my $application = route {
 
     get -> 'repos', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       if check-user($user, $token) == True {
-        my $data = repos($user); 
+        my @data = repos($user);
+        #say @data[0].perl;
+        #die "";
+        my $repos =  @data[0].map({ ("\"{$_<name>}\"") }).join(",");
+        say $repos;
         template 'templates/repos.crotmp', %(
           page-title => "Repositories", 
           title => title(),
-          repos => $data[0],   
+          repos => $repos,   
           css => css($theme),
           theme => $theme,
           navbar => navbar($user, $token, $theme),
         )
       } else {
-        redirect :see-other, "{http-root()}/login-page?message=you need to sign in to add repositories";
+        redirect :see-other, "{http-root()}/login-page?message=you need to sign in to manage repositories";
       }  
     }
 
@@ -94,6 +98,11 @@ my $application = route {
     get -> 'js', *@path {
         cache-control :public, :max-age(300);
         static 'js', @path;
+    }
+
+    get -> 'css', *@path {
+        cache-control :public, :max-age(300);
+        static 'css', @path;
     }
 
     get -> 'icons', *@path {
