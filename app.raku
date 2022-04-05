@@ -89,27 +89,43 @@ my $application = route {
       }  
     }
 
-   post -> 'repos', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
+   post -> 'repo', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       if check-user($user, $token) == True {
-        my @data = repos($user);
-        my @projects = projects($user);
-        #say @projects.perl;
-        #die "";
-        my $repos =  @data[0].map({ ("\"{$_<name>}\"") }).join(",");
-        #say $repos;
-        template 'templates/repos.crotmp', %(
-          page-title => "Repositories", 
-          title => title(),
-          projects => @projects, 
-          repos-js => $repos,
-          css => css($theme),
-          theme => $theme,
-          navbar => navbar($user, $token, $theme),
-        )
+        my $repo;
+        request-body -> (:$repos) {
+          $repo = $repos;
+          say "add repo: $repo";
+        }
+        my $yaml = qq:to/YAML/;
+          sparrowdo:
+            no_sudo: true
+            no_index_update: false
+            bootstrap: false
+            format: default
+            repo: file:///home/sph/repo
+            tags: cpu=2,mem=6,SCM_URL=https://github.com/{$user}/{$repo}.git
+          disabled: false
+          keep_builds: 100
+          allow_manual_run: true
+          scm:
+            url: https://github.com/{$user}/{$repo}.git
+            branch: main
+        YAML
+        say "yaml: $yaml";  
+        mkdir "{%*ENV<HOME>}/.sparky/projects/gh-{$user}-$repo";
+        "{%*ENV<HOME>}/.sparky/projects/gh-{$user}-$repo/sparky.yaml".IO.spurt($yaml);
+
+        if "{%*ENV<HOME>}/.sparky/projects/gh-{$user}-$repo/sparrowfile".IO ~~ :e {
+          say "{%*ENV<HOME>}/.sparky/projects/gh-{$user}-$repo/sparrowfile symlink exists"; 
+        } else {
+          say "create {%*ENV<HOME>}/.sparky/projects/gh-{$user}-$repo/sparrowfile symlink"; 
+          symlink("sparrowfile","{%*ENV<HOME>}/.sparky/projects/gh-{$user}-$repo/sparrowfile");
+          redirect :see-other, "{http-root()}/repos?message=repo {$repo} added";
+        }
       } else {
-        redirect :see-other, "{http-root()}/login-page?message=you need to sign in to manage repositories";
-      }  
-    }
+         redirect :see-other, "{http-root()}/login-page?message=you need to sign in to manage repositories"; 
+      }
+   }
 
     post -> 'repos-sync', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       if check-user($user, $token) == True {
