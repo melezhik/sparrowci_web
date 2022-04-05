@@ -40,7 +40,7 @@ sub sync-repos (Mu $user) is export {
 
     my @list = from-json($data);
 
-    "{cache-root()}/users/{$user}/repos.js".IO.spurt(to-json(@list[0]<>));
+    "{cache-root()}/users/{$user}/repos.js".IO.spurt(to-json(@list));
 
     return @list;
 
