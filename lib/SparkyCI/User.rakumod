@@ -17,7 +17,7 @@ sub repos (Mu $user) is export {
 }
 
 sub repos-sync-date (Mu $user) is export {
-    "{cache-root()}/users/{$user}/repos.js".IO.modified.DateTime;
+    "{cache-root()}/users/{$user}/repos.js".IO.modified.DateTime.truncated-to('minute');
 }
 
 sub sync-repos (Mu $user) is export {
