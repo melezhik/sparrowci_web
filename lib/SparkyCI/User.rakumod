@@ -6,6 +6,22 @@ use JSON::Tiny;
 
 sub repos (Mu $user) is export {
 
+    unless "{cache-root()}/users/{$user}/repos.js".IO ~~ :e {
+        sync-repos($user)
+    }
+
+    my @list = from-json("{cache-root()}/users/{$user}/repos.js".IO.slurp);
+
+    return @list[0]<>;
+
+}
+
+sub repos-sync-date (Mu $user) is export {
+    "{cache-root()}/users/{$user}/repos.js".IO.modified.DateTime;
+}
+
+sub sync-repos (Mu $user) is export {
+
     say "fetch user repos: https://api.github.com/users/$user/repos";
 
     my %q = %( per_page => 100, sort => "updated" );
@@ -21,6 +37,8 @@ sub repos (Mu $user) is export {
     my $data = await $resp.body-text();
 
     my @list = from-json($data);
+
+    "{cache-root()}/users/{$user}/repos.js".IO.spurt(to-json(@list[0]<>));
 
     return @list;
 
