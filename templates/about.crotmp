@@ -20,7 +20,7 @@
             </p>
             <div class="panel-block"> 
               <div class="content" id="doc">
-                <pre><.repos></pre>
+                <&HTML(.data)>
               </div>
             </div>
           </nav>
