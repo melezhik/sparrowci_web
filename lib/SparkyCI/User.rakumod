@@ -2,7 +2,7 @@ unit module SparkyCI::User;
 use SparkyCI::Conf;
 use SparkyCI::Security;
 use Cro::HTTP::Client;
-use JSON::Tiny;
+use JSON::Fast;
 
 sub repos (Mu $user) is export {
 

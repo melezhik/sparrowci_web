@@ -1,6 +1,6 @@
 unit module SparkyCI::Security;
 use SparkyCI::Conf;
-use JSON::Tiny;
+use JSON::Fast;
 
 sub gen-token is export {
 
