@@ -130,7 +130,8 @@ my $application = route {
     post -> 'repos-sync', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       if check-user($user, $token) == True {
         my $repo;
-        say "sync repos information from GH account for user: $user";  
+        say "sync repos information from GH account for user: $user";
+        sync-repos($user);  
         redirect :see-other, "{http-root()}/repos?message=repositories synced from GH account";
       } else {
         redirect :see-other, "{http-root()}/login-page?message=you need to sign in to manage repositories";
