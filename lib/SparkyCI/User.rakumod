@@ -12,7 +12,9 @@ sub repos (Mu $user) is export {
 
     my @list = from-json("{cache-root()}/users/{$user}/repos.js".IO.slurp);
 
-    return @list[0]<>;
+    #die @list.List.flat.perl;
+
+    return @list.List.flat;
 
 }
 

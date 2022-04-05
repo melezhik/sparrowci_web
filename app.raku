@@ -67,11 +67,11 @@ my $application = route {
 
     get -> 'repos', :$message, :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       if check-user($user, $token) == True {
-        my @data = repos($user);
+        my $data = repos($user);
         my @projects = projects($user);
-        #say @data.perl;
+        #say $data.perl;
         #die "";
-        my $repos =  @data.map({ ("\"{$_<name>}\"") }).join(",");
+        my $repos =  $data<>.map({ ("\"{$_<name>||''}\"") }).join(",");
         #say $repos;
         template 'templates/repos.crotmp', %(
           page-title => "Repositories", 
