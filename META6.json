@@ -18,6 +18,7 @@
     "SparkyCI" : "lib/SparkyCI.rakumod",
     "SparkyCI::DB" : "lib/SparkyCI/DB.rakumod",
     "SparkyCI::User" : "lib/SparkyCI/User.rakumod",
+    "SparkyCI::User" : "lib/SparkyCI/Repo.rakumod",
     "SparkyCI::HTML" : "lib/SparkyCI/HTML.rakumod",
     "SparkyCI::Conf" : "lib/SparkyCI/Conf.rakumod",
     "SparkyCI::Security" : "lib/SparkyCI/Security.rakumod"
