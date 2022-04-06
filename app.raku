@@ -107,7 +107,7 @@ my $application = route {
           allow_manual_run: true
           scm:
             url: https://github.com/{$user}/{$repo}.git
-            branch: main
+            branch: HEAD
         YAML
         say "yaml: $yaml";  
         mkdir "{%*ENV<HOME>}/.sparky/projects/gh-{$user}-$repo";
