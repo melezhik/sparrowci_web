@@ -6,8 +6,9 @@ use SparkyCI::User;
 use SparkyCI::HTML;
 use SparkyCI::Conf;
 use SparkyCI::Security;
+use SparkyCI::Repo;
 use Text::Markdown;
-use JSON::Tiny;
+use JSON::Fast;
 use Cro::HTTP::Client;
 use File::Directory::Tree;
 
@@ -69,10 +70,7 @@ my $application = route {
       if check-user($user, $token) == True {
         my $data = repos($user);
         my @projects = projects($user);
-        #say $data.perl;
-        #die "";
         my $repos =  $data<>.map({ ("\"{$_<name>||''}\"") }).join(",");
-        #say $repos;
         template 'templates/repos.crotmp', %(
           page-title => "Repositories", 
           title => title(),
@@ -109,7 +107,7 @@ my $application = route {
           allow_manual_run: true
           scm:
             url: https://github.com/{$user}/{$repo}.git
-            branch: main
+            branch: HEAD
         YAML
         say "yaml: $yaml";  
         mkdir "{%*ENV<HOME>}/.sparky/projects/gh-{$user}-$repo";
@@ -158,6 +156,23 @@ my $application = route {
       }  
     }
 
+    get -> 'repo', 'edit', Str $repo-id, :$message, :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
+      if check-user($user, $token) == True {
+        my %repo = repo($user, $repo-id);
+        template 'templates/repos-edit.crotmp', %(
+          page-title => "Edit Repo - {$repo-id}", 
+          title => title(),
+          %repo, 
+          css => css($theme),
+          theme => $theme,
+          navbar => navbar($user, $token, $theme),
+          message => $message,
+        )
+      } else {
+        redirect :see-other, "{http-root()}/login-page?message=you need to sign in to manage repositories";
+      }  
+    }
+
     get -> 'tc', Int $id, :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       my %report = get-report($id);
       template 'templates/tc.crotmp', %( 
@@ -196,6 +211,11 @@ my $application = route {
       redirect :see-other, "{http-root()}/?message=theme set to {$theme}";
 
     }
+
+    #
+    # Authentication methods
+    #
+    
     get -> 'login' {
 
       if %*ENV<SC_USER> {
