@@ -13,6 +13,7 @@ class Pipeline does Sparky::JobApi::Role {
   has Str $.notify-project = tags()<notify-project> || "";
   has Str $.notify-job = tags()<notify-job> || "";
   has Str $.git-sha = tags<SCM_BRANCH> || tags<git-sha> || "HEAD";
+  has Str $.sparky-project = tags<sparky-project> || "raku";
 
   method stage-run-container {
 
@@ -26,7 +27,7 @@ class Pipeline does Sparky::JobApi::Role {
         --cpu {$.cpu} --memory {$.mem} \\
         --secure-environment-variables SPARKY_API_TOKEN={%*ENV<SPARKY_API_TOKEN>} \\
         SPARKY_TIMEOUT=5 \\
-        SPARKY_PROJECT="raku" \\
+        SPARKY_PROJECT={$.sparky-project} \\
         SCM={$.scm} \\
         GIT_SHA="{$.git-sha}" \\
         GIT_URL="https://github.com/melezhik/sparkyci.git" \\
