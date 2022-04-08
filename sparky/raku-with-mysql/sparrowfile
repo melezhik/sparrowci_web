@@ -54,7 +54,7 @@ class Pipeline does Sparky::JobApi::Role {
 
   method stage-main {
 
-      say "run raku build for scm: {$.scm}";
+      say "run raku build for scm: {$.scm} !";
 
       my $nj = self.new-job:
         :api($.notify-api),
@@ -70,13 +70,15 @@ class Pipeline does Sparky::JobApi::Role {
         ),
       });
 
+      my $s = self.wait-job($sj);
+
       my %sj = $sj.info;
 
       my $r = HTTP::Tiny.get: "http://127.0.0.1:4000/report/raw/{%sj<project>}/{%sj<job-id>}";
 
       my $service-log = $r<content> ?? $r<content>.decode !! '';
 
-      if $sj<FAIL> or $sj<TIMEOUT> {
+      if $s<FAIL> or $s<TIMEOUT> {
         $nj.put-stash({
           status => "FAIL",
           log => $service-log,
@@ -116,7 +118,7 @@ class Pipeline does Sparky::JobApi::Role {
       });
 
 
-      my $s = self.wait-job($j);
+      $s = self.wait-job($j);
 
       my %j = $j.info;
 
