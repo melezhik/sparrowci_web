@@ -1,0 +1,43 @@
+use Sparky::JobApi;
+
+class Pipeline does Sparky::JobApi::Role {
+
+  has Str $.git-url = %*ENV<GIT_URL>;
+  has Str $.sparky-project = %*ENV<SPARKY_PROJECT>;
+
+  method stage-main {
+
+    directory-delete "sparky";
+
+    directory "sparky";
+
+    git-scm $.git-url, %(
+      to => "sparky"
+    );
+    
+    bash "pwd && ls -l && cp -rv {$.sparky-project} ~/.sparky/projects/", %(
+     cwd => "{$*CWD}/sparky/sparky"
+    );
+
+    task-run "build {$.sparky-project}", "curl", %(
+      args => [
+        %( 
+          "dump-header" => "-",
+          "request" => "POST",
+          "-d" => "''",
+        ),
+        [
+          'silent',
+          '-f',
+          'location'
+        ],
+        "127.0.0.1:4000/build/project/{$.sparky-project}"
+      ]
+    );
+
+  }
+
+}
+
+Pipeline.new.run;  
+
