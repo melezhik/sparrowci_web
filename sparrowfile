@@ -22,7 +22,7 @@ class Pipeline does Sparky::JobApi::Role {
       #set -x 
       az container create -g sparky2 \\
         --name {$.worker} \\
-        --image melezhik/sparky-fastspec:v10 \\
+        --image melezhik/sparkyci:latest \\
         --cpu {$.cpu} --memory {$.mem} \\
         --secure-environment-variables SPARKY_API_TOKEN={%*ENV<SPARKY_API_TOKEN>} \\
         SPARKY_TIMEOUT=5 \\
