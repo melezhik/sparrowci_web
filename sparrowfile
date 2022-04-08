@@ -17,7 +17,7 @@ class Pipeline does Sparky::JobApi::Role {
 
   method stage-run-container {
 
-    say "run az container, scm: {$.scm}";
+    say "run az container, sparky-project: {$.sparky-proect} | scm: {$.scm}";
 
     bash qq:to/HERE/, %( description => "az container create" );
       #set -x 
