@@ -12,8 +12,8 @@ class Pipeline does Sparky::JobApi::Role {
   has Str $.scm = tags()<scm> || tags()<SCM_URL> || "";
   has Str $.notify-project = tags()<notify-project> || "";
   has Str $.notify-job = tags()<notify-job> || "";
-  has Str $.git-sha = tags<SCM_BRANCH> || tags<git-sha> || "HEAD";
-  has Str $.sparky-project = tags<sparky-project> || "raku";
+  has Str $.git-sha = tags()<SCM_BRANCH> || tags()<git-sha> || "HEAD";
+  has Str $.sparky-project = tags()<sparky-project> || "raku";
 
   method stage-run-container {
 
@@ -77,6 +77,7 @@ class Pipeline does Sparky::JobApi::Role {
           cpu => $.cpu,
           mem => $.mem,
           project => $.project,
+          sparky-project => $.sparky-project,
           notify-job => $cj.info()<job-id>,
           notify-project => "raku.notify",
           scm => $.scm,
