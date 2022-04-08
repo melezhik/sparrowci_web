@@ -2,9 +2,9 @@ FROM melezhik/sparky:0.0.1
 
 RUN rm -rf /tmp/sparkyci && echo OK
 
-RUN echo OK11 && git clone https://github.com/melezhik/sparkyci.git /tmp/sparkyci
+RUN echo OK13 && git clone https://github.com/melezhik/sparkyci.git /tmp/sparkyci
 
-RUN echo OK11 && cp -r /tmp/sparkyci/sparky/container /home/raku/.sparky/projects/
+RUN echo OK13 && cp -r /tmp/sparkyci/sparky/container /home/raku/.sparky/projects/
 
 USER raku 
 

@@ -25,7 +25,7 @@ class Pipeline does Sparky::JobApi::Role {
           "dump-header" => "-",
           "request" => "POST",
           "-d" => "''",
-          "-u" => "'':''",
+          "-u" => "sparky:sparky",
         ),
         [
           'silent',

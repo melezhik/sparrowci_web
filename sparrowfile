@@ -54,7 +54,7 @@ class Pipeline does Sparky::JobApi::Role {
 
     bash qq:to/HERE/, %( description => "run sparky job" );
       az container exec -g sparky2 --name {$.worker} \\
-      --exec-command "curl -fs -u '':'' -d '' --retry-all-errors --retry-delay 10 --retry-connrefused --retry 10 -X POST 127.0.0.1:4000/build/project/container" \\
+      --exec-command "curl -fs -u sparky:sparky -d '' --retry-delay 10 --retry-connrefused --retry 10 -X POST 127.0.0.1:4000/build/project/container" \\
       -o table
     HERE
 
