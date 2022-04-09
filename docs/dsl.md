@@ -74,6 +74,7 @@ Installs packages of software
 init:
   packages:
      xml:
+     ssl:
 ```
 
 Every package is implemented as a Sparrow plugin.
