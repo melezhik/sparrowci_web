@@ -53,7 +53,7 @@ Other parameters:
 
 Arbitrary bash code:
 
-```y'all
+```yaml
 init:
   script: |
     cp t/.my.cnf ~
