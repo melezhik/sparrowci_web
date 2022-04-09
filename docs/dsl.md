@@ -58,9 +58,7 @@ For example - [sparkyci-service-mysql](http://sparrowhub.io/plugin/sparkyci-serv
 
 ### Scripts
 
-* `script`
-
-Arbitrary bash code:
+Allows execute arbitrary bash code:
 
 ```yaml
 init:
@@ -137,8 +135,8 @@ init:
     cp t/.my.cnf ~
 
   variables:
-    DB_USER=sparky
-    DB_PASS=sparky123
+    DB_USER: sparky
+    DB_PASS: sparky123
 
 main:
   with-code-coverage: false
