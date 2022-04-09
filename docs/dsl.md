@@ -34,7 +34,7 @@ there is no need for clean up steps so far.
 
 ## Init stage
 
-Pre stage allows to configure dependencies ( services, packages, etc ):
+Initialization stage allows to configure dependencies ( services, packages, etc ):
 
 ### Services
 
