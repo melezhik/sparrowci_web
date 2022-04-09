@@ -68,7 +68,7 @@ init:
 
 ### Packages 
 
-Installs and packages of software
+Installs packages of software
 
 ```yaml
 init:
