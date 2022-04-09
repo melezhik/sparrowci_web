@@ -18,7 +18,7 @@ Initialization stage, used to installed dependencies required for `main` stage
 
 * `main`
 
-Main CI logic, used to defined parameters for CI process, enable / disable some 
+Main CI logic, used to define parameters for CI process, enable / disable some 
 features, so on.
 
 
@@ -33,7 +33,10 @@ there is no need for clean up steps so far.
 
 ## Init stage
 
-Pre stage allows to configure dependencies ( f.e. services ):
+Pre stage allows to configure dependencies ( services, packages, etc ):
+
+
+### Services
 
 ```yaml
 init:
@@ -47,7 +50,13 @@ Supported services:
 
 * postgresql
 
-Other parameters:
+Every service is implemented as Sparrow plugin.
+One can refer to a plugin documentation,
+to see supported parameters.
+
+For example - sparkyci-mysql-service
+
+### Scripts
 
 * `script`
 
