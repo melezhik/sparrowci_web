@@ -70,6 +70,15 @@ init:
     DB_PASS=sparky123
 ```
 
+One can reference variables anywhere 
+across CI scenario:
+
+```yaml
+init:
+  script: |
+    echo $DB_USER
+```
+
 ## Main stage
 
 Main stage configures main CI logic:
