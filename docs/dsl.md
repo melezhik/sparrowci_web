@@ -49,7 +49,7 @@ Supported services:
 
 * postgresql
 
-Every service is implemented as Sparrow plugin.
+Every service is implemented as a Sparrow plugin.
 One can refer to a plugin documentation,
 to see supported parameters.
 
@@ -65,6 +65,16 @@ Arbitrary bash code:
 init:
   script: |
     cp t/.my.cnf ~
+```
+
+### Packages 
+
+Installs and packages of software
+
+```yaml
+init:
+  packages:
+     xml:
 ```
 
 ### Variables
