@@ -35,7 +35,6 @@ there is no need for clean up steps so far.
 
 Pre stage allows to configure dependencies ( services, packages, etc ):
 
-
 ### Services
 
 ```yaml
@@ -54,7 +53,7 @@ Every service is implemented as Sparrow plugin.
 One can refer to a plugin documentation,
 to see supported parameters.
 
-For example - sparkyci-mysql-service
+For example - [sparkyci-service-mysql](http://sparrowhub.io/plugin/sparkyci-service-mysql/0.000012)
 
 ### Scripts
 
