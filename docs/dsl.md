@@ -31,7 +31,7 @@ ephemeral docker containers that are destroyed at the end of every build
 there is no need for clean up steps so far.
 
 
-## Int stage
+## Init stage
 
 Pre stage allows to configure dependencies ( f.e. services ):
 
@@ -53,7 +53,7 @@ Other parameters:
 
 Arbitrary bash code:
 
-```
+```y'all
 init:
   script: |
     cp t/.my.cnf ~
@@ -63,7 +63,7 @@ init:
 
 Sets environment variables, visible for main CI process:
 
-```
+```yaml
 init:
   variables:
     DB_USER=sparky
