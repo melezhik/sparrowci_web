@@ -31,6 +31,7 @@ ephemeral docker containers that are destroyed at the end of every build
 there is no need for clean up steps so far.
 
 
+
 ## Init stage
 
 Pre stage allows to configure dependencies ( services, packages, etc ):
@@ -76,6 +77,13 @@ init:
   packages:
      xml:
 ```
+
+Every package is implemented as a Sparrow plugin.
+One can refer to a plugin documentation,
+to see supported parameters.
+
+For example - [sparkyci-package-xml](http://sparrowhub.io/plugin/sparkyci-package-mysql/0.000012)
+
 
 ### Variables
 
