@@ -67,7 +67,7 @@ init:
     cp t/.my.cnf ~
 ```
 
-* variables
+### Variables
 
 Sets environment variables, visible for main CI process:
 
