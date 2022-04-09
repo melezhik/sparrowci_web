@@ -23,6 +23,10 @@ TODO:
 
 Ideas, comments, bugs - are welcome: drop a message to @melezhik on Raku IRC
 
+# SparkyCI DSL
+
+[docs/dsl.md](https://github.com/melezhik/sparkyci/blob/main/docs/dsl.md)
+
 # GH project
 
 [https://github.com/melezhik/sparkyci](https://github.com/melezhik/sparkyci)
