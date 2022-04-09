@@ -90,7 +90,6 @@ Enable code coverage
 
 Enable license check
 
-* `script`
 
 # Complete example
 
