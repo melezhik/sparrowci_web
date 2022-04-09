@@ -1,7 +1,7 @@
 # SparkyCI DSL
 
 This document defines SparkyCI DSL design, which is not
-implemented yet. WHIP.
+implemented yet. WIP.
 
 ## Configuration file
 
@@ -24,7 +24,12 @@ features, so on.
 
 * `finish`
 
-Finish stage is used for some clean up jobs, etc
+Finish stage is used for some clean up jobs, etc. 
+
+The section is reserved for the future use. As SparkyCI jobs run on
+ephemeral docker containers that are destroyed at the end of every build
+there is no need for clean up steps so far.
+
 
 ## Int stage
 
