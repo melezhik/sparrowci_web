@@ -1,7 +1,7 @@
 # SparkyCI DSL
 
 This document defines SparkyCI DSL design, which is not
-implemented yet. WIP.
+implemented yet. This is WIP.
 
 ## Configuration file
 
@@ -9,7 +9,7 @@ Create `.sparkyci.yaml` in project root directory
 
 ## Stages
 
-CI process consists of following stage:
+CI process consists of following stages:
 
 * `init`
 
