@@ -91,8 +91,8 @@ Sets environment variables, visible for main CI process:
 ```yaml
 init:
   variables:
-    DB_USER=sparky
-    DB_PASS=sparky123
+    DB_USE: sparky
+    DB_PASS: sparky123
 ```
 
 One can reference variables anywhere 
