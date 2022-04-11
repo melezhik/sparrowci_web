@@ -127,44 +127,56 @@ class Pipeline does Sparky::JobApi::Role {
         dir => "{$*CWD}/scm",
       );
 
+      # notify job
       my $nj = self.new-job:
         :api($.notify-api),
         :project($.notify-project),
         :job-id($.notify-job);
 
-      my $sj = self.new-job;
+      my $init-log;
 
-      $sj.queue({
-        description => "init",
-        tags => %(
-          stage => "init",
-        ),
-      });
+      if "{$*CWD}/scm/.sparkyci.yaml".IO ~~ :e {
 
-      my $s = self.wait-job($sj);
+        # init job 
+        my $j = self.new-job;
 
-      my %sj = $sj.info;
+        my $sparkyci-yaml = "{$*CWD}/scm/.sparkyci.yaml".IO.slurp;
 
-      my $r = HTTP::Tiny.get: "http://127.0.0.1:4000/report/raw/{%sj<project>}/{%sj<job-id>}";
-
-      my $init-log = $r<content> ?? $r<content>.decode !! '';
-
-      if $s<FAIL> or $s<TIMEOUT> {
-        $nj.put-stash({
-          status => "FAIL",
-          init-log => $init-log,
-          test-coverage-html => "",
-          raku-env => {},
-          git-data => $git-data,
-        });
-        $nj.queue({
-          description => "{$.project} - build report",
+        $j.queue({
+          description => "init",
           tags => %(
-            stage => "notify",
-            worker => $.worker,
+            stage => "init",
+            sparkyci-yaml => $sparkyci-yaml,
           ),
         });
-        die;
+
+        my $s = self.wait-job($j);
+
+        my %j = $j.info;
+
+        my $r = HTTP::Tiny.get: "http://127.0.0.1:4000/report/raw/{%j<project>}/{%j<job-id>}";
+
+        $init-log = $r<content> ?? $r<content>.decode !! '';
+
+        if $s<FAIL> or $s<TIMEOUT> {
+          $nj.put-stash({
+            status => "FAIL",
+            init-log => $init-log,
+            test-coverage-html => "",
+            raku-env => {},
+            git-data => $git-data,
+          });
+          $nj.queue({
+            description => "{$.project} - build report",
+            tags => %(
+              stage => "notify",
+              worker => $.worker,
+            ),
+          });
+          die;
+        }
+      } else {
+          $init-log = "no .sparkyci.yaml file found"
       }
 
       my $j = self.new-job;
@@ -178,11 +190,11 @@ class Pipeline does Sparky::JobApi::Role {
       });
 
 
-      $s = self.wait-job($j);
+      my $s = self.wait-job($j);
 
       my %j = $j.info;
 
-      $r = HTTP::Tiny.get: "http://127.0.0.1:4000/report/raw/{%j<project>}/{%j<job-id>}";
+      my $r = HTTP::Tiny.get: "http://127.0.0.1:4000/report/raw/{%j<project>}/{%j<job-id>}";
 
       my $log = $r<content> ?? $r<content>.decode !! '';
 
