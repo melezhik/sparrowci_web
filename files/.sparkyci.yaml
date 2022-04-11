@@ -1,0 +1,14 @@
+init:
+  services:
+    mysql: OK
+
+  script: |
+    echo $DB_USER
+    cp t/.my.cnf ~
+
+  variables:
+    DB_USER: sparky
+    DB_PASS: sparky123
+
+main:
+  with-code-coverage: false
