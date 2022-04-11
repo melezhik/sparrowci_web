@@ -1,5 +1,7 @@
 use Sparky::JobApi;
 use HTTP::Tiny;
+use YAMLish;
+use Data::Dump;
 
 class Pipeline does Sparky::JobApi::Role {
 
@@ -11,6 +13,70 @@ class Pipeline does Sparky::JobApi::Role {
   has Str $.notify-api = %*ENV<NOTIFY_API> || "";
   has Str $.notify-project = %*ENV<NOTIFY_PROJECT> || "";
   has Str $.notify-job = %*ENV<NOTIFY_JOB> || "";
+  has Str $.sparkyci-yaml = tags()<sparkyci-yaml> || "";
+
+  method stage-init {
+
+    say "load .sparkyci.yaml from {$.sparkyci-yaml}";
+
+    my $yaml = $.sparkyci-yaml.IO.slurp;
+
+    my $sci-conf-raw = load-yaml($yaml);
+
+    die $sci-conf-raw.Execption if $sci-conf-raw.WHAT === Failure;
+
+    #say $sci-conf-raw;
+
+    my $variables = $sci-conf-raw<init><variables> ?? $sci-conf-raw<init><variables>  !! {}; 
+
+    say "variables loaded: ", $variables.perl; 
+
+    $yaml = $yaml.subst(/ '$' (\S+)  /, { $variables{$0} || "" }, :g );
+
+    say "processed yaml: \n{$yaml}";
+
+    say "load processed yaml ...";
+
+    my $sci-conf = load-yaml($yaml);
+
+    my $profile = "{%*ENV<HOME>}/.profile";
+
+    say "add environment variables into $profile";
+
+    unless my $fh = open "$profile", :a {
+      die "Could not open '$profile': {$fh.exception}";
+    }
+
+    for $variables.kv -> $k, $v {
+      say "export {$k}={$v}";
+      $fh.say("export {$k}={$v}");
+    }
+
+    $fh.close;
+
+    for $sci-conf<init><packages> || () -> $p {
+      my $name =  $p.keys[0];
+      say "install package {$name}";
+      my $params = $p{$name};
+      say "params: {$params.perl}";
+      task-run $name, "sparkyci-package-{$name}", $params;
+    }
+
+    for $sci-conf<init><services> || () -> $s {
+      my $name =  $s.keys[0];
+      say "install service {$name}";
+      my $params = $s{$name};
+      say "params: {$params.perl}";    
+      task-run $name, "sparkyci-service-{$name}", $params;
+    }
+
+    if $sci-conf<init><script> {
+      bash $sci-conf<init><script>, %(
+        description => "init.script"
+      );
+    }
+
+  }
 
   method stage-test {
 
@@ -48,7 +114,7 @@ class Pipeline does Sparky::JobApi::Role {
 
   method stage-main {
 
-      say "run raku build for scm: {$.scm}";
+      say "run raku build for scm: {$.scm} !";
 
       directory "scm";
 
@@ -60,6 +126,58 @@ class Pipeline does Sparky::JobApi::Role {
       my $git-data = task-run "git data", "git-commit-data", %(
         dir => "{$*CWD}/scm",
       );
+
+      # notify job
+      my $nj = self.new-job:
+        :api($.notify-api),
+        :project($.notify-project),
+        :job-id($.notify-job);
+
+      my $init-log;
+
+      if "{$*CWD}/scm/.sparkyci.yaml".IO ~~ :e {
+
+        # init job 
+        my $j = self.new-job;
+
+        my $sparkyci-yaml = "{$*CWD}/scm/.sparkyci.yaml";
+
+        $j.queue({
+          description => "init",
+          tags => %(
+            stage => "init",
+            sparkyci-yaml => $sparkyci-yaml,
+          ),
+        });
+
+        my $s = self.wait-job($j);
+
+        my %j = $j.info;
+
+        my $r = HTTP::Tiny.get: "http://127.0.0.1:4000/report/raw/{%j<project>}/{%j<job-id>}";
+
+        $init-log = $r<content> ?? $r<content>.decode !! '';
+
+        if $s<FAIL> or $s<TIMEOUT> {
+          $nj.put-stash({
+            status => "FAIL",
+            init-log => $init-log,
+            test-coverage-html => "",
+            raku-env => {},
+            git-data => $git-data,
+          });
+          $nj.queue({
+            description => "{$.project} - build report",
+            tags => %(
+              stage => "notify",
+              worker => $.worker,
+            ),
+          });
+          die;
+        }
+      } else {
+          $init-log = "no .sparkyci.yaml file found"
+      }
 
       my $j = self.new-job;
 
@@ -74,12 +192,6 @@ class Pipeline does Sparky::JobApi::Role {
 
       my $s = self.wait-job($j);
 
-      my $nj = self.new-job: 
-        :api($.notify-api), 
-        :project($.notify-project), 
-        :job-id($.notify-job);
-
-
       my %j = $j.info;
 
       my $r = HTTP::Tiny.get: "http://127.0.0.1:4000/report/raw/{%j<project>}/{%j<job-id>}";
@@ -93,6 +205,7 @@ class Pipeline does Sparky::JobApi::Role {
       if $s<OK> {
         $nj.put-stash({ 
           status => "OK", 
+          init-log => $init-log,
           log => $log, 
           test-coverage-html => $test-coverage-html,
           raku-env => $raku-env,
@@ -101,7 +214,8 @@ class Pipeline does Sparky::JobApi::Role {
       } else {
         $nj.put-stash({ 
           status => "FAIL", 
-          log => $log,  
+          init-log => $init-log,
+          log => $log, 
           test-coverage-html => $test-coverage-html,
           raku-env => $raku-env,
           git-data => $git-data,
