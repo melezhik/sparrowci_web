@@ -8,7 +8,9 @@ say "load yaml from files/.sparkyci.yaml: $yaml";
 
 my $sci-conf-raw = load-yaml("files/.sparkyci.yaml".IO.slurp);
 
-say $sci-conf-raw;
+die $sci-conf-raw.Execption if $sci-conf-raw.WHAT === Failure;
+
+#say $sci-conf-raw;
 
 my $variables = $sci-conf-raw<init><variables> ?? $sci-conf-raw<init><variables>  !! {}; 
 
@@ -18,8 +20,18 @@ $yaml = $yaml.subst(/ '$' (\S+)  /, { $variables{$0} || "" }, :g );
 
 say "processed yaml: $yaml";
 
-#my $sci-conf = load-yaml("files/.sparkyci.yaml".IO.slurp);
+my $profile = "{%*ENV<HOME>}/.profile";
 
-#say $sci-conf;
+say "add environment variables into $profile";
 
-say "OK";
+unless my $fh = open "$profile", :a {
+    die "Could not open '$profile': {$fh.exception}";
+}
+
+for $variables.kv -> $k, $v {
+    say "export {$k}={$v}";
+    $fh.say("export {$k}={$v}");
+
+}
+
+$fh.close;
