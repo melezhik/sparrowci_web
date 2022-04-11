@@ -17,11 +17,11 @@ class Pipeline does Sparky::JobApi::Role {
 
   method stage-init {
 
-    my $yaml =  $.sparkyci-yaml;
+    say "load .sparkyci.yaml";
 
-    say "load yaml from files/.sparkyci.yaml: $yaml";
+    my $yaml = $.sparkyci-yaml;
 
-    my $sci-conf-raw = load-yaml("files/.sparkyci.yaml".IO.slurp);
+    my $sci-conf-raw = load-yaml($yaml);
 
     die $sci-conf-raw.Execption if $sci-conf-raw.WHAT === Failure;
 
@@ -33,7 +33,7 @@ class Pipeline does Sparky::JobApi::Role {
 
     $yaml = $yaml.subst(/ '$' (\S+)  /, { $variables{$0} || "" }, :g );
 
-    say "processed yaml: $yaml";
+    say "processed yaml: {$yaml}";
 
     say "load processed yaml ...";
 

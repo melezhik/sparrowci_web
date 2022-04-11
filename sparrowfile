@@ -63,8 +63,11 @@ class Pipeline does Sparky::JobApi::Role {
 
   method stage-main {
 
-    say "configuration: cpu: {$.cpu} | mem: {$.mem}";
+      say "configuration: cpu: {$.cpu} | mem: {$.mem}";
+  
+      say "sparky project: {tags()<sparky-project>}";
 
+      say tags().perl;
 
       my $cj = self.new-job: :project<sparkyci.run.container>;
 
