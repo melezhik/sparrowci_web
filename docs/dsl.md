@@ -41,7 +41,7 @@ Initialization stage allows to configure dependencies ( services, packages, etc 
 ```yaml
 init:
   services:
-    mysql:
+    mysql: {}
 ```
 
 Supported services:
@@ -73,8 +73,8 @@ Installs packages of software
 ```yaml
 init:
   packages:
-     xml:
-     ssl:
+     xml: {}
+     ssl: {}
 ```
 
 Every package is implemented as a Sparrow plugin.
@@ -130,7 +130,7 @@ Enable license check
 ```yaml
 init:
   services:
-    mysql:
+    mysql: {}
 
   script: |
     cp t/.my.cnf ~

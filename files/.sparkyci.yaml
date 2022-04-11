@@ -1,6 +1,6 @@
 init:
   services:
-    mysql: OK
+    mysql: {}
 
   script: |
     echo $DB_USER
