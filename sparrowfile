@@ -125,6 +125,7 @@ class Pipeline does Sparky::JobApi::Role {
     my $nj-stash = $nj.get-stash;
 
     "{sparkyci-root()}/data/{$bid}/log.txt".IO.spurt($nj-stash<log>||"");
+    "{sparkyci-root()}/data/{$bid}/init-log.txt".IO.spurt($nj-stash<init-log>||"");
 
     "{sparkyci-root()}/data/{$bid}/data.json".IO.spurt(to-json(%(
       date => "{DateTime.now}",
@@ -135,6 +136,7 @@ class Pipeline does Sparky::JobApi::Role {
       id => $bid,
       test-coverage-html => $nj-stash<test-coverage-html> || "",
       log => $nj-stash<log> || "",
+      init-log => $nj-stash<init-log> || "",
       raku-env => $nj-stash<raku-env> || {},
       git-data => $nj-stash<git-data> || {}, 
       elapsed => $time.Int,

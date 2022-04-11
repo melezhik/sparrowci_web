@@ -23,6 +23,7 @@
                     <div class="container">
                       <ul>
                         <li class="tab is-active" onclick="openTab(event,'Summary')"><a>Summary</a></li>
+                        <li class="tab" onclick="openTab(event,'Init')"><a>Init</a></li>
                         <li class="tab" onclick="openTab(event,'Report')"><a>Report</a></li>
                         <li class="tab" onclick="openTab(event,'TC')"><a>Test coverage</a></li>
                       </ul>
@@ -41,6 +42,9 @@
                     --- <br>
                     Git sha: <.git-data.sha><br>
                     Git comment: <.git-data.comment><br>
+                  </div>
+                  <div id="Init" class="content-tab" style="display:none">
+                    <pre><&HTML(.init-log)></pre>
                   </div>
                   <div id="Report" class="content-tab" style="display:none">
                     <pre><&HTML(.log)></pre>
