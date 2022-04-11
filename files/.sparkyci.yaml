@@ -1,6 +1,8 @@
 init:
   services:
-    mysql: {}
+    mysql:
+      db-user: $DB_USER
+      db-password: $DB_PASS
 
   script: |
     echo $DB_USER

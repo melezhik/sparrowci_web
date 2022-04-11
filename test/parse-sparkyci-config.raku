@@ -35,3 +35,17 @@ for $variables.kv -> $k, $v {
 }
 
 $fh.close;
+
+
+for $sci-conf-raw<init><packages> || () -> $p {
+    say "install package: $p"
+}
+
+for $sci-conf-raw<init><services> || () -> $s {
+    #say "install service: $s";
+    #say "{$s}";
+    #say $s{$s}.perl;
+    my $name =  $s.keys[0];
+    say "install service {$name}";
+    say $s{$name}.perl;    
+}
