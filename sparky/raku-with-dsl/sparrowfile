@@ -70,8 +70,8 @@ class Pipeline does Sparky::JobApi::Role {
       task-run $name, "sparkyci-service-{$name}", $params;
     }
 
-    if $sci-conf<script> {
-      bash $sci-conf<script>, %(
+    if $sci-conf<init><script> {
+      bash $sci-conf<init><script>, %(
         description => "init.script"
       );
     }
