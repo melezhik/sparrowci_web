@@ -17,9 +17,9 @@ class Pipeline does Sparky::JobApi::Role {
 
   method stage-init {
 
-    say "load .sparkyci.yaml";
+    say "load .sparkyci.yaml from {$.sparkyci-yaml}";
 
-    my $yaml = $.sparkyci-yaml;
+    my $yaml = $.sparkyci-yaml.IO.slurp;
 
     my $sci-conf-raw = load-yaml($yaml);
 
@@ -33,7 +33,7 @@ class Pipeline does Sparky::JobApi::Role {
 
     $yaml = $yaml.subst(/ '$' (\S+)  /, { $variables{$0} || "" }, :g );
 
-    say "processed yaml: {$yaml}";
+    say "processed yaml: \n{$yaml}";
 
     say "load processed yaml ...";
 
@@ -140,7 +140,7 @@ class Pipeline does Sparky::JobApi::Role {
         # init job 
         my $j = self.new-job;
 
-        my $sparkyci-yaml = "{$*CWD}/scm/.sparkyci.yaml".IO.slurp;
+        my $sparkyci-yaml = "{$*CWD}/scm/.sparkyci.yaml";
 
         $j.queue({
           description => "init",
