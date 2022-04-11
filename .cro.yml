@@ -4,7 +4,7 @@ name: SparkyCI
 entrypoint: app.raku
 ignore:
   #- projects
-  #- sparky
+  - sparky/
   #- .cache
   #- .tom
   - README.md
