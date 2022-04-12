@@ -39,7 +39,7 @@ class Pipeline does Sparky::JobApi::Role {
 
     my $sci-conf = load-yaml($yaml);
 
-    my $profile = "{%*ENV<HOME>}/.bashrc";
+    my $profile = "/etc/profile";
 
     say "add environment variables into $profile";
 
