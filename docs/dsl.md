@@ -81,7 +81,7 @@ Every package is implemented as a Sparrow plugin.
 One can refer to a plugin documentation,
 to see supported parameters.
 
-For example - [sparkyci-package-xml](http://sparrowhub.io/plugin/sparkyci-package-xml/0.000001)
+For example - [sparkyci-package-mysql](http://sparrowhub.io/plugin/sparkyci-package-mysql/0.000002)
 
 
 ### Variables
