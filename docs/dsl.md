@@ -81,7 +81,7 @@ Every package is implemented as a Sparrow plugin.
 One can refer to a plugin documentation,
 to see supported parameters.
 
-For example - [sparkyci-package-xml](http://sparrowhub.io/plugin/sparkyci-package-xml/0.000001)
+For example - [sparkyci-package-mysql](http://sparrowhub.io/plugin/sparkyci-package-mysql/0.000002)
 
 
 ### Variables
@@ -129,16 +129,26 @@ Enable license check
 
 ```yaml
 init:
+
   services:
+    mysql:
+      db_name: $MYSQL_DATABASE
+      db_user: $MYSQL_USER
+      db_pass: $MYSQL_PASSWORD
+
+  packages:
     mysql: {}
 
   script: |
-    cp t/.my.cnf ~
+    env | grep MYSQL
 
   variables:
-    DB_USER: sparky
-    DB_PASS: sparky123
+    MYSQL_DATABASE: dbdishtest
+    MYSQL_HOST: localhost
+    MYSQL_USER: testuser
+    MYSQL_PASSWORD: testpass
+    MYSQL_ROOT_PASSWORD: ''
 
 main:
-  with-code-coverage: false
+  with-code-coverage: true
 ```
