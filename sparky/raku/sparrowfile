@@ -39,7 +39,7 @@ class Pipeline does Sparky::JobApi::Role {
 
     my $sci-conf = load-yaml($yaml);
 
-    my $profile = "{%*ENV<HOME>}/.bashrc";
+    my $profile = "{%*ENV<HOME>}/.sparkyci.vars";
 
     say "add environment variables into $profile";
 
@@ -53,6 +53,10 @@ class Pipeline does Sparky::JobApi::Role {
     }
 
     $fh.close;
+
+    bash "sudo cat {%*ENV<HOME>}/.sparkyci.vars >> /etc/profile", %(
+      description => "update /etc/profile"
+    );
 
     for $sci-conf<init><packages> || () -> $p {
       my $name =  $p.keys[0];
