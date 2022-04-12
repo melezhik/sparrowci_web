@@ -129,16 +129,26 @@ Enable license check
 
 ```yaml
 init:
+
   services:
+    mysql:
+      db_name: $MYSQL_DATABASE
+      db_user: $MYSQL_USER
+      db_pass: $MYSQL_PASSWORD
+
+  packages:
     mysql: {}
 
   script: |
-    cp t/.my.cnf ~
+    env | grep MYSQL
 
   variables:
-    DB_USER: sparky
-    DB_PASS: sparky123
+    MYSQL_DATABASE: dbdishtest
+    MYSQL_HOST: localhost
+    MYSQL_USER: testuser
+    MYSQL_PASSWORD: testpass
+    MYSQL_ROOT_PASSWORD: ''
 
 main:
-  with-code-coverage: false
+  with-code-coverage: true
 ```
