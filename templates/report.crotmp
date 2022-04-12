@@ -40,6 +40,9 @@
                     Raku Version: <.raku-env.raku><br>
                     Zef Version: <.raku-env.zef><br>
                     --- <br>
+                    <?.scm>
+                    SCM: <a href="<.scm>" target="_blank"><.scm></a><br>
+                    </?>
                     Git sha: <.git-data.sha><br>
                     Git comment: <.git-data.comment><br>
                   </div>
