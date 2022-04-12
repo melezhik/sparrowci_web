@@ -54,8 +54,8 @@ class Pipeline does Sparky::JobApi::Role {
 
     $fh.close;
 
-    bash "sudo bash -c 'cat {%*ENV<HOME>}/.sparkyci.vars >> /etc/profile'", %(
-      description => "update /etc/profile"
+    bash "sudo bash -c 'cat {%*ENV<HOME>}/.sparkyci.vars >> /etc/bashrc'", %(
+      description => "update /etc/bashrc"
     );
 
     for $sci-conf<init><packages> || () -> $p {
