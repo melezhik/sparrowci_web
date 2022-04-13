@@ -92,7 +92,7 @@ class Pipeline does Sparky::JobApi::Role {
 
 
     # wait containers jobs
-    my $s = self.wait-job($cj, %( timeout => 800 )); 
+    my $s = self.wait-job($cj, %( timeout => 200 )); 
 
     # wait notify jobs
     my $s2 = self.wait-job($nj, %( timeout => 800 )); 
@@ -110,7 +110,19 @@ class Pipeline does Sparky::JobApi::Role {
 
     say "cost: \$", (0.0000013**($.mem.Int)*$time*1 + 0.0000113*($.cpu.Int)*$time*1);
 
-    my $state = $s2<OK> ?? 1 !! ( $s2<TIMEOUT> ?? -1 !! -2 );
+    my $state;
+
+    if $s<TIMEOUT> {
+      $state = -1;
+    } elsif $s<FAIL> {
+      $state = -2;
+    } elsif $s2<TIMEOUT> {
+      $state = -1;
+    } elsif $s2<FAIL> {
+      $state = -2;
+    } else {
+      $state = 1
+    }
 
     my $desc = $.scm;
 
