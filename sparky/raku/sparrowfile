@@ -72,7 +72,8 @@ class Pipeline does Sparky::JobApi::Role {
 
     if $sci-conf<init><script> {
       bash $sci-conf<init><script>, %(
-        description => "init.script"
+        description => "init.script",
+        cwd => $.scm-dir,
       );
     }
 
@@ -147,6 +148,7 @@ class Pipeline does Sparky::JobApi::Role {
           tags => %(
             stage => "init",
             sparkyci-yaml => $sparkyci-yaml,
+            scm-dir => "{$*CWD}/scm",
           ),
         });
 
