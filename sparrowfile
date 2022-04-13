@@ -92,7 +92,7 @@ class Pipeline does Sparky::JobApi::Role {
 
 
     # wait containers jobs
-    my $s = self.wait-job($cj); 
+    my $s = self.wait-job($cj, %( timeout => 800 )); 
 
     # wait notify jobs
     my $s2 = self.wait-job($nj, %( timeout => 800 )); 
