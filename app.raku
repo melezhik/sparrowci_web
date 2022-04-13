@@ -66,6 +66,15 @@ my $application = route {
       )
     }
 
+    get -> 'donations', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
+      template 'templates/donations.crotmp', %(
+        page-title => "Support SparkyCI", 
+        title => title(),   
+        css => css($theme),
+        theme => $theme,
+        navbar => navbar($user, $token, $theme),
+      )
+    }
     get -> 'repos', :$message, :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       if check-user($user, $token) == True {
         my $data = repos($user);

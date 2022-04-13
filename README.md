@@ -27,10 +27,6 @@ Ideas, comments, bugs - are welcome: drop a message to @melezhik on Raku IRC
 
 [docs/dsl.md](https://github.com/melezhik/sparkyci/blob/main/docs/dsl.md)
 
-# Sponsors
-
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/E1E75Z6RL)
-
 # GH project
 
 [https://github.com/melezhik/sparkyci](https://github.com/melezhik/sparkyci)
