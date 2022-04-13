@@ -49,7 +49,7 @@ class Pipeline does Sparky::JobApi::Role {
 
     for $variables.kv -> $k, $v {
       say "export {$k}={$v}";
-      $fh.say("export {$k}={$v}");
+      $fh.say("export {$k}='{$v}'");
     }
 
     $fh.close;
