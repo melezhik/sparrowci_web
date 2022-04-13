@@ -1,6 +1,6 @@
 # SparkyCI DSL
 
-This document defines SparkyCI DSL design, which is not
+This document defines SparkyCI DSL design, which is not _fully_
 implemented yet. This is WIP.
 
 ## Configuration file
