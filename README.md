@@ -16,10 +16,10 @@ TODO:
 
 * More languages support (not just Raku)
 * Improve UI
-* GH authentication
+* GH authentication +
 * Send notifications (email/irc?)
 * CI against daily Rakudo builds
-* Discuss must have features with Raku community
+* Discuss must have features with Raku community +
 
 Ideas, comments, bugs - are welcome: drop a message to @melezhik on Raku IRC
 
