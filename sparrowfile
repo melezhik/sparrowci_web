@@ -95,7 +95,7 @@ class Pipeline does Sparky::JobApi::Role {
     my $s = self.wait-job($cj, %( timeout => 200 )); 
 
     # wait notify jobs
-    my $s2 = self.wait-job($nj, %( timeout => 800 )); 
+    my $s2 = self.wait-job($nj, %( timeout => 1000 )); 
 
     # remove containers
     say "clean up containers just in case ...";
