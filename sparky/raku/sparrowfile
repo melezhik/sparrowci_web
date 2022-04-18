@@ -107,6 +107,13 @@ class Pipeline does Sparky::JobApi::Role {
         );
       }
 
+      if "{$.scm-dir}/Build.pm6".IO ~~ :f {
+        bash "zef build . 2>&1", %(
+          cwd => $.scm-dir,
+          description => "zef build"
+        );
+      }
+
       bash "racoco -l --html 2>&1", %(
         cwd => $.scm-dir,
         description => "run tests"
