@@ -54,20 +54,16 @@ class Pipeline does Sparky::JobApi::Role {
 
     $fh.close;
 
-    for $sci-conf<init><packages> || () -> $p {
-      my $name =  $p.keys[0];
-      say "install package {$name}";
-      my $params = $p{$name};
+    for $sci-conf<init><packages>.kv || () -> $p,$params {
+      say "install package {$p}";
       say "params: {$params.perl}";
-      task-run $name, "sparkyci-package-{$name}", $params;
+      task-run "package {$p}", "sparkyci-package-{$p}", $params;
     }
 
-    for $sci-conf<init><services> || () -> $s {
-      my $name =  $s.keys[0];
-      say "install service {$name}";
-      my $params = $s{$name};
+    for $sci-conf<init><services>.kv || () -> $s,$params {
+      say "install service {$s}";
       say "params: {$params.perl}";    
-      task-run $name, "sparkyci-service-{$name}", $params;
+      task-run "service {$s}", "sparkyci-service-{$s}", $params;
     }
 
     if $sci-conf<init><script> {

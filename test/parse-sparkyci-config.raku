@@ -2,15 +2,15 @@
 use YAMLish;
 use Data::Dump;
 
-my $yaml =  "files/.sparkyci.yaml".IO.slurp;
+my $yaml =  "/tmp/.sparkyci.yaml".IO.slurp;
 
-say "load yaml from files/.sparkyci.yaml: $yaml";
+say "load yaml from /tmp/.sparkyci.yaml: $yaml";
 
-my $sci-conf-raw = load-yaml("files/.sparkyci.yaml".IO.slurp);
+my $sci-conf-raw = load-yaml("/tmp/.sparkyci.yaml".IO.slurp);
 
 die $sci-conf-raw.Execption if $sci-conf-raw.WHAT === Failure;
 
-#say $sci-conf-raw;
+say $sci-conf-raw.perl;
 
 my $variables = $sci-conf-raw<init><variables> ?? $sci-conf-raw<init><variables>  !! {}; 
 
@@ -37,15 +37,12 @@ for $variables.kv -> $k, $v {
 $fh.close;
 
 
-for $sci-conf-raw<init><packages> || () -> $p {
-    say "install package: $p"
+for $sci-conf-raw<init><packages>.kv || () -> $p,$params {
+    say "install package: $p";
+    say $params.perl;    
 }
 
-for $sci-conf-raw<init><services> || () -> $s {
-    #say "install service: $s";
-    #say "{$s}";
-    #say $s{$s}.perl;
-    my $name =  $s.keys[0];
-    say "install service {$name}";
-    say $s{$name}.perl;    
+for $sci-conf-raw<init><services><> || () -> $s,$params {
+    say "install service {$s}";
+    say $params.perl;    
 }
