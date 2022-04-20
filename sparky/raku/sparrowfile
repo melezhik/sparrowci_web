@@ -202,7 +202,7 @@ class Pipeline does Sparky::JobApi::Role {
       });
 
 
-      my $s = self.wait-job($j);
+      my $s = self.wait-job($j, %( timeout => 1000 ));
 
       my %j = $j.info;
 
