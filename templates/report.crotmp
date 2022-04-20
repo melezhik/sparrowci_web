@@ -34,8 +34,9 @@
                   <div id="Summary" class="content-tab">
                     BuildID: <.id><br>
                     Status: <.state><br>
+                    Worker status: <.worker-status><br>
                     Date: <.date><br>
-                    Time elapsed: <.elapsed> sec<br>
+                    Time rlapsed: <.elapsed> sec<br>
                     --- <br>
                     Raku Version: <.raku-env.raku><br>
                     Zef Version: <.raku-env.zef><br>

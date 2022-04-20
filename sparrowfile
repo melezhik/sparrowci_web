@@ -146,6 +146,7 @@ class Pipeline does Sparky::JobApi::Role {
     "{sparkyci-root()}/data/{$bid}/data.json".IO.spurt(to-json(%(
       date => "{DateTime.now}",
       state => $state,
+      worker-status => $nj-stash<status> || "",
       project => $project,
       desc => $desc,
       job-id => $job-id,

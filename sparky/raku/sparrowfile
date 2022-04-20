@@ -223,11 +223,20 @@ class Pipeline does Sparky::JobApi::Role {
           raku-env => $raku-env,
           git-data => $git-data,
         });
-      } else {
+      } elsif $s<FAIL> {
         $nj.put-stash({ 
           status => "FAIL", 
           init-log => $init-log,
           log => $log, 
+          test-coverage-html => $test-coverage-html,
+          raku-env => $raku-env,
+          git-data => $git-data,
+        });
+      } elsif $s<TIMEOUT> {
+        $nj.put-stash({
+          status => "TIMEOUT",
+          init-log => $init-log,
+          log => $log,
           test-coverage-html => $test-coverage-html,
           raku-env => $raku-env,
           git-data => $git-data,
