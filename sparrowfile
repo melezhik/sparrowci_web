@@ -92,7 +92,7 @@ class Pipeline does Sparky::JobApi::Role {
 
 
     # wait containers jobs
-    my $s = self.wait-job($cj, %( timeout => 200 )); 
+    my $s = self.wait-job($cj, %( timeout => 1000 )); 
 
     # wait notify jobs
     my $s2 = self.wait-job($nj, %( timeout => 1000 )); 
@@ -161,9 +161,9 @@ class Pipeline does Sparky::JobApi::Role {
     )));
 
 
-    say $s.perl;
+    say "container job status: ", $s.perl;
 
-    say $s2.perl;
+    say "notify job status: ", $s2.perl;
 
     die if $s<FAIL> or $s<TIMEOUT>;
 
