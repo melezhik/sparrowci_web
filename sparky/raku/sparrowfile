@@ -103,6 +103,13 @@ class Pipeline does Sparky::JobApi::Role {
         );
       }
 
+      if "{$.scm-dir}/Build.rakumod".IO ~~ :f {
+        bash "zef build . 2>&1", %(
+          cwd => $.scm-dir,
+          description => "zef build"
+        );
+      }
+
       if "{$.scm-dir}/Build.pm6".IO ~~ :f {
         bash "zef build . 2>&1", %(
           cwd => $.scm-dir,
