@@ -4,7 +4,7 @@ use SparkyCI::Security;
 use Cro::HTTP::Client;
 use JSON::Fast;
 
-sub repos (Mu $user) is export {
+sub gh-repos (Mu $user) is export {
 
     unless "{cache-root()}/users/{$user}/repos.js".IO ~~ :e {
         sync-repos($user)
@@ -49,7 +49,11 @@ sub sync-repos (Mu $user) is export {
 sub projects (Mu $user) is export {
     my @list;
     for dir "{%*ENV<HOME>}/.sparky/projects/" -> $i {
-        push @list, "{$0}" if $i.IO ~~ :d and $i ~~ /"gh-" $user "-" (\S+)/;
+        if $i.IO ~~ :d and $i ~~ /"gh-" $user "-" (\S+)/ {
+            push @list, { repo => "{$0}", type => 'gh', type-human => "github" } 
+        } elsif $i.IO ~~ :d  and $i ~~ /"git-" $user "-" (\S+)/ {
+            push @list, {  repo => "{$0}" , type => 'git', type-human => "git" }
+        }
     }
     return @list;
 }

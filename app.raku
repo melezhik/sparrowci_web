@@ -77,14 +77,14 @@ my $application = route {
     }
     get -> 'repos', :$message, :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       if check-user($user, $token) == True {
-        my $data = repos($user);
+        my $data = gh-repos($user);
         my @projects = projects($user);
         my $repos =  $data<>.map({ ("\"{$_<name>||''}\"") }).join(",");
         template 'templates/repos.crotmp', %(
           page-title => "Repositories", 
           title => title(),
           projects => @projects, 
-          repos-js => $repos,
+          gh-repos-js => $repos,
           css => css($theme),
           theme => $theme,
           repos-sync-date => repos-sync-date($user),
@@ -98,11 +98,13 @@ my $application = route {
 
    post -> 'repo', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       if check-user($user, $token) == True {
-        my $repo;
-        request-body -> (:$repos) {
+        my $repo; my $type;
+        request-body -> (:$repos,:$typegit) {
           $repo = $repos;
-          say "add repo: $repo";
+          $type = $typegit ?? "git" !! "gh";
+          say "add repo: $repo type: $type";
         }
+        my $url = $type eq "git" ?? $repo !! "https://github.com/{$user}/{$repo}.git";
         my $yaml = qq:to/YAML/;
           sparrowdo:
             no_sudo: true
@@ -110,23 +112,31 @@ my $application = route {
             bootstrap: false
             format: default
             repo: file:///home/sph/repo
-            tags: cpu=2,mem=6,SCM_URL=https://github.com/{$user}/{$repo}.git
+            tags: cpu=2,mem=6,SCM_URL=$url
           disabled: false
           keep_builds: 100
           allow_manual_run: true
           scm:
-            url: https://github.com/{$user}/{$repo}.git
+            url: $url
             branch: HEAD
         YAML
-        say "yaml: $yaml";  
-        mkdir "{%*ENV<HOME>}/.sparky/projects/gh-{$user}-$repo";
-        "{%*ENV<HOME>}/.sparky/projects/gh-{$user}-$repo/sparky.yaml".IO.spurt($yaml);
+        say "yaml: $yaml";
 
-        if "{%*ENV<HOME>}/.sparky/projects/gh-{$user}-$repo/sparrowfile".IO ~~ :e {
-          say "{%*ENV<HOME>}/.sparky/projects/gh-{$user}-$repo/sparrowfile symlink exists"; 
+        my $repo-dir = $type eq "git" ?? 
+          "{%*ENV<HOME>}/.sparky/projects/git-{$user}-{$repo.split('/').tail}" !!
+          "{%*ENV<HOME>}/.sparky/projects/gh-{$user}-$repo";
+
+        say "create repo dir: $repo-dir";
+
+        mkdir $repo-dir;
+
+        "{$repo-dir}/sparky.yaml".IO.spurt($yaml);
+
+        if "{$repo-dir}/sparrowfile".IO ~~ :e {
+          say "{$repo-dir}/sparrowfile symlink exists"; 
         } else {
-          say "create {%*ENV<HOME>}/.sparky/projects/gh-{$user}-$repo/sparrowfile symlink"; 
-          symlink("sparrowfile","{%*ENV<HOME>}/.sparky/projects/gh-{$user}-$repo/sparrowfile");
+          say "create {$repo-dir}/sparrowfile symlink"; 
+          symlink("sparrowfile","{$repo-dir}/sparrowfile");
           redirect :see-other, "{http-root()}/repos?message=repo {$repo} added";
         }
       } else {
@@ -147,17 +157,20 @@ my $application = route {
 
     post -> 'repo-rm', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       if check-user($user, $token) == True {
-        my $repo-id;
-        request-body -> (:$repo) {
+        my $repo-id; my $repo-type;
+        request-body -> (:$repo,:$type) {
           $repo-id = $repo;
-          say "remove repo: $repo";
+          $repo-type = $type;
+          say "remove repo: $repo type: $type";
         }
+        
+        my $repo-dir = "{%*ENV<HOME>}/.sparky/projects/{$repo-type}-{$user}-{$repo-id}";
 
-        if "{%*ENV<HOME>}/.sparky/projects/gh-{$user}-{$repo-id}".IO ~~ :d {
-           say "remove {%*ENV<HOME>}/.sparky/projects/gh-{$user}-{$repo-id}";
-          rmtree "{%*ENV<HOME>}/.sparky/projects/gh-{$user}-{$repo-id}";
+        if "{$repo-dir}".IO ~~ :d {
+           say "remove {$repo-dir}";
+          rmtree $repo-dir;
         } else {
-           say "{%*ENV<HOME>}/.sparky/projects/gh-{$user}-{$repo-id} does not exist"; 
+           say "{$repo-dir} does not exist"; 
         }
         redirect :see-other, "{http-root()}/repos?message=repo {$repo-id} removed";
       } else {
@@ -165,9 +178,9 @@ my $application = route {
       }  
     }
 
-    get -> 'repo', 'edit', Str $repo-id, :$message, :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
+    get -> 'repo', 'edit', Str $type, Str $repo-id, :$message, :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       if check-user($user, $token) == True {
-        my %repo = repo($user, $repo-id);
+        my %repo = repo($user, $repo-id, $type);
         template 'templates/repos-edit.crotmp', %(
           page-title => "Edit Repo - {$repo-id}", 
           title => title(),
