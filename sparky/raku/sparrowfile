@@ -39,6 +39,10 @@ class Pipeline does Sparky::JobApi::Role {
 
     my $sci-conf = load-yaml($yaml);
 
+    my $j = Sparky::JobApi.new( mine => True );
+
+    $j.put-stash($sci-conf);
+
     my $profile = "{%*ENV<HOME>}/.profile";
 
     say "add environment variables into $profile";
@@ -81,6 +85,16 @@ class Pipeline does Sparky::JobApi::Role {
       say "scm-dir: {$.scm-dir}";
       say "git-sha: {$.git-sha}";
 
+      my $sparkyci-conf = Sparky::JobApi.new( mine => True ).get-stash;
+
+      if $sparkyci-conf<main> && $sparkyci-conf<main><build> && $sparkyci-conf<main><build><pre> {
+
+         bash $sparkyci-conf<main><build><pre>, %(
+          cwd => $.scm-dir,
+          description => "main.build.pre"
+        );
+
+      } 
       zef "App::RaCoCo", %(
           description => "install App::RaCoCo",
           notest => True 
@@ -153,6 +167,8 @@ class Pipeline does Sparky::JobApi::Role {
 
       my $init-log;
 
+      my $sparkyci-conf = {};
+
       if "{$*CWD}/scm/.sparkyci.yaml".IO ~~ :e {
 
         # init job 
@@ -170,6 +186,8 @@ class Pipeline does Sparky::JobApi::Role {
         });
 
         my $s = self.wait-job($j);
+
+        $sparkyci-conf = $j.get-stash() || {};
 
         my %j = $j.info;
 
@@ -200,11 +218,13 @@ class Pipeline does Sparky::JobApi::Role {
 
       my $j = self.new-job;
 
+      $j.put-stash($sparkyci-conf);
+
       $j.queue({
         description => "test",
         tags => %(
           stage => "test",
-          scm-dir => "{$*CWD}/scm"
+          scm-dir => "{$*CWD}/scm",
         ),
       });
 

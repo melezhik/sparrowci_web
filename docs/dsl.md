@@ -21,7 +21,6 @@ Initialization stage, used to installed dependencies required for `main` stage
 Main CI logic, used to define parameters for CI process, enable / disable some 
 features, so on.
 
-
 * `finish`
 
 Finish stage is used for some clean up jobs, etc. 
