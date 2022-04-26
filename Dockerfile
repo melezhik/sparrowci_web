@@ -1,4 +1,4 @@
-FROM melezhik/sparky:0.0.1
+FROM melezhik/sparky:0.0.2
 
 RUN rm -rf /tmp/sparkyci && echo OK
 

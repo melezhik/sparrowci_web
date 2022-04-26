@@ -52,13 +52,20 @@
                     <@projects: $i>
                       <tr>
                         <td>
-                          <form action="/repo-rm" method="POST">
-                            <input id="repo" class="input" type="hidden" name="repo" value="<$i.repo>">
                             <$i.type-human>@<$i.repo>
                         </td>
-                        <td>  
-                            <button class="button is-small">Delete</button>
+                        <td>
+                          <form action="/repo-build" method="POST">
+                            <input id="repo" class="input" type="hidden" name="repo" value="<$i.repo>">
                             <input type="hidden" name="type" value="<$i.type>">  
+                            <button class="button is-small">Rebuild</button>
+                          </form>
+                        </td>
+                        <td>
+                          <form action="/repo-rm" method="POST">
+                            <input id="repo" class="input" type="hidden" name="repo" value="<$i.repo>">
+                            <input type="hidden" name="type" value="<$i.type>">  
+                            <button class="button is-small">Delete</button>
                           </form>
                         </td>
                       </tr>

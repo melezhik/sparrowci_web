@@ -155,6 +155,36 @@ my $application = route {
       }  
     }
 
+    post -> 'repo-build', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
+      if check-user($user, $token) == True {
+        my $repo-id; my $repo-type;
+        request-body -> (:$repo,:$type) {
+          $repo-id = $repo;
+          $repo-type = $type;
+          say "build repo: $repo type: $type";
+        }
+        
+        my $repo-dir = "{%*ENV<HOME>}/.sparky/projects/{$repo-type}-{$user}-{$repo-id}";
+
+        my $id = "{('a' .. 'z').pick(20).join('')}.{$*PID}";
+
+        my %trigger = %(
+          description =>  "triggered by SparkyCI user",
+        );
+
+        mkdir "{$repo-dir}/.triggers";
+
+        "{$repo-dir}/.triggers/$id".IO.spurt(%trigger.perl);
+
+        say "queue repo: {$repo-id} type: {$repo-type} to build: {$repo-dir}/.triggers/$id";
+
+        redirect :see-other, "{http-root()}/repos?message=repo {$repo-id} queued to build";
+
+      } else {
+        redirect :see-other, "{http-root()}/login-page?message=you need to sign in to manage repositories";
+      }  
+    }
+
     post -> 'repo-rm', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       if check-user($user, $token) == True {
         my $repo-id; my $repo-type;

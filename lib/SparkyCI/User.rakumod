@@ -55,6 +55,6 @@ sub projects (Mu $user) is export {
             push @list, {  repo => "{$0}" , type => 'git', type-human => "git" }
         }
     }
-    return @list;
+    return @list.sort({ .<repo> || .<type> });
 }
 
