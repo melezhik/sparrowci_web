@@ -21,16 +21,6 @@ Initialization stage, used to installed dependencies required for `main` stage
 Main CI logic, used to define parameters for CI process, enable / disable some 
 features, so on. 
 
-For example, precede main build command with some custom bash script:
-
-```yaml
-main:
-  build:
-    pre: |
-      set -x
-      ake test-setup deploy-runner
-```
-
 * `finish`
 
 Finish stage is used for some clean up jobs, etc. 
@@ -38,8 +28,6 @@ Finish stage is used for some clean up jobs, etc.
 The section is reserved for the future use. As SparkyCI jobs run on
 ephemeral docker containers that are destroyed at the end of every build
 there is no need for clean up steps so far.
-
-
 
 ## Init stage
 
@@ -133,6 +121,19 @@ Enable code coverage
 
 Enable license check
 
+### Build hooks
+
+Build hooks allow customize standard build flow.
+
+For example, to precede main build command with some custom bash script:
+
+```yaml
+main:
+  build:
+    pre: |
+      set -x
+      ake test-setup deploy-runner
+```
 
 # Complete example
 
