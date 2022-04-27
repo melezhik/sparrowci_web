@@ -94,16 +94,17 @@ class Pipeline does Sparky::JobApi::Role {
           description => "main.build.pre"
         );
 
-      } 
-      zef "App::RaCoCo", %(
-          description => "install App::RaCoCo",
-          notest => True 
-      );
+      }
+ 
+      #zef "App::RaCoCo", %(
+      #    description => "install App::RaCoCo",
+      #    notest => True 
+      #);
 
-      zef "App::Prove6", %(
-          description => "install prove6",
-          notest => True
-      );
+      #zef "App::Prove6", %(
+      #    description => "install prove6",
+      #    notest => True
+      #);
 
       bash "zef install --deps-only --test-depends --/test . 2>&1", %(
         cwd => $.scm-dir,
