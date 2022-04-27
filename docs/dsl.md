@@ -19,7 +19,17 @@ Initialization stage, used to installed dependencies required for `main` stage
 * `main`
 
 Main CI logic, used to define parameters for CI process, enable / disable some 
-features, so on.
+features, so on. 
+
+For example, precede main build command with some custom bash script:
+
+```yaml
+main:
+  build:
+    pre: |
+      set -x
+      ake test-setup deploy-runner
+```
 
 * `finish`
 
@@ -149,5 +159,11 @@ init:
     MYSQL_ROOT_PASSWORD: ''
 
 main:
+
+  build:
+    pre: |
+      set -x
+      echo "hello from build.pre hook!"
+
   with-code-coverage: true
 ```
