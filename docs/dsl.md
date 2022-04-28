@@ -119,7 +119,12 @@ Enable code coverage
 
 * `with-license-check`
 
-Enable license check
+Enable license check ( not implemented yet )
+
+* `verbose`
+
+Enable verbose output ( mostly will affect `zef` commands )
+
 
 ### Build hooks
 
@@ -167,4 +172,5 @@ main:
       echo "hello from build.pre hook!"
 
   with-code-coverage: true
+  verbose: true
 ```
