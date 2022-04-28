@@ -106,7 +106,13 @@ class Pipeline does Sparky::JobApi::Role {
       #    notest => True
       #);
 
-      bash "zef install --deps-only --test-depends --/test . 2>&1", %(
+      my $zef-flags = ( $sparkyci-conf<main> && $sparkyci-conf<main><verbose> ) ?? 
+      "--deps-only --test-depends --/test  --debug"  !! 
+      "--deps-only --test-depends --/test";
+      
+      say "Install Raku dependencies with: zef install $zef-flags";
+      
+      bash "zef install $zef-flags . 2>&1", %(
         cwd => $.scm-dir,
         description => "install deps"
       );
@@ -134,7 +140,7 @@ class Pipeline does Sparky::JobApi::Role {
 
       if $sparkyci-conf<main> && $sparkyci-conf<main><with-code-coverage> {
 
-        say "run test as: racoco -l --html";
+        say "Run tests with: racoco -l --html";
 
         bash "racoco -l --html 2>&1", %(
           cwd => $.scm-dir,
@@ -143,7 +149,7 @@ class Pipeline does Sparky::JobApi::Role {
 
       } else {
 
-        say "run test as: zef test . --verbose";
+        say "Run tests with: zef test . --verbose";
 
         bash "zef test . --verbose 2>&1", %(
           cwd => $.scm-dir,
