@@ -132,10 +132,25 @@ class Pipeline does Sparky::JobApi::Role {
         );
       }
 
-      bash "racoco -l --html 2>&1", %(
-        cwd => $.scm-dir,
-        description => "run tests"
-      );
+      if $sparkyci-conf<main> && $sparkyci-conf<main><with-code-coverage> {
+
+        say "run test as: racoco -l --html";
+
+        bash "racoco -l --html 2>&1", %(
+          cwd => $.scm-dir,
+          description => "run tests"
+        );
+
+      } else {
+
+        say "run test as: zef test . --verbose";
+
+        bash "zef test . --verbose 2>&1", %(
+          cwd => $.scm-dir,
+          description => "run tests"
+        );
+
+      }
 
       my $j = self.new-job: :mine(True);
 
