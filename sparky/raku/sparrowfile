@@ -110,7 +110,7 @@ class Pipeline does Sparky::JobApi::Role {
       "--deps-only --test-depends --/test  --debug"  !! 
       "--deps-only --test-depends --/test";
       
-      say "Install Raku dependencies with: zef install $zef-flags";
+      say "Install Raku dependencies with: zef install $zef-flags .";
       
       bash "zef install $zef-flags . 2>&1", %(
         cwd => $.scm-dir,
