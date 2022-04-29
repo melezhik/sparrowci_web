@@ -67,7 +67,7 @@ class Pipeline does Sparky::JobApi::Role {
     my $cj = self.new-job: :project<sparkyci.queue>;
 
     $cj.queue({
-      description => "{$.project} - run stage",
+      description => "{tags()<SPARKY_PROJECT>} - run stage",
       tags => %(
         stage => "run",
         project => tags()<SPARKY_PROJECT>,
