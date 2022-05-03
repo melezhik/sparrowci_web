@@ -5,5 +5,8 @@ sparrowdo:
   bootstrap: false
   format: default
 disabled: false
+scm:
+  url: https://github.com/melezhik/sparkyci.git
+  branch: master
 keep_builds: 5
 allow_manual_run: true

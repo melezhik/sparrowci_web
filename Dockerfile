@@ -4,9 +4,7 @@ RUN zef install --/test App::RaCoCo App::Prove6
 
 RUN rm -rf /tmp/sparkyci && echo OK
 
-RUN echo OK13 && git clone https://github.com/melezhik/sparkyci.git /tmp/sparkyci
-
-RUN echo OK13 && cp -r /tmp/sparkyci/sparky/container /home/raku/.sparky/projects/
+COPY sparky/raku /home/raku/.sparky/projects/raku
 
 USER raku 
 

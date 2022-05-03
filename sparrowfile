@@ -39,28 +39,28 @@ class Pipeline does Sparky::JobApi::Role {
         NOTIFY_API=https://sparrowhub.io:4000 -o table
     HERE
 
-    my $j = self.new-job: :project<sparkyci.run.job>;
+    #my $j = self.new-job: :project<sparkyci.run.job>;
 
-    $j.queue({
-      description => "{$.project} - run az container job",
-      tags => %(
-        stage => "run-container-job",
-        worker => $.worker,
-      ),
-    });
-
-  }
-
-
-  method stage-run-container-job {
-
-    bash qq:to/HERE/, %( description => "run sparky job" );
-      az container exec -g sparky2 --name {$.worker} \\
-      --exec-command "curl -fs -u sparky:sparky -d '' --retry-delay 10 --retry-connrefused --retry 10 -X POST 127.0.0.1:4000/build/project/container" \\
-      -o table
-    HERE
+    #$j.queue({
+    #  description => "{$.project} - run az container job",
+    #  tags => %(
+    #    stage => "run-container-job",
+    #    worker => $.worker,
+    #  ),
+    #});
 
   }
+
+
+  #method stage-run-container-job {
+
+  #  bash qq:to/HERE/, %( description => "run sparky job" );
+  #    az container exec -g sparky2 --name {$.worker} \\
+  #    --exec-command "curl -fs -u sparky:sparky -d '' --retry-delay 10 --retry-connrefused --retry 10 -X POST 127.0.0.1:4000/build/project/container" \\
+  #    -o table
+  #  HERE
+
+  #}
 
   method stage-main {
 
