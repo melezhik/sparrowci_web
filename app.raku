@@ -43,6 +43,19 @@ my $application = route {
       )
     }
 
+    get -> Str $user-id, 'builds', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
+      my @results = get-builds(100,$user-id);
+      #die @results.perl;
+      template 'templates/main.crotmp', %( 
+        page-title => "{$user-id}'s Reports",
+        title => title(),   
+        results => @results,
+        css => css($theme),
+        theme => $theme,
+        navbar => navbar($user, $token, $theme),
+      )
+    }
+
     get -> 'report', Int $id, :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       my %report = get-report($id);
       template 'templates/report.crotmp', %( 

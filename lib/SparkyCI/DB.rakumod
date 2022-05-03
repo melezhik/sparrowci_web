@@ -62,7 +62,7 @@ sub insert-build (:$state, :$project, :$desc, :$job-id ) is export {
 
 }
 
-sub get-builds ($limit=10) is export {
+sub get-builds ($limit=10, $user?) is export {
 
     my $dbh = get-dbh();
 
@@ -89,8 +89,12 @@ sub get-builds ($limit=10) is export {
 
     $sth.finish;
 
-    return @rows;
-
+    if $user {
+     return @rows.grep({.<project> ~~  / ( git || gh ) '-'  $user '-' / });
+    } else {
+     return @rows;
+    }
+ 
 }
 
 
