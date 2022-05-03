@@ -6,6 +6,8 @@ RUN rm -rf /tmp/sparkyci && echo OK
 
 COPY sparky/raku /home/raku/.sparky/projects/raku
 
+RUN sudo chown raku:raku -R /home/raku/.sparky/
+
 #RUN ls -l /home/raku/.sparky/projects/ && ls -l /home/raku/.sparky/projects/raku && ggg
 
 USER raku 
