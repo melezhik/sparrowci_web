@@ -35,12 +35,18 @@
             <div class="panel-block">
                 <div id="ActiveList" class="panel-block content-tab">
                   <p class="control">
-                    <table class="table">
+                    <table class="table" border=0>
                     <@projects: $i>
                       <tr>
                         <td>
                           <$i.type-human>@<$i.repo>
+                        </td>
+                        <td>
+                          |
                         </td>  
+                        <td>
+                          <a href="/repo/<$i.repo>/link?type=<$i.type>" target="_blank">Http Link</a>
+                        </td>
                       </tr>  
                     </@>
                     </table>

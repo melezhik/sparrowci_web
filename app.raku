@@ -223,7 +223,7 @@ my $application = route {
 
     get -> 'repo', 'edit', Str $type, Str $repo-id, :$message, :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       if check-user($user, $token) == True {
-        my %repo = repo($user, $repo-id, $type);
+        my %repo = get-repo($user, $repo-id, $type);
         template 'templates/repos-edit.crotmp', %(
           page-title => "Edit Repo - {$repo-id}", 
           title => title(),
@@ -235,6 +235,15 @@ my $application = route {
         )
       } else {
         redirect :see-other, "{http-root()}/login-page?message=you need to sign in to manage repositories";
+      }  
+    }
+
+    get -> 'repo', Str $repo-id, 'link', :$type, :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
+      my $repo = get-repo($user,$repo-id,$type);
+      if $repo && $repo<scm> && $repo<scm><url> {
+        redirect :see-other, $repo<scm><url>;
+      } else {
+        redirect :see-other, "{http-root()}/repos?message=http link not found";
       }  
     }
 
