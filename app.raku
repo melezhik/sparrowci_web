@@ -258,6 +258,10 @@ my $application = route {
       )
     }
 
+    get -> 'project', Str $project, 'badge' {
+      redirect :see-other, 'https://img.shields.io/static/v1?label=SparkyCI&message=Build+|+OK&color=green'
+    }
+
     get -> 'js', *@path {
         cache-control :public, :max-age(300);
         static 'js', @path;
