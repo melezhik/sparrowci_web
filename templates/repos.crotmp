@@ -47,6 +47,12 @@
                         <td>
                           <a href="/repo/<$i.repo>/link?type=<$i.type>" target="_blank">Http Link</a>
                         </td>
+                        <td>
+                          |
+                        </td>  
+                        <td>
+                          <a href="/project/<$i.project>/badge/markdown">Badge</a>
+                        </td>
                       </tr>  
                     </@>
                     </table>

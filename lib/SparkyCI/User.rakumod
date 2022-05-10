@@ -50,9 +50,9 @@ sub projects (Mu $user) is export {
     my @list;
     for dir "{%*ENV<HOME>}/.sparky/projects/" -> $i {
         if $i.IO ~~ :d and $i ~~ /"gh-" $user "-" (\S+)/ {
-            push @list, { repo => "{$0}", type => 'gh', type-human => "github" } 
+            push @list, { repo => "{$0}", type => 'gh', type-human => "github", project => $i.IO.basename } 
         } elsif $i.IO ~~ :d  and $i ~~ /"git-" $user "-" (\S+)/ {
-            push @list, {  repo => "{$0}" , type => 'git', type-human => "git" }
+            push @list, {  repo => "{$0}" , type => 'git', type-human => "git", project => $i.IO.basename  }
         }
     }
     return @list.sort({ .<repo> || .<type> });

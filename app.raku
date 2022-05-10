@@ -258,8 +258,30 @@ my $application = route {
       )
     }
 
-    get -> 'project', Str $project, 'badge' {
-      redirect :see-other, 'https://img.shields.io/static/v1?label=SparkyCI&message=Build+|+OK&color=green'
+    get -> 'project', Str $project, 'badge', 'markdown', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
+
+      template 'templates/badge.crotmp', %( 
+        page-title => "{$project} badge",  
+        title => title(),   
+        badge => "[![SparkyCI](http://sparrowhub.io:2222/project/{$project}/badge)](http://sparrowhub.io:2222)",
+        css => css($theme),
+        theme => $theme,
+        navbar => navbar($user, $token, $theme),
+      )
+
+    }
+
+    get -> 'project', Str $project, 'badge', {
+      my $b = get-last-build($project);
+      if $b<state> eq "OK" {
+        redirect :see-other, 'https://img.shields.io/static/v1?label=SparkyCI&message=Build+|+OK&color=green'
+      } elsif $b<state> eq "FAIL" {
+        redirect :see-other, 'https://img.shields.io/static/v1?label=SparkyCI&message=Build+|+FAIL&color=red'
+      } elsif $b<state> eq "FAIL" {
+        redirect :see-other, 'https://img.shields.io/static/v1?label=SparkyCI&message=Build+|+TIMEOUT&color=yellow'
+      } else {
+        redirect :see-other, 'https://img.shields.io/static/v1?label=SparkyCI&message=Build+|+UNKOWN&color=gray'
+      }
     }
 
     get -> 'js', *@path {

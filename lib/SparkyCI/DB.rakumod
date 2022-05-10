@@ -97,6 +97,34 @@ sub get-builds ($limit=10, $user?) is export {
  
 }
 
+sub get-last-build ($project) is export {
+
+    my $dbh = get-dbh();
+
+    my $sth = $dbh.prepare(q:to/STATEMENT/);
+        SELECT 
+          project, 
+          CASE
+            WHEN state = 1 THEN "OK"
+            WHEN state = -1 THEN "TIMEOUT"
+            WHEN state = -2 THEN "FAIL"
+            ELSE "UNKNOWN"
+          END AS state,
+          dt as date, id
+        FROM 
+          builds
+        WHERE
+          project = ?
+        ORDER BY
+          id desc
+        LIMIT 1  
+    STATEMENT
+
+    my @rows = $sth.allrows(:array-of-hash);
+
+    return @rows[0];
+ 
+}
 
 sub get-report ($id) is export {
 
