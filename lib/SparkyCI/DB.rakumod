@@ -120,7 +120,11 @@ sub get-last-build ($project) is export {
         LIMIT 1  
     STATEMENT
 
+    $sth.execute($project);
+
     my @rows = $sth.allrows(:array-of-hash);
+
+    $sth.finish;
 
     return @rows[0];
  
