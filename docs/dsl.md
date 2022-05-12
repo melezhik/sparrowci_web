@@ -174,3 +174,31 @@ main:
   with-code-coverage: true
   verbose: true
 ```
+
+# Available SparkyCI plugins
+
+Services and packages are represented by sparrow plugin.
+
+To use sparkyci package one need to reference it as:
+
+```
+  services: 
+    name: {} # or service parameters
+```
+
+To lookup for service parameter one need to find a `sparkyci-service-$name` 
+
+plugin documentation, for example:
+
+Service - `mysql` , sparrow plugin - `sparkyci-service-mysql`
+
+The same logic applies to sparkyci packages:
+
+For example:
+
+package - `build-essential` , sparrow plugin - `sparkyci-package-build-essential`
+
+
+Available sparkyci plugins are listed here:
+
+http://sparrowhub.io/search?q=sparkyci
