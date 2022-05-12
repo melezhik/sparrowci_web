@@ -175,28 +175,41 @@ main:
   verbose: true
 ```
 
-# Available SparkyCI plugins
+# SparkyCI plugins
 
-Services and packages are represented by sparrow plugin.
+Services and packages - are reusable plugins that extend basic functionality.
+
+SparkyCI plugins are _implemented_ as sparrow plugins.
+
+## Services
 
 To use sparkyci package one need to reference it as:
 
-```
+```yaml
   services: 
-    name: {} # or service parameters
+    name: {} # or specific parameters
 ```
 
-To lookup for service parameter one need to find a `sparkyci-service-$name` 
+To lookup for service parameters one need to refer a `sparkyci-service-$name`  plugin documentation.
 
-plugin documentation, for example:
+For example:
 
 Service - `mysql` , sparrow plugin - `sparkyci-service-mysql`
+
+## Packages
 
 The same logic applies to sparkyci packages:
 
 For example:
 
-package - `build-essential` , sparrow plugin - `sparkyci-package-build-essential`
+Package - `build-essential` , sparrow plugin - `sparkyci-package-build-essential`
+
+SparkyCI code:
+
+```yaml
+  packages: 
+    name: {} # or specific parameters
+```
 
 
 Available sparkyci plugins are listed here:
