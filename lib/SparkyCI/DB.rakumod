@@ -58,6 +58,8 @@ sub insert-build (:$state, :$project, :$desc, :$job-id ) is export {
 
     $sth.finish;
 
+    $dbh.dispose;
+
     return $build_id;
 
 }
@@ -88,6 +90,8 @@ sub get-builds ($limit=10, $user?) is export {
     my @rows = $sth.allrows(:array-of-hash);
 
     $sth.finish;
+
+    $dbh.dispose;
 
     if $user {
      return @rows.grep({.<project> ~~  / ( git || gh ) '-'  $user '-' / });
@@ -125,6 +129,8 @@ sub get-last-build ($project) is export {
     my @rows = $sth.allrows(:array-of-hash);
 
     $sth.finish;
+
+    $dbh.dispose;
 
     return @rows[0];
  
