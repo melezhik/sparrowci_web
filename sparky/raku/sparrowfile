@@ -149,9 +149,21 @@ class Pipeline does Sparky::JobApi::Role {
 
       } else {
 
-        say "Run tests with: zef test . --verbose";
+        my $zef-opts = "";
 
-        bash "zef test . --verbose 2>&1", %(
+        if $sparkyci-conf<main> && $sparkyci-conf<main><verbose> {
+
+          $zef-opts = "--/tap-harness --/prove --debug";
+          
+        } else {
+
+          $zef-opts = "--verbose";
+
+        }
+
+        say "Run tests with: zef test . $zef-opts";
+
+        bash "zef test . $zef-opts 2>&1", %(
           cwd => $.scm-dir,
           description => "run tests"
         );
