@@ -153,7 +153,7 @@ class Pipeline does Sparky::JobApi::Role {
 
         if $sparkyci-conf<main> && $sparkyci-conf<main><verbose> {
 
-          $zef-opts = "--/tap-harness --/prove --debug";
+          $zef-opts = "--debug";
           
         } else {
 

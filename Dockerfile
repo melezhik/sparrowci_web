@@ -1,6 +1,10 @@
 FROM melezhik/sparky:0.0.2
 
+RUN zef update
+
 RUN zef install --/test App::RaCoCo App::Prove6
+
+RUN zef upgrade --/test zef
 
 RUN rm -rf /tmp/sparkyci && echo OK
 
