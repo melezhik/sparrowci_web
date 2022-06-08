@@ -31,7 +31,7 @@ class Pipeline does Sparky::JobApi::Role {
 
     say "variables loaded: ", $variables.perl; 
 
-    $yaml = $yaml.subst(/ '$' (\S+)  /, { $variables{$0} || "" }, :g );
+    $yaml = $yaml.subst(/ '$' (<[ \w \d]>+) /, { $variables{$0} || "" }, :g );
 
     say "processed yaml: \n{$yaml}";
 
