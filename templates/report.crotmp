@@ -52,7 +52,7 @@
                     <pre><.init-log></pre>
                   </div>
                   <div id="Report" class="content-tab" style="display:none">
-                    <pre><.log>></pre>
+                    <pre><.log></pre>
                   </div>
                   <div id="TC" class="content-tab" style="display:none">
                     <?.test-coverage-html>
