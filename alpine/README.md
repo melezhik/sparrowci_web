@@ -19,13 +19,13 @@ su - builder
 # Build a package
 
 ```bash
-sudo  addgroup builder abuild
+sudo addgroup builder abuild
 sudo addgroup builder abuild
 sudo mkdir -p /var/cache/distfiles
 sudo chmod a+w /var/cache/distfiles
 abuild-keygen -a -i
-mkdir -p ~/raku-packages/kind
-cd raku-packages/kind
+mkdir -p ~/raku-packages/raku-kind
+cd raku-packages/raku-kind
 cat << 'HERE' > APKBUILD
 # Contributor:
 # Maintainer:
@@ -89,4 +89,4 @@ say Blob.&is-class; # OUTPUT: False
 HERE
 
 raku test.raku
- ```
+```
