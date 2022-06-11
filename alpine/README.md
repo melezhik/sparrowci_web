@@ -79,8 +79,8 @@ sudo apk search raku-kind
 # raku-kind-doc-0.2.2-r3
 # raku-kind-0.2.2-r3
 sudo apk add raku-kind
-#(1/1) Installing raku-kind (0.2.2-r3)
-#OK: 263 MiB in 65 packages
+# (1/1) Installing raku-kind (0.2.2-r3)
+# OK: 263 MiB in 65 packages
 ```
 
 # Test package
@@ -102,4 +102,6 @@ say Blob.&is-class; # OUTPUT: False
 HERE
 
 raku test.raku
+# True
+# False
 ```
