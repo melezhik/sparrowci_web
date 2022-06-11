@@ -1,3 +1,5 @@
+# Building alpine package for Raku modules
+
 # Install abuild toolchain
 
 ```bash
@@ -14,6 +16,8 @@ nano /etc/sudoers
 su - builder
 ```
 
+# Build a package
+
 ```bash
 sudo  addgroup builder abuild
 sudo addgroup builder abuild
@@ -25,9 +29,9 @@ cd raku-packages/kind
 cat << 'HERE' > APKBUILD
 # Contributor:
 # Maintainer:
-pkgname=kind
+pkgname=raku-kind
 pkgver=0.2.2
-pkgrel=0
+pkgrel=3
 pkgdesc="kind package"
 url="https://raku.land/cpan:KAIEPI/Kind"
 arch="all !s390x !riscv64"
@@ -36,9 +40,9 @@ depends="rakudo"
 makedepends="rakudo-dev"
 #checkdepends=""
 #install=""
-#subpackages="$pkgname-dev $pkgname-doc"
+subpackages="$pkgname-doc"
 source="$pkgname-$pkgver.tar.gz::https://cpan.metacpan.org/authors/id//K/KA/KAIEPI/Perl6/Kind-0.2.2.tar.gz"
-#builddir="$srcdir/"
+builddir="$srcdir"/Kind-"$pkgver"
 
 
 check() {
@@ -51,20 +55,19 @@ package() {
 	set -x	
 	ls -l	
 	RAKUDO_RERESOLVE_DEPENDENCIES=0 /usr/share/rakudo/tools/install-dist.raku \
-		--from=src/Kind-"$pkgver" --to="$pkgdir"/usr/share/rakudo/vendor --for=vendor
-	install -Dvm644 src/Kind-"$pkgver"/LICENSE src/Kind-"$pkgver"/META6.json src/Kind-"$pkgver"/README.md \
+		--to="$pkgdir"/usr/share/rakudo/vendor --for=vendor
+	install -Dvm644 LICENSE META6.json README.md \
 		-t "$pkgdir"/usr/share/doc/"$pkgname"
 
 }
-
 HERE 
 abuild checksum
 abuild -r
 ls -l ~/packages/
 sudo echo "/home/builder/packages/raku-packages/" >> /etc/apk/repositories 
 sudo apk update
-sudo apk search kind
-sudo apk add kind
+sudo apk search raku-kind
+sudo apk add raku-kind
 ```
 
 # Test package
