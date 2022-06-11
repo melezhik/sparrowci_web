@@ -61,6 +61,7 @@ package() {
 
 }
 HERE
+```
 
 # Build a package
 
