@@ -16,7 +16,7 @@ nano /etc/sudoers
 su - builder
 ```
 
-# Build a package
+# Create APKBUILD
 
 ```bash
 sudo addgroup builder abuild
@@ -60,19 +60,32 @@ package() {
 		-t "$pkgdir"/usr/share/doc/"$pkgname"
 
 }
-HERE 
+HERE
+
+# Build a package
+
+```bash
 abuild checksum
 abuild -r
+```
+
+# Install a package
+
+```bash
 ls -l ~/packages/
 sudo echo "/home/builder/packages/raku-packages/" >> /etc/apk/repositories 
 sudo apk update
 sudo apk search raku-kind
+# raku-kind-doc-0.2.2-r3
+# raku-kind-0.2.2-r3
 sudo apk add raku-kind
+#(1/1) Installing raku-kind (0.2.2-r3)
+#OK: 263 MiB in 65 packages
 ```
 
 # Test package
 
-```
+```bash
 cat << 'HERE' > test.raku
 
 use Kind;
