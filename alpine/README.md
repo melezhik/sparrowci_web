@@ -3,11 +3,8 @@
 # Install abuild toolchain
 
 ```bash
-apk add curl nano alpine-sdk
-curl -1sLf 'https://dl.cloudsmith.io/public/nxadm-pkgs/rakudo-pkg/rsa.1A83FB1E50BD764C.key' > /etc/apk/keys/rakudo-pkg@nxadm-pkgs-1A83FB1E50BD764C.rsa.pub
-curl -1sLf 'https://dl.cloudsmith.io/public/nxadm-pkgs/rakudo-pkg/rsa.1A83FB1E50BD764C.key' > /etc/apk/keys/rakudo-pkg@nxadm-pkgs-1A83FB1E50BD764C.rsa.pub
-curl -1sLf 'https://dl.cloudsmith.io/public/nxadm-pkgs/rakudo-pkg/config.alpine.txt?distro=alpine&codename=v3.8' >> /etc/apk/repositories
 apk update
+apk add curl nano alpine-sdk
 apk search -v raku 
 apk add rakudo-dev
 apk add rakudo
