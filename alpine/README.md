@@ -1,29 +1,28 @@
 # Install abuild toolchain
 
 ```bash
-    apk add curl nano alpine-sdk
-    curl -1sLf 'https://dl.cloudsmith.io/public/nxadm-pkgs/rakudo-pkg/rsa.1A83FB1E50BD764C.key' > /etc/apk/keys/rakudo-pkg@nxadm-pkgs-1A83FB1E50BD764C.rsa.pub
-    curl -1sLf 'https://dl.cloudsmith.io/public/nxadm-pkgs/rakudo-pkg/rsa.1A83FB1E50BD764C.key' > /etc/apk/keys/rakudo-pkg@nxadm-pkgs-1A83FB1E50BD764C.rsa.pub
-    curl -1sLf 'https://dl.cloudsmith.io/public/nxadm-pkgs/rakudo-pkg/config.alpine.txt?distro=alpine&codename=v3.8' >> /etc/apk/repositories
-    apk update
-    apk search -v raku 
-    apk add rakudo-dev
-    apk add rakudo
-    adduser builder wheel
-    nano /etc/sudoers
-    su - builder
+apk add curl nano alpine-sdk
+curl -1sLf 'https://dl.cloudsmith.io/public/nxadm-pkgs/rakudo-pkg/rsa.1A83FB1E50BD764C.key' > /etc/apk/keys/rakudo-pkg@nxadm-pkgs-1A83FB1E50BD764C.rsa.pub
+curl -1sLf 'https://dl.cloudsmith.io/public/nxadm-pkgs/rakudo-pkg/rsa.1A83FB1E50BD764C.key' > /etc/apk/keys/rakudo-pkg@nxadm-pkgs-1A83FB1E50BD764C.rsa.pub
+curl -1sLf 'https://dl.cloudsmith.io/public/nxadm-pkgs/rakudo-pkg/config.alpine.txt?distro=alpine&codename=v3.8' >> /etc/apk/repositories
+apk update
+apk search -v raku 
+apk add rakudo-dev
+apk add rakudo
+adduser builder wheel
+nano /etc/sudoers
+su - builder
 ```
 
 ```bash
-   sudo  addgroup builder abuild
-   sudo addgroup builder abuild
-   sudo mkdir -p /var/cache/distfiles
-   sudo chmod a+w /var/cache/distfiles
-   abuild-keygen -a -i
-   mkdir -p ~/raku-packages/kind
-   cd raku-packages/kind
-   cat << 'HERE' > APKBUILD
-
+sudo  addgroup builder abuild
+sudo addgroup builder abuild
+sudo mkdir -p /var/cache/distfiles
+sudo chmod a+w /var/cache/distfiles
+abuild-keygen -a -i
+mkdir -p ~/raku-packages/kind
+cd raku-packages/kind
+cat << 'HERE' > APKBUILD
 # Contributor:
 # Maintainer:
 pkgname=kind
@@ -58,14 +57,14 @@ package() {
 
 }
 
-   HERE 
-   abuild checksum
-   abuild -r
-   ls -l ~/packages/
-   sudo echo "/home/builder/packages/raku-packages/" >> /etc/apk/repositories 
-   sudo apk update
-   sudo apk search kind
-   sudo apk add kind
+HERE 
+abuild checksum
+abuild -r
+ls -l ~/packages/
+sudo echo "/home/builder/packages/raku-packages/" >> /etc/apk/repositories 
+sudo apk update
+sudo apk search kind
+sudo apk add kind
 ```
 
 # Test package
@@ -87,5 +86,4 @@ say Blob.&is-class; # OUTPUT: False
 HERE
 
 raku test.raku
- 
-```
+ ```
