@@ -1,6 +1,6 @@
 # SparkyCI
 
-SparkyCI - dead simple CI service
+SparkyCI - dead simple CI service.
 
 # Service URL
 
