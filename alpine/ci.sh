@@ -10,8 +10,14 @@
   25 addgroup builder abuild
   26 mkdir -p /var/cache/distfiles
   27 chmod a+w /var/cache/distfiles
-  28 su --help
-  34 su - builder -c 'abuild-keygen -a -n -i'
+  #34 su - builder -c 'abuild-keygen -a -n -i'
+  cp builder-62c0a309.rsa /home/builder/.abuild/builder-62c0a309.rsa
+  chmod a+r /home/builder/.abuild/builder-62c0a309.rsa
+  cp builder-62c0a309.rsa.pub /home/builder/.abuild/builder-62c0a309.rsa.pub
+  chmod a+r /home/builder/.abuild/builder-62c0a309.rsa.pub
+  echo PACKAGER_PRIVKEY="/home/builder/.abuild/builder-62c0a309.rsa" > /home/builder/.abuild/abuild.conf
+  chmod a+r /home/builder/.abuild/abuild.conf
+  
   35 nano /tmp/crt.package
 mkdir -p ~/raku-packages/raku-kind
 cd raku-packages/raku-kind
