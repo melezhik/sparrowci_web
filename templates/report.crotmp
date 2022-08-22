@@ -66,6 +66,19 @@
           </nav>
         </div>      
       </div>      
+
+      <script src="js/ansi_up.js" type="text/javascript"></script>
+      <script type="text/javascript">
+
+        var txt  = document.getElementById('Report').innerText;
+        
+        var ansi_up = new AnsiUp;
+
+        var html = ansi_up.ansi_to_html(txt);
+
+        document.getElementById('Report').innerHTML = html;
+
+      </script>
     </body>
 </html>
 
