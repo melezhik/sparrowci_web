@@ -1,4 +1,4 @@
-#!perl6
+#!raku
 
 EVALFILE ".tom/commit.raku";
 EVALFILE ".tom/push.raku";
