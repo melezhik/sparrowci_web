@@ -28,6 +28,7 @@ class Pipeline does Sparky::JobApi::Role {
         --secure-environment-variables SPARKY_API_TOKEN={%*ENV<SPARKY_API_TOKEN>} \\
         BASH_ENV=/home/raku/.profile \\
         SPARKY_TIMEOUT=5 \\
+        SP6_FORMAT_COLOR=1 \\
         SPARKY_PROJECT={$.sparky-project} \\
         SCM={$.scm} \\
         GIT_SHA="{$.git-sha}" \\
