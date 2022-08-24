@@ -41,6 +41,6 @@ sub title is export {
 
 
 sub default-theme is export {
-  "light"
+  "dark"
 }
 
