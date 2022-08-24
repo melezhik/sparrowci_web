@@ -31,7 +31,7 @@
               </nav>
             </div>
             <div class="panel-block">
-                  <div id="Summary" class="content-tab">
+                  <div id="Summary" class="content-tab" style="display:none">
                     BuildID: <.id><br>
                     Status: <.state><br>
                     Worker status: <.worker-status><br>
@@ -51,7 +51,7 @@
                   <div id="Init" class="content-tab" style="display:none">
                     <pre id="init_log"><.init-log></pre>
                   </div>
-                  <div id="Report" class="content-tab" style="display:none">
+                  <div id="Report" class="content-tab">
                     <pre id="log"><.log></pre>
                   </div>
                   <div id="TC" class="content-tab" style="display:none">
