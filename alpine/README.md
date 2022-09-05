@@ -106,6 +106,7 @@ raku test.raku
 
 
 
+```
 991e1636dc8e:~/packages/raku-kind$ abuild-keygen -a
 >>> Generating public/private rsa key pair for abuild
 Enter file in which to save the key [/home/builder/.abuild/builder-6316182f.rsa]: 
@@ -121,3 +122,4 @@ writing RSA key
 >>> 
 >>> Please remember to make a safe backup of your private key:
 >>> /home/builder/.abuild/builder-6316182f.rsa
+```
