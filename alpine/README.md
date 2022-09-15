@@ -103,3 +103,23 @@ raku test.raku
 # True
 # False
 ```
+
+
+
+```
+991e1636dc8e:~/packages/raku-kind$ abuild-keygen -a
+>>> Generating public/private rsa key pair for abuild
+Enter file in which to save the key [/home/builder/.abuild/builder-6316182f.rsa]: 
+Generating RSA private key, 2048 bit long modulus (2 primes)
+...........................................+++++
+...................+++++
+e is 65537 (0x010001)
+writing RSA key
+>>> 
+>>> You'll need to install /home/builder/.abuild/builder-6316182f.rsa.pub into 
+>>> /etc/apk/keys to be able to install packages and repositories signed with
+>>> /home/builder/.abuild/builder-6316182f.rsa
+>>> 
+>>> Please remember to make a safe backup of your private key:
+>>> /home/builder/.abuild/builder-6316182f.rsa
+```
