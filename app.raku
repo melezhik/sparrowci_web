@@ -263,7 +263,7 @@ my $application = route {
       template 'templates/badge.crotmp', %( 
         page-title => "{$project} badge",  
         title => title(),   
-        badge => "[![SparkyCI](http://sparrowhub.io:2222/project/{$project}/badge)](http://sparrowhub.io:2222)",
+        badge => "[![SparkyCI](https://ci.sparrowhub.io/project/{$project}/badge)](https://ci.sparrowhub.io)",
         css => css($theme),
         theme => $theme,
         navbar => navbar($user, $token, $theme),
@@ -389,7 +389,7 @@ my $application = route {
             "Accept" => "application/json"
           ],
           query => { 
-            redirect_uri => "http://sparrowhub.io:2222/oauth2",
+            redirect_uri => "https://ci.sparrowhub.io/oauth2",
             client_id => %*ENV<OAUTH_CLIENT_ID>,
             client_secret => %*ENV<OAUTH_CLIENT_SECRET>,
             code => $code,
@@ -469,7 +469,7 @@ my $application = route {
 (.out-buffer = False for $*OUT, $*ERR);
 
 my Cro::Service $service = Cro::HTTP::Server.new:
-    :host<0.0.0.0>, :port<2222>, :$application;
+    :host<127.0.0.1>, :port<2222>, :$application;
 
 $service.start;
 
