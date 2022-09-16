@@ -6,7 +6,7 @@ SparkyCI - dead simple CI service.
 
 This might change!
 
-[http://sparrowhub.io:2222](http://sparrowhub.io:2222)
+[https://ci.sparrowhub.io](https://ci.sparrowhub.io)
 
 # Current Status
 
