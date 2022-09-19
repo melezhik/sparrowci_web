@@ -312,7 +312,7 @@ class Pipeline does Sparky::JobApi::Role {
       });
 
       # wait for job_test and job_deps jobs to finish
-      my $s = self.wait-job(($j_test,$j_deps,), %( timeout => 1000 ));
+      my $s = self.wait-jobs(($j_test,$j_deps,), %( timeout => 1000 ));
 
       say "job_test and job_deps jobs have finished: ", $s.perl;
 
