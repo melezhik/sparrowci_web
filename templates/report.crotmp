@@ -60,7 +60,7 @@
                       <pre id="dr"><.deps-data></pre>
                     </?>
                     <!.deps-data>
-                      no data found
+                      <pre id="dr">no data found</pre>
                     </!>
                   </div>                  
                   <div id="TC" class="content-tab" style="display:none">
