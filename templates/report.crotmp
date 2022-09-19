@@ -26,6 +26,7 @@
                         <li class="tab" onclick="openTab(event,'Init')"><a>Init</a></li>
                         <li class="tab is-active" onclick="openTab(event,'Report')"><a>Report</a></li>
                         <li class="tab" onclick="openTab(event,'TC')"><a>Test coverage</a></li>
+                        <li class="tab" onclick="openTab(event,'DR')"><a>Deps report</a></li>
                       </ul>
                     </div>
               </nav>
@@ -61,6 +62,9 @@
                     <!.test-coverage-html>
                       no data found
                     </!>
+                  </div>
+                  <div id="DR" class="content-tab">
+                    <pre id="dr"><.deps-data></pre>
                   </div>
             </div>
           </nav>
