@@ -196,7 +196,7 @@ class Pipeline does Sparky::JobApi::Role {
 
         zef "App::Zef-Deps", %( notest => True );
 
-        bash 'zef-deps . 2>&1 1>data.txt', %(
+        bash 'zef-deps . 2>&1 1>data.txt || echo', %(
           cwd => $.scm-dir,
           description => "collect zef-deps data"
         );
@@ -332,7 +332,7 @@ class Pipeline does Sparky::JobApi::Role {
 
       my %j_deps = $j_deps.info;
 
-      my $deps-data = $j_deps.get-file("deps-data") || ""; 
+      my $deps-data = $j_deps.get-file("deps-data",:text) || ""; 
 
       my $raku-env = task-run "dump info", "raku-env-info";
 
