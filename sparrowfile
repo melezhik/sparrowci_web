@@ -23,7 +23,8 @@ class Pipeline does Sparky::JobApi::Role {
       #set -x 
       az container create -g sparky2 \\
         --name {$.worker} \\
-        --image melezhik/sparkyci:0.0.14 \\
+        --image melezhik/sparkyci:0.0.15
+ \\
         --cpu {$.cpu} --memory {$.mem} \\
         --secure-environment-variables SPARKY_API_TOKEN={%*ENV<SPARKY_API_TOKEN>} \\
         BASH_ENV=/home/raku/.profile \\

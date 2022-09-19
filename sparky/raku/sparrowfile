@@ -188,6 +188,8 @@ class Pipeline does Sparky::JobApi::Role {
 
       my $sparkyci-conf = $j.get-stash;
 
+      say "sparkyci-conf: ", $sparkyci-conf.perl;
+
       if $sparkyci-conf<main> && $sparkyci-conf<main><with-zef-deps> {
 
         say "Calculate deps with: zef-deps";
