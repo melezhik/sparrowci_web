@@ -202,7 +202,7 @@ class Pipeline does Sparky::JobApi::Role {
         );
 
         if "{$.scm-dir}/data.txt".IO ~~ :e {
-          $j.put-file("{$.scm-dir}/data.txt","deps-data");
+          $j.put-stash({ data => "{$.scm-dir}/data.txt".IO.slurp()});
         }
 
       }
@@ -332,7 +332,7 @@ class Pipeline does Sparky::JobApi::Role {
 
       my %j_deps = $j_deps.info;
 
-      my $deps-data = $j_deps.get-file("deps-data",:text) || ""; 
+      my $deps-data = $j_deps.get-stash()<data> || ""; 
 
       my $raku-env = task-run "dump info", "raku-env-info";
 
