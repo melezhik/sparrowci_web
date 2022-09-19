@@ -290,7 +290,8 @@ class Pipeline does Sparky::JobApi::Role {
       }
 
       # run test job 
-      my $j_test = self.new-job;
+      my $project = "test";
+      my $j_test = self.new-job: :$project;
 
       $j_test.put-stash($sparkyci-conf);
 
@@ -302,7 +303,7 @@ class Pipeline does Sparky::JobApi::Role {
         ),
       });
 
-      my $j_deps = self.new-job;
+      my $j_deps = self.new-job: :$project;
 
       $j_deps.put-stash($sparkyci-conf);
 

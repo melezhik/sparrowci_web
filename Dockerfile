@@ -14,6 +14,10 @@ RUN sudo chown raku:raku -R /home/raku/.sparky/
 
 #RUN ls -l /home/raku/.sparky/projects/ && ls -l /home/raku/.sparky/projects/raku && ggg
 
+RUN zef upgrade Sparky::JobApi 
+RUN zef install --/test https://github.com/melezhik/sparrowdo.git --force-install
+RUN zef install --/test https://github.com/melezhik/sparky.git --force-install 
+
 USER raku 
 
 RUN sudo echo
