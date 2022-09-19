@@ -185,6 +185,7 @@ class Pipeline does Sparky::JobApi::Role {
       say "git-sha: {$.git-sha}";
 
       my $j = self.new-job: :mine;
+
       my $sparkyci-conf = $j.get-stash;
 
       if $sparkyci-conf<main> && $sparkyci-conf<main><with-zef-deps> {
@@ -193,7 +194,7 @@ class Pipeline does Sparky::JobApi::Role {
 
         zef "App::Zef-Deps", %( notest => True );
 
-        bash "zef-deps 2>&1 1>data.txt", %(
+        bash "zef-deps . 2>&1 1>data.txt", %(
           cwd => $.scm-dir,
           description => "collect zef-deps data"
         );
