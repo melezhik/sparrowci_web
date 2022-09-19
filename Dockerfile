@@ -1,4 +1,4 @@
-FROM melezhik/sparky:0.0.4
+FROM melezhik/sparky:0.0.6
 
 RUN zef update
 
