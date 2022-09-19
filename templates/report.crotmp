@@ -55,14 +55,14 @@
                   <div id="Report" class="content-tab">
                     <pre id="log"><.log></pre>
                   </div>
-                  <div id="DR" class="content-tab">
+                  <div id="DR" class="content-tab" style="display:none">
                     <?.deps-data>
                       <pre id="dr"><.deps-data></pre>
                     </?>
                     <!.deps-data>
-                      no data found
+                      no data found      
                     </!>
-                  </div>                  
+                  </div>
                   <div id="TC" class="content-tab" style="display:none">
                     <?.test-coverage-html>
                       <a href="/tc/<.id>" target="_blank">test coverage report</a>
