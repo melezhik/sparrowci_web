@@ -64,7 +64,12 @@
                     </!>
                   </div>
                   <div id="DR" class="content-tab">
-                    <pre id="dr"><.deps-data></pre>
+                    <?.deps-data>
+                      <pre id="dr"><.deps-data></pre>
+                    </?>
+                    <!.deps-data>
+                      no data found
+                    </!>
                   </div>
             </div>
           </nav>
