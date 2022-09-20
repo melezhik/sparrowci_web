@@ -1,4 +1,4 @@
-FROM melezhik/sparky:0.0.6
+FROM melezhik/sparky:0.0.7
 
 RUN zef update
 
@@ -10,15 +10,15 @@ RUN rm -rf /tmp/sparkyci && echo OK
 
 COPY sparky/raku /home/raku/.sparky/projects/raku
 
-RUN sudo chown raku:raku -R /home/raku/.sparky/
+RUN sudo chown raku -R /home/raku/.sparky/
 
 #RUN ls -l /home/raku/.sparky/projects/ && ls -l /home/raku/.sparky/projects/raku && ggg
 
-RUN zef upgrade Sparky::JobApi 
-RUN zef install --/test https://github.com/melezhik/sparrowdo.git --force-install
-RUN zef install --/test https://github.com/melezhik/sparky.git --force-install 
+#RUN zef upgrade Sparky::JobApi 
+#RUN zef install --/test https://github.com/melezhik/sparrowdo.git --force-install
+#RUN zef install --/test https://github.com/melezhik/sparky.git --force-install 
 
-USER raku 
+#USER raku 
 
 RUN sudo echo
 
