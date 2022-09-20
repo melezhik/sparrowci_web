@@ -117,6 +117,10 @@ Stage parameters:
 
 Enable code coverage
 
+* `with-zef-deps`
+
+Enable zef dependencies report using [zef-deps](https://github.com/coke/raku-zef-deps)
+
 * `with-license-check`
 
 Enable license check ( not implemented yet )
@@ -124,7 +128,6 @@ Enable license check ( not implemented yet )
 * `verbose`
 
 Enable verbose output ( mostly will affect `zef` commands )
-
 
 ### Build hooks
 
@@ -210,7 +213,6 @@ SparkyCI code:
   packages: 
     name: {} # or specific parameters
 ```
-
 
 Available sparkyci plugins are listed here:
 
