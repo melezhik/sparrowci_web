@@ -31,3 +31,5 @@ class Pipeline does Sparky::JobApi::Role {
 
     }
 }        
+
+Pipeline.new.run;  
