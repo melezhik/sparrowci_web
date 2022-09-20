@@ -328,7 +328,11 @@ class Pipeline does Sparky::JobApi::Role {
 
       my %j_deps = $j_deps.info;
 
-      my $deps-data = $j_deps.get-stash()<data> || ""; 
+      $r = HTTP::Tiny.get: "http://127.0.0.1:4000/report/raw/{%j_deps<project>}/{%j_deps<job-id>}";
+
+      my $deps-log = $r<content> ?? $r<content>.decode !! '';
+
+      my $deps-data = $j_deps.get-stash()<data> || $deps-log || ""; 
 
       my $raku-env = task-run "dump info", "raku-env-info";
 
