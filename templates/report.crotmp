@@ -93,6 +93,13 @@
 
         document.getElementById('log').innerHTML = html;
 
+        txt  = document.getElementById('dr').innerText;
+
+        html = ansi_up.ansi_to_html(txt);
+
+        document.getElementById('dr').innerHTML = html;
+
+
       </script>
     </body>
 </html>
