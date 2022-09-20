@@ -213,15 +213,8 @@ class Pipeline does Sparky::JobApi::Role {
 
       say "run raku build for scm: {$.scm} !";
 
-      bash qq:to/HERE/, %( description => "ping sparky web" );
-        curl -fs -u sparky:sparky \\
-        --retry-delay 10 --retry-connrefused \\
-        --retry 10 \\
-        127.0.0.1:4000
-      HERE
-
       directory "scm";
-
+      
       git-scm $.scm, %(
         to => "scm",
         branch => $.git-sha,
@@ -302,6 +295,8 @@ class Pipeline does Sparky::JobApi::Role {
           scm-dir => "{$*CWD}/scm",
         ),
       });
+
+      $project = "zef_deps";
 
       my $j_deps = self.new-job: :$project;
 

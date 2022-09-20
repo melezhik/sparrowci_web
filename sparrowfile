@@ -23,7 +23,7 @@ class Pipeline does Sparky::JobApi::Role {
       #set -x 
       az container create -g sparky2 \\
         --name {$.worker} \\
-        --image melezhik/sparkyci:0.0.20 \\
+        --image melezhik/sparkyci:0.0.21 \\
         --cpu {$.cpu} --memory {$.mem} \\
         --secure-environment-variables SPARKY_API_TOKEN={%*ENV<SPARKY_API_TOKEN>} \\
         BASH_ENV=/home/raku/.profile \\
@@ -32,7 +32,9 @@ class Pipeline does Sparky::JobApi::Role {
         SPARKY_PROJECT={$.sparky-project} \\
         SCM={$.scm} \\
         GIT_SHA="{$.git-sha}" \\
-        GIT_URL="https://github.com/melezhik/sparkyci.git" \\
+        BOOTSTRAP_URL="https://github.com/melezhik/sparkyci.git" \\
+        BOOTSTRAP_DIR=sparky/raku \\
+        BOOTSTRAP_PROJECT=raku \\
         PROJECT={$.project} \\
         WORKER={$.worker} \\
         NOTIFY_PROJECT={self.notify-project} \\

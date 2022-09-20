@@ -1,0 +1,33 @@
+use Sparky::JobApi;
+
+class Pipeline does Sparky::JobApi::Role {
+
+    has Str $.project = %*ENV<BOOTSTRAP_PROJECT> || "";
+    has Str $.url = %*ENV<BOOTSTRAP_URL> || "";
+    has Str $.dir = %*ENV<BOOTSTRAP_DIR> || "";
+
+    method stage-main {
+
+        say "bootstrap: {$.url} | project: {$.project}| dir: {$.dir}";
+
+        bash qq:to/HERE/, %( description => "ping sparky web" );
+            curl -fs -u sparky:sparky \\
+            --retry-delay 10 --retry-connrefused \\
+            --retry 10 \\
+            127.0.0.1:4000
+        HERE
+
+        directory "scm";
+
+        git-scm $.url, %(
+            to => "scm",
+        );
+
+        directory "{%*ENV<HOME>}/.sparky/projects/{$.project}";
+
+        copy "scm/{$.dir}/sparrowfile", "{%*ENV<HOME>}/.sparky/projects/{$.project}/sparrowfile";
+
+        copy "scm/{$.dir}/sparky.yaml", "{%*ENV<HOME>}/.sparky/projects/{$.project}/sparky.yaml";
+
+    }
+}        

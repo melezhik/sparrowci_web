@@ -8,7 +8,7 @@ RUN zef upgrade --/test zef
 
 RUN rm -rf /tmp/sparkyci && echo OK
 
-COPY sparky/raku /home/raku/.sparky/projects/raku
+COPY sparky/bootstrap /home/raku/.sparky/projects/bootstrap
 
 RUN sudo chown raku -R /home/raku/.sparky/
 
