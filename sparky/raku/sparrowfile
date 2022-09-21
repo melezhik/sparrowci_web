@@ -206,7 +206,7 @@ class Pipeline does Sparky::JobApi::Role {
         }
 
       } else {
-         say "main.with-zef-deps is not set, no report available"
+        $j.put-stash({ data => "main.with-zef-deps is not set, no report available" });
       }
 
   }
