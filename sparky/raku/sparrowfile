@@ -205,6 +205,8 @@ class Pipeline does Sparky::JobApi::Role {
           $j.put-stash({ data => "{$.scm-dir}/data.txt".IO.slurp()});
         }
 
+      } else {
+         say "main.with-zef-deps is not set, no report available"
       }
 
   }
