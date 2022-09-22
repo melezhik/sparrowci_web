@@ -297,6 +297,7 @@ class Pipeline does Sparky::JobApi::Role {
             init-log => $init-log,
             test-coverage-html => "",
             deps-data => "",
+            lc-data => "",
             raku-env => {},
             git-data => $git-data,
           });
