@@ -232,7 +232,7 @@ class Pipeline does Sparky::JobApi::Role {
           dir => $.scm-dir
       );
 
-      $j.put-stash({ data => "{$s<status>}: {$s<message>}"});
+      $j.put-stash({ data => "license: {$s<license>||'NA'}\nstatus: {$s<status>}\nmessage: {$s<message>}"});
 
     } else {
       $j.put-stash({ data => "main.with-license-check is not set, report is not available" });
