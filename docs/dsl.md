@@ -123,7 +123,7 @@ Enable zef dependencies report using [zef-deps](https://github.com/coke/raku-zef
 
 * `with-license-check`
 
-Enable license check ( not implemented yet )
+Enable license check
 
 * `verbose`
 

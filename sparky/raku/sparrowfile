@@ -206,8 +206,37 @@ class Pipeline does Sparky::JobApi::Role {
         }
 
       } else {
-        $j.put-stash({ data => "main.with-zef-deps is not set, no report available" });
+        $j.put-stash({ data => "main.with-zef-deps is not set, report is not available" });
       }
+
+  }
+
+  # license check
+  method stage-lc {
+
+    say "scm: {$.scm}";
+    say "scm-dir: {$.scm-dir}";
+    say "git-sha: {$.git-sha}";
+
+    my $j = self.new-job: :mine;
+
+    my $sparkyci-conf = $j.get-stash;
+
+    say "sparkyci-conf: ", $sparkyci-conf.perl;
+
+    if $sparkyci-conf<main> && $sparkyci-conf<main><with-license-check> {
+
+      say "Check license: License::SPDX";
+
+      my $s = task-run "license check", "license-spdx", %(
+          dir => $.scm-dir
+      );
+
+      $j.put-stash({ data => "{$s<status>}: {$s<message>}"});
+
+    } else {
+      $j.put-stash({ data => "main.with-license-check is not set, report is not available" });
+    }
 
   }
 
@@ -312,12 +341,31 @@ class Pipeline does Sparky::JobApi::Role {
         ),
       });
 
-      # wait for job_test and job_deps jobs to finish
-      my $s = self.wait-jobs(($j_test,$j_deps,), %( timeout => 1000 ));
+     $project = "license_check";
+
+      my $j_lc = self.new-job: :$project;
+
+      $j_lc.put-stash($sparkyci-conf);
+
+      $j_lc.queue({
+        description => "license check",
+        tags => %(
+          stage => "lc",
+          scm-dir => "{$*CWD}/scm",
+        ),
+      });
+
+      # wait for check jobs to finish
+      my $s = self.wait-jobs(($j_test,$j_deps,$j_lc,), 
+        %( 
+          timeout => 1000 
+        ),
+      );
 
       say "job_test and job_deps jobs have finished: ", $s.perl;
 
-      # job_test data 
+      # job_test data
+
       my %j_test = $j_test.info;
 
       my $r = HTTP::Tiny.get: "http://127.0.0.1:4000/report/raw/{%j_test<project>}/{%j_test<job-id>}";
@@ -336,15 +384,26 @@ class Pipeline does Sparky::JobApi::Role {
 
       my $deps-data = $j_deps.get-stash()<data> || $deps-log || ""; 
 
+      # job_lc data
+
+      my %j_lc = $j_lc.info;
+
+      $r = HTTP::Tiny.get: "http://127.0.0.1:4000/report/raw/{%j_lc<project>}/{%j_lc<job-id>}";
+
+      my $lc-log = $r<content> ?? $r<content>.decode !! '';
+
+      my $lc-data = $j_lc.get-stash()<data> || $lc-log || ""; 
+
       my $raku-env = task-run "dump info", "raku-env-info";
 
-      if $s<OK> == 2 {
+      if $s<OK> == 3 {
         $nj.put-stash({ 
           status => "OK", 
           init-log => $init-log,
           log => $log, 
           test-coverage-html => $test-coverage-html,
           deps-data => $deps-data,
+          lc-data => $lc-data,
           raku-env => $raku-env,
           git-data => $git-data,
         });
@@ -355,6 +414,7 @@ class Pipeline does Sparky::JobApi::Role {
           log => $log, 
           test-coverage-html => $test-coverage-html,
           deps-data => $deps-data,
+          lc-data => $lc-data,
           raku-env => $raku-env,
           git-data => $git-data,
         });
@@ -365,6 +425,7 @@ class Pipeline does Sparky::JobApi::Role {
           log => $log,
           test-coverage-html => $test-coverage-html,
           deps-data => $deps-data,
+          lc-data => $lc-data,
           raku-env => $raku-env,
           git-data => $git-data,
         });
