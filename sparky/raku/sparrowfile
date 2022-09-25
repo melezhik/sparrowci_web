@@ -240,6 +240,33 @@ class Pipeline does Sparky::JobApi::Role {
 
   }
 
+  # rakudoc check
+  method stage-rc {
+
+    say "scm: {$.scm}";
+    say "scm-dir: {$.scm-dir}";
+    say "git-sha: {$.git-sha}";
+
+    my $j = self.new-job: :mine;
+
+    my $sparkyci-conf = $j.get-stash;
+
+    say "sparkyci-conf: ", $sparkyci-conf.perl;
+
+    if $sparkyci-conf<main> && $sparkyci-conf<main><rakudoc> && $sparkyci-conf<main><rakudoc><source> {
+
+      say "Rakudoc check: Pod::To::Markdown";
+
+      my $s = task-run "rakudoc check", "rakudoc-check", %(
+          path => $sparkyci-conf<main><rakudoc><source>,
+      );
+
+    } else {
+      say "main.rakudoc.source is not set, report is not available";
+    }
+
+  }
+
   method stage-main {
 
       say "run raku build for scm: {$.scm} !";
