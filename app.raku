@@ -60,8 +60,8 @@ my $application = route {
 
       my %report = get-report($id);
 
-      my $path =  %report<with-sparrowci>.exists ?? 'templates/report2.crotmp' !! 'templates/report.crotmp';
-      my $title = %report<with-sparrowci>.exists ?? "SparrowCI Report - {%report<project>}" !! "SparkyCI Report - {%report<project>}";
+      my $path =  %report<with-sparrowci>:exists ?? 'templates/report2.crotmp' !! 'templates/report.crotmp';
+      my $title = %report<with-sparrowci>:exists ?? "SparrowCI Report - {%report<project>}" !! "SparkyCI Report - {%report<project>}";
 
       template $path, %( 
         page-title => $title,
