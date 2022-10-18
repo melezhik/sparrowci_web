@@ -166,6 +166,7 @@ class Pipeline does Sparky::JobApi::Role {
     "{sparkyci-root()}/data/{$bid}/init-log.txt".IO.spurt($nj-stash<init-log>||"");
 
     "{sparkyci-root()}/data/{$bid}/data.json".IO.spurt(to-json(%(
+      with-sparrowci => True,
       date => "{DateTime.now}",
       state => $state,
       worker-status => $nj-stash<status> || "",
