@@ -57,9 +57,14 @@ my $application = route {
     }
 
     get -> 'report', Int $id, :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
+
       my %report = get-report($id);
-      template 'templates/report.crotmp', %( 
-        page-title => "SparkyCI Report - {%report<project>}",
+
+      my $path =  %report<with-sparrowci>.exists ?? 'templates/report2.crotmp' !! 'templates/report.crotmp';
+      my $title = %report<with-sparrowci>.exists ?? "SparrowCI Report - {%report<project>}" !! "SparkyCI Report - {%report<project>}";
+
+      template $path, %( 
+        page-title => $title,
         title => title(),   
         %report,
         css => css($theme),

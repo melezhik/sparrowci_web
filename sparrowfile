@@ -32,9 +32,9 @@ class Pipeline does Sparky::JobApi::Role {
         SPARKY_PROJECT={$.sparky-project} \\
         SCM={$.scm} \\
         GIT_SHA="{$.git-sha}" \\
-        BOOTSTRAP_URL="https://github.com/melezhik/sparkyci.git" \\
-        BOOTSTRAP_DIR=sparky/raku \\
-        BOOTSTRAP_PROJECT=raku \\
+        BOOTSTRAP_URL="https://github.com/melezhik/SparrowCI.git" \\
+        BOOTSTRAP_DIR="" \\
+        BOOTSTRAP_PROJECT=sparrowci \\
         PROJECT={$.project} \\
         WORKER={$.worker} \\
         NOTIFY_PROJECT={self.notify-project} \\
@@ -174,12 +174,7 @@ class Pipeline does Sparky::JobApi::Role {
       job-id => $job-id,
       id => $bid,
       scm => $.scm,
-      test-coverage-html => $nj-stash<test-coverage-html> || "",
-      log => $nj-stash<log> || "",
-      init-log => $nj-stash<init-log> || "",
-      deps-data => $nj-stash<deps-data> || "",
-      lc-data => $nj-stash<lc-data> || "",
-      raku-env => $nj-stash<raku-env> || {},
+      log => (join "\n", ($nj-stash<logs> || "")),
       git-data => $nj-stash<git-data> || {}, 
       elapsed => $time.Int,
     )));
