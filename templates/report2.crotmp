@@ -44,12 +44,12 @@
                     Git sha: <.git-data.sha><br>
                     Git comment: <.git-data.comment><br>
                   </div>
-                  <div id="PipelineYAML" class="content-tab">
+                  <div id="PipelineYAML" class="content-tab" style="display:none">
                     <?.sparrow-yaml>
                       <pre id="sparrow-yaml"><.sparrow-yaml></pre>
                     </?>
                     <!.sparrow-yaml>
-                      pipeline code not found
+                      <pre id="sparrow-yaml">pipeline code not found</pre>
                     </!>
                   </div>
                   <div id="Report" class="content-tab">
