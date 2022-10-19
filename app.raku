@@ -73,9 +73,9 @@ my $application = route {
       )
     }
 
-    get -> 'about', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
-      template 'templates/about.crotmp', %(
-        page-title => "Roadmap", 
+    get -> 'quickstart', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
+      template 'templates/quickstart.crotmp', %(
+        page-title => "Quick Start", 
         title => title(),   
         data => parse-markdown("README.md".IO.slurp).to_html,
         css => css($theme),

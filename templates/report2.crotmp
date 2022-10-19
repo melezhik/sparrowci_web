@@ -23,6 +23,7 @@
                     <div class="container">
                       <ul>
                         <li class="tab" onclick="openTab(event,'Summary')"><a>Summary</a></li>
+                        <li class="tab" onclick="openTab(event,'PipelineYAML')"><a>Pipeline YAML</a></li>
                         <li class="tab is-active" onclick="openTab(event,'Report')"><a>Report</a></li>
                       </ul>
                     </div>
@@ -42,6 +43,14 @@
                     </?>
                     Git sha: <.git-data.sha><br>
                     Git comment: <.git-data.comment><br>
+                  </div>
+                  <div id="PipelineYAML" class="content-tab">
+                    <?.sparrow-yaml>
+                      <pre id="sparrow-yaml"><.sparrow-yaml></pre>
+                    </?>
+                    <!.sparrow-yaml>
+                      pipeline code not found
+                    </!>
                   </div>
                   <div id="Report" class="content-tab">
                     <pre id="log"><.log></pre>
