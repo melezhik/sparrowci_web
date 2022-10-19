@@ -37,6 +37,7 @@ class Pipeline does Sparky::JobApi::Role {
         BOOTSTRAP_PROJECT=sparrowci \\
         PROJECT={$.project} \\
         WORKER={$.worker} \\
+        SPARKY_JOB_TIMEOUT=1500 \\
         NOTIFY_PROJECT={self.notify-project} \\
         NOTIFY_JOB={self.notify-job} \\
         NOTIFY_API=https://sparky.sparrowhub.io -o table
