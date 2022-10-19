@@ -31,11 +31,9 @@ git push
 
 ## Add git repository to SparrowCI
 
-* Go to [https://ci.sparrowhub.io](https://ci.sparrowhub.io), sign in
-using your GitHub credentials
+* Go to [https://ci.sparrowhub.io](https://ci.sparrowhub.io), sign in using your GitHub credentials
 
 * Go to "My Repos" page and add a repository to your repository list
-
 
 ## Trigger a build
 
@@ -43,7 +41,7 @@ That is it. A build will be triggered soon!
 
 # Examples
 
-See more examples at [SparrowCI/tree/main/files/examples)](https://github.com/melezhik/SparrowCI/tree/main/files/examples)
+See more examples at [SparrowCI examples](https://github.com/melezhik/SparrowCI/tree/main/files/examples)
 
 or read documentation to get in depth understanding of SparrowCI pipelines.
 
