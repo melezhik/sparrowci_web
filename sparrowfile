@@ -176,6 +176,7 @@ class Pipeline does Sparky::JobApi::Role {
       id => $bid,
       scm => $.scm,
       log => $nj-stash<log>,
+      sparrow-yaml => $nj-stash<sparrow-yaml> || "",
       git-data => $nj-stash<git-data> || {}, 
       elapsed => $time.Int,
     )));
