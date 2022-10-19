@@ -18,6 +18,10 @@
             <p class="panel-heading">
               <.page-title>
             </p>
+            <p class="panel-block">
+                First time here? 
+                Check out a &nbsp;<a href="/quickstart">quick start</a>!
+            </p>
             <div class="panel-block">
               <table class="table">
                 <thead>
