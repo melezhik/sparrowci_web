@@ -1,0 +1,200 @@
+use Sparky::JobApi;
+use SparkyCI::DB;
+use SparkyCI::Conf;
+use JSON::Fast;
+
+class Pipeline does Sparky::JobApi::Role {
+
+  has Str $.cpu = tags()<cpu> || "2";
+  has Str $.mem = tags()<mem> || "7";
+  has Str $.project = tags()<project> || "";
+  has Str $.worker = tags()<worker> || "spk-" ~ (("a" .. "z").pick(10).join("")); 
+  has Str $.scm = tags()<scm> || tags()<SCM_URL> || "";
+  has Str $.notify-project = tags()<notify-project> || "";
+  has Str $.notify-job = tags()<notify-job> || "";
+  has Str $.git-sha = tags()<SCM_BRANCH> || tags()<git-sha> || "HEAD";
+  has Str $.sparky-project = tags()<sparky-project> || "raku";
+
+  method stage-run-container {
+
+    say "run az container, sparky-project: {$.sparky-project} | scm: {$.scm}";
+
+    bash qq:to/HERE/, %( description => "az container create" );
+      #set -x 
+      az container create -g sparky2 \\
+        --name {$.worker} \\
+        --image melezhik/sparkyci:0.0.23 \\
+        --cpu {$.cpu} --memory {$.mem} \\
+        --secure-environment-variables SPARKY_API_TOKEN={%*ENV<SPARKY_API_TOKEN>} \\
+        BASH_ENV=/home/raku/.profile \\
+        SPARKY_TIMEOUT=5 \\
+        SP6_FORMAT_COLOR=1 \\
+        SPARKY_PROJECT={$.sparky-project} \\
+        SCM={$.scm} \\
+        GIT_SHA="{$.git-sha}" \\
+        BOOTSTRAP_URL="https://github.com/melezhik/sparkyci.git" \\
+        BOOTSTRAP_DIR=sparky/raku \\
+        BOOTSTRAP_PROJECT=raku \\
+        PROJECT={$.project} \\
+        WORKER={$.worker} \\
+        NOTIFY_PROJECT={self.notify-project} \\
+        NOTIFY_JOB={self.notify-job} \\
+        NOTIFY_API=https://sparky.sparrowhub.io -o table
+    HERE
+
+    #my $j = self.new-job: :project<sparkyci.run.job>;
+
+    #$j.queue({
+    #  description => "{$.project} - run az container job",
+    #  tags => %(
+    #    stage => "run-container-job",
+    #    worker => $.worker,
+    #  ),
+    #});
+
+  }
+
+
+  #method stage-run-container-job {
+
+  #  bash qq:to/HERE/, %( description => "run sparky job" );
+  #    az container exec -g sparky2 --name {$.worker} \\
+  #    --exec-command "curl -fs -u sparky:sparky -d '' --retry-delay 10 --retry-connrefused --retry 10 -X POST 127.0.0.1:4000/build/project/container" \\
+  #    -o table
+  #  HERE
+
+  #}
+
+  method stage-main {
+
+    my $cj = self.new-job: :project<sparkyci.queue>;
+
+    $cj.queue({
+      description => "{tags()<SPARKY_PROJECT>} - run stage",
+      tags => %(
+        stage => "run",
+        project => tags()<SPARKY_PROJECT>,
+        cpu => $.cpu,
+        mem => $.mem,
+        sparky-project => $.sparky-project,
+        scm => $.scm,
+        git-sha => $.git-sha,
+        worker => $.worker,
+      )
+    });
+  }
+
+  method stage-run {
+
+      say "configuration: cpu: {$.cpu} | mem: {$.mem}";
+  
+      say "sparky project: {$.sparky-project}";
+
+      say tags().perl;
+
+      my $cj = self.new-job: :project<sparkyci.run.container>;
+
+      my $nj = self.new-job: :project<raku.notify>, :job-id($cj.info()<job-id>);
+
+      $cj.queue({
+        description => "{$.project} - run az container",
+        tags => %(
+          stage => "run-container",
+          cpu => $.cpu,
+          mem => $.mem,
+          project => $.project,
+          sparky-project => $.sparky-project,
+          notify-job => $cj.info()<job-id>,
+          notify-project => "raku.notify",
+          scm => $.scm,
+          git-sha => $.git-sha,
+          worker => $.worker,
+        ),
+      });
+
+
+    # wait containers jobs
+    my $s = self.wait-job($cj, %( timeout => 1000 )); 
+
+    # wait notify jobs
+    my $s2 = self.wait-job($nj, %( timeout => 1000 )); 
+
+    # remove containers
+    say "clean up containers just in case ...";
+
+    bash "az container delete -g sparky2 --name {$.worker} -y -o table || echo", %(
+      description => "delete container";
+    );
+
+    my $time = now - INIT now;
+
+    say "$time sec passed";
+
+    say "cost: \$", (0.0000013**($.mem.Int)*$time*1 + 0.0000113*($.cpu.Int)*$time*1);
+
+    my $state;
+
+    if $s<TIMEOUT> {
+      $state = -1;
+    } elsif $s<FAIL> {
+      $state = -2;
+    } elsif $s2<TIMEOUT> {
+      $state = -1;
+    } elsif $s2<FAIL> {
+      $state = -2;
+    } else {
+      $state = 1
+    }
+
+    my $desc = $.scm;
+
+    my $job-id = tags()<SPARKY_JOB_ID>;
+
+    my $project = $.project;
+
+    say "generate sparkyci build ...";
+
+    my $bid = insert-build :$state, :$project, :$desc, :$job-id;
+
+    say "bid: $bid";
+
+    mkdir "{sparkyci-root()}/data/{$bid}";
+
+    my $nj-stash = $nj.get-stash;
+
+    "{sparkyci-root()}/data/{$bid}/log.txt".IO.spurt($nj-stash<log>||"");
+    "{sparkyci-root()}/data/{$bid}/init-log.txt".IO.spurt($nj-stash<init-log>||"");
+
+    "{sparkyci-root()}/data/{$bid}/data.json".IO.spurt(to-json(%(
+      date => "{DateTime.now}",
+      state => $state,
+      worker-status => $nj-stash<status> || "",
+      project => $project,
+      desc => $desc,
+      job-id => $job-id,
+      id => $bid,
+      scm => $.scm,
+      test-coverage-html => $nj-stash<test-coverage-html> || "",
+      log => $nj-stash<log> || "",
+      init-log => $nj-stash<init-log> || "",
+      deps-data => $nj-stash<deps-data> || "",
+      lc-data => $nj-stash<lc-data> || "",
+      raku-env => $nj-stash<raku-env> || {},
+      git-data => $nj-stash<git-data> || {}, 
+      elapsed => $time.Int,
+    )));
+
+
+    say "container job status: ", $s.perl;
+
+    say "notify job status: ", $s2.perl;
+
+    die if $s<FAIL> or $s<TIMEOUT>;
+
+    die if $s2<FAIL> or $s2<TIMEOUT>;
+
+  }
+
+}
+
+Pipeline.new.run;  
