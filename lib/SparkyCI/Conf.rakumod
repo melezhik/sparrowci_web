@@ -35,7 +35,7 @@ sub cache-root is export {
 
 sub title is export { 
 
-  "SparkyCI - dead easy CI service"
+  "SparrowCI - super fun and flexible CI system with many programming languages support."
 
 }
 

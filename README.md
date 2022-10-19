@@ -1,6 +1,6 @@
-# SparkyCI
+# SparrowCI
 
-SparkyCI - dead simple CI service.
+SparrowCI - super fun and flexible CI system with many programming languages support.
 
 # Service URL
 
@@ -10,26 +10,11 @@ This might change!
 
 # Current Status
 
-SparkyCI is in deep development and is HIGHLY experimental, things might change.
+SparrowCI is in deep development and is HIGHLY experimental, things might change.
 
-TODO:
+# Documentation
 
-* More languages support? (not just Raku)
-* Improve UI (WIP) - I need frontend devs support!
-* GH authentication +
-* Send notifications (email/irc?)
-* Build against daily Rakudo builds
-* Discuss must have features with Raku community +
-
-Ideas, comments, bugs - are welcome: drop a message to @melezhik on Raku IRC
-
-# SparkyCI DSL
-
-[docs/dsl.md](https://github.com/melezhik/sparkyci/blob/main/docs/dsl.md)
-
-# GH project
-
-[https://github.com/melezhik/sparkyci](https://github.com/melezhik/sparkyci)
+Follow https://github.com/melezhik/SparrowCI
 
 # Author
 
