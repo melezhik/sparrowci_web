@@ -8,7 +8,7 @@ Just create a file `sparrow.yaml` in your repository root folder:
 
 ```yaml
 tasks:
-    name: unit tests
+    name: unit_tests
     language: Bash
     default: true
     code: |
