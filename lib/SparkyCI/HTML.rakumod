@@ -108,9 +108,9 @@ sub navbar (Mu $user, Mu $token, Mu $theme) is export {
                 <div class="navbar-dropdown">
                   {login-logout($user, $token)}
                   {theme-link($theme)}
-                  <a class="navbar-item" href="https://github.com/melezhik/sparkyci" target="_blank">Github</a>
+                  <a class="navbar-item" href="https://github.com/melezhik/SparrowCI" target="_blank">Github</a>
                   <hr class="navbar-divider">
-                  <a class="navbar-item" href="https://sparky.sparrowhub.io">Admin</a>
+                  <a class="navbar-item" href="https://sparky.sparrowhub.io">Workers</a>
                 </div>
               </div>      
             </div>  
