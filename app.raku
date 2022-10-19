@@ -20,7 +20,7 @@ my $application = route {
       my @results = get-builds();
       #die @results.perl;
       template 'templates/main.crotmp', %(
-        page-title => "SparkyCI - dead simple CI service",
+        page-title => "SparrowCI - super fun and flexible CI system with many programming languages support",
         message => $message,
         title => title(),   
         results => @results,
@@ -61,7 +61,7 @@ my $application = route {
       my %report = get-report($id);
 
       my $path =  %report<with-sparrowci>:exists ?? 'templates/report2.crotmp' !! 'templates/report.crotmp';
-      my $title = %report<with-sparrowci>:exists ?? "SparrowCI Report - {%report<project>}" !! "SparkyCI Report - {%report<project>}";
+      my $title = %report<with-sparrowci>:exists ?? "SparrowCI Report - {%report<project>}" !! "SparrowCI Report - {%report<project>}";
 
       template $path, %( 
         page-title => $title,
@@ -86,7 +86,7 @@ my $application = route {
 
     get -> 'donations', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       template 'templates/donations.crotmp', %(
-        page-title => "Support SparkyCI", 
+        page-title => "Support SparrowCI", 
         title => title(),   
         css => css($theme),
         theme => $theme,
@@ -187,7 +187,7 @@ my $application = route {
         my $id = "{('a' .. 'z').pick(20).join('')}.{$*PID}";
 
         my %trigger = %(
-          description =>  "triggered by SparkyCI user",
+          description =>  "triggered by SparrowCI user",
         );
 
         mkdir "{$repo-dir}/.triggers";
@@ -268,7 +268,7 @@ my $application = route {
       template 'templates/badge.crotmp', %( 
         page-title => "{$project} badge",  
         title => title(),   
-        badge => "[![SparkyCI](https://ci.sparrowhub.io/project/{$project}/badge)](https://ci.sparrowhub.io)",
+        badge => "[![SparrowCI](https://ci.sparrowhub.io/project/{$project}/badge)](https://ci.sparrowhub.io)",
         css => css($theme),
         theme => $theme,
         navbar => navbar($user, $token, $theme),
@@ -279,13 +279,13 @@ my $application = route {
     get -> 'project', Str $project, 'badge', {
       my $b = get-last-build($project);
       if $b<state> eq "OK" {
-        redirect :see-other, 'https://img.shields.io/static/v1?label=SparkyCI&message=Build+|+OK&color=green'
+        redirect :see-other, 'https://img.shields.io/static/v1?label=SparrowCI&message=Build+|+OK&color=green'
       } elsif $b<state> eq "FAIL" {
-        redirect :see-other, 'https://img.shields.io/static/v1?label=SparkyCI&message=Build+|+FAIL&color=red'
+        redirect :see-other, 'https://img.shields.io/static/v1?label=SparrowCI&message=Build+|+FAIL&color=red'
       } elsif $b<state> eq "FAIL" {
-        redirect :see-other, 'https://img.shields.io/static/v1?label=SparkyCI&message=Build+|+TIMEOUT&color=yellow'
+        redirect :see-other, 'https://img.shields.io/static/v1?label=SparrowCI&message=Build+|+TIMEOUT&color=yellow'
       } else {
-        redirect :see-other, 'https://img.shields.io/static/v1?label=SparkyCI&message=Build+|+UNKOWN&color=gray'
+        redirect :see-other, 'https://img.shields.io/static/v1?label=SparrowCI&message=Build+|+UNKOWN&color=gray'
       }
     }
 
