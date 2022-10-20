@@ -6,7 +6,7 @@ sparrowdo:
   format: default
 disabled: false
 scm:
-  url: https://github.com/melezhik/sparkyci.git
+  url: https://github.com/melezhik/rakudist-teddy-bear.git
   branch: main
 keep_builds: 5
 allow_manual_run: true
