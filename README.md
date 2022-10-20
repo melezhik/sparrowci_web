@@ -41,7 +41,7 @@ That is it. A build will be triggered soon!
 
 # Examples
 
-See more examples at [SparrowCI examples](https://github.com/melezhik/SparrowCI/tree/main/files/examples)
+See more examples at [SparrowCI examples](https://github.com/melezhik/SparrowCI/tree/main/examples)
 
 or read documentation to get in depth understanding of SparrowCI pipelines.
 
