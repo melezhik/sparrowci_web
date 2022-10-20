@@ -48,7 +48,7 @@ or read documentation to get in depth understanding of SparrowCI pipelines.
 
 # Documentation
 
-Follow https://github.com/melezhik/SparrowCI
+Follow [https://github.com/melezhik/SparrowCI](https://github.com/melezhik/SparrowCI)
 
 # Author
 
