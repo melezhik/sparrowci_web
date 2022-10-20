@@ -29,6 +29,7 @@ class Pipeline does Sparky::JobApi::Role {
         BASH_ENV=/home/raku/.profile \\
         SPARKY_TIMEOUT=5 \\
         SP6_FORMAT_COLOR=1 \\
+        SP6_DUMP_TASK_CODE=1 \\
         SPARKY_PROJECT={$.sparky-project} \\
         SCM={$.scm} \\
         GIT_SHA="{$.git-sha}" \\
