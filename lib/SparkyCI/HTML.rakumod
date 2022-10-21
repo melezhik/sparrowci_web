@@ -36,6 +36,8 @@ sub css (Mu $theme) is export {
   <link rel="stylesheet" href="https://unpkg.com/bulmaswatch/$bulma-theme/bulmaswatch.min.css">
   <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
   <script src="{http-root()}/js/misc.js"></script>
+  <link href="css/prism.css" rel="stylesheet" />
+  <script src="js/prism.js"></script>
   HERE
 
 }

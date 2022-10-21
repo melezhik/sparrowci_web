@@ -46,7 +46,7 @@
                   </div>
                   <div id="PipelineYAML" class="content-tab" style="display:none">
                     <?.sparrow-yaml>
-                      <pre id="sparrow-yaml"><.sparrow-yaml></pre>
+                      <pre id="sparrow-yaml"><code class="language-yaml"><.sparrow-yaml></code></pre>
                     </?>
                     <!.sparrow-yaml>
                       <pre id="sparrow-yaml">pipeline code not found</pre>
