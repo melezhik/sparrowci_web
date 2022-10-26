@@ -203,20 +203,18 @@ my $application = route {
       }  
     }
 
-    put -> 'build' {
+    post -> 'build' {
 
       my $bid;
 
-      request-body-blob  -> $data {
+      request-body  -> %json {
 
-        my $build = from-json($data);
+        my $project = %json<project>;
+        my $desc = %json<desc>;
+        my $state = %json<state>;
+        my $job-id = %json<job-id>;
 
-        my $project = $build<project>;
-        my $desc = $build<desc>;
-        my $state = $build<state>;
-        my $job-id = $build<job-id>;
-
-        say "generate sparkyci build ...";
+        say "generate sparkyci build | json: {%json.perl} ...";
 
         $bid = insert-build :$state, :$project, :$desc, :$job-id;
 
@@ -224,7 +222,7 @@ my $application = route {
 
         mkdir "{sparkyci-root()}/data/{$bid}";
 
-        "{sparkyci-root()}/data/{$bid}/data.json".IO.spurt($data);
+        "{sparkyci-root()}/data/{$bid}/data.json".IO.spurt(to-json(%json));
 
       }
 
