@@ -203,6 +203,35 @@ my $application = route {
       }  
     }
 
+    put -> 'build' {
+
+      my $bid;
+
+      request-body-blob  -> $data {
+
+        my $build = from-json($data);
+
+        my $project = $build<project>;
+        my $desc = $build<desc>;
+        my $state = $build<state>;
+        my $job-id = $build<job-id>;
+
+        say "generate sparkyci build ...";
+
+        $bid = insert-build :$state, :$project, :$desc, :$job-id;
+
+        say "bid: $bid";
+
+        mkdir "{sparkyci-root()}/data/{$bid}";
+
+        "{sparkyci-root()}/data/{$bid}/data.json".IO.spurt($data);
+
+      }
+
+      content 'text/plain', $bid;
+
+    } 
+
     post -> 'repo-rm', :$user is cookie, :$token is cookie, :$theme is cookie = default-theme() {
       if check-user($user, $token) == True {
         my $repo-id; my $repo-type;
