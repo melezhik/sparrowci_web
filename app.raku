@@ -224,6 +224,8 @@ my $application = route {
 
         mkdir "{sparkyci-root()}/data/{$bid}";
 
+        $build<id> = $bid;
+
         "{sparkyci-root()}/data/{$bid}/data.json".IO.spurt(to-json($build));
 
       }
